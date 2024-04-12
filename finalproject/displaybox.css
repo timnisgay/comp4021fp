@@ -1,0 +1,45 @@
+body {
+	margin: 0 0;
+}
+
+#mainPlayground {
+	position: relative;
+	width: 75vw;
+	height: 101vh;
+	left:5vmin;
+	top:5vmin;
+}
+
+.playerStatContainer {
+	display: block;
+	position: relative;
+	top: 5vmin;
+	right: 5vmin;
+	width: 20vw;
+	height: 90vh;
+	font-size: 3vh;
+	text-align: left;
+	background: rgb(238, 238, 238);
+	color: black;
+	text-decoration:none;
+	border: 1vmin solid rgb(96, 96, 96);
+	border-radius: 2vmin;
+	box-sizing: border-box;
+}
+
+.textLeft {
+	float: left;
+}
+
+.textRight {
+	float: right;
+}
+
+#playerInfo p{
+	margin: 3vh 0;
+	text-align: center;
+}
+
+.playerStatContainer p{
+	margin: 1vh 1vw;
+}

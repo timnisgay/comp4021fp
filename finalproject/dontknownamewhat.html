@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>superScuffDemo</title>
+    <script src="playground.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <link rel="stylesheet" href="displaybox.css">
+</head>
+<body>
+    <div style="float:left">
+        <canvas id="mainPlayground" width="1300px" height="900px"></canvas>
+        <script> init() </script>
+    </div>
+    
+    <div class="playerStatContainer" style="float:right">
+        <div id="playerInfo">
+            <p>Player name here</p>
+            <p>Round 1/1</p>
+        </div>
+        <div id="bombStat" style="padding-top: 10vh;">
+            <p>Bomb power detail:</p>
+            <div style="clear: both;">
+                <p class="textLeft">Radius:</p>
+                <p class="textRight">4 tiles</p>
+            </div>
+            <div style="clear: both;">
+                <p class="textLeft">Max bomb: </p>
+                <p class="textRight">2 bombs</p>
+            </div>
+        </div>
+        <div id="instruction" style="padding-top: 27vh;">
+            <p>How to play:</p>
+            <div style="clear: both;">
+                <p class="textLeft">WASD</p>
+                <p class="textRight">Move</p>
+            </div>
+            <div style="clear: both;">
+                <p class="textLeft">Space</p>
+                <p class="textRight">Place bomb</p>
+            </div>
+            <div style="clear: both;">
+                <p class="textLeft">???</p>
+                <p class="textRight">Cheat</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
