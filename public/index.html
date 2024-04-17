@@ -9,40 +9,42 @@
 </head>
 <body>
     <!-- Gary's skeleton -->
-    <div style="float:left">
-        <canvas id="mainPlayground" width="1300px" height="900px"></canvas>
-        <script> init() </script>
-    </div>
-    
-    <div class="playerStatContainer" style="float:right">
-        <div id="playerInfo">
-            <p>Player name here</p>
-            <p>Round 1/1</p>
+    <div>
+        <div style="float:left">
+            <canvas id="mainPlayground" width="1300px" height="900px"></canvas>
+            <script> init() </script>
         </div>
-        <div id="bombStat" style="padding-top: 10vh;">
-            <p>Bomb power detail:</p>
-            <div style="clear: both;">
-                <p class="textLeft">Radius:</p>
-                <p class="textRight">4 tiles</p>
+        
+        <div class="playerStatContainer" style="float:right">
+            <div id="playerInfo">
+                <p>Player name here</p>
+                <p>Round 1/1</p>
             </div>
-            <div style="clear: both;">
-                <p class="textLeft">Max bomb: </p>
-                <p class="textRight">2 bombs</p>
+            <div id="bombStat" style="padding-top: 10vh;">
+                <p>Bomb power detail:</p>
+                <div style="clear: both;">
+                    <p class="textLeft">Radius:</p>
+                    <p class="textRight">4 tiles</p>
+                </div>
+                <div style="clear: both;">
+                    <p class="textLeft">Max bomb: </p>
+                    <p class="textRight">2 bombs</p>
+                </div>
             </div>
-        </div>
-        <div id="instruction" style="padding-top: 27vh;">
-            <p>How to play:</p>
-            <div style="clear: both;">
-                <p class="textLeft">WASD</p>
-                <p class="textRight">Move</p>
-            </div>
-            <div style="clear: both;">
-                <p class="textLeft">Space</p>
-                <p class="textRight">Place bomb</p>
-            </div>
-            <div style="clear: both;">
-                <p class="textLeft">???</p>
-                <p class="textRight">Cheat</p>
+            <div id="instruction" style="padding-top: 27vh;">
+                <p>How to play:</p>
+                <div style="clear: both;">
+                    <p class="textLeft">WASD</p>
+                    <p class="textRight">Move</p>
+                </div>
+                <div style="clear: both;">
+                    <p class="textLeft">Space</p>
+                    <p class="textRight">Place bomb</p>
+                </div>
+                <div style="clear: both;">
+                    <p class="textLeft">???</p>
+                    <p class="textRight">Cheat</p>
+                </div>
             </div>
         </div>
     </div>
@@ -79,6 +81,16 @@
             </form>
         </div>
     </div>
+
+    <!-- Game Start Page -->
+
+    <!-- Instruction Page/Overlay -->
+
+    <!-- Lobby Page -->
+
+    <!-- Game Play Page -->
+
+    <!-- Game End Page -->
 
     <script src="scripts/avatar.js"></script>
     <script src="scripts/ui.js"></script>

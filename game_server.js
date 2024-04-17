@@ -111,9 +111,66 @@ app.get("/signout", (req, res) => {
 //
 // ***** Please insert your Lab 6 code here *****
 //
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+const io = new Server(httpServer);
 
+io.use((socket, next) => {
+    chatSession(socket.request, {}, next);
+});
+
+const onlineUsers = {};
+let players = {player1: null, player2: null, player3: null, player4: null};
+
+io.on("connection", (socket) => {
+    if (socket.request.session.user) {
+        const {username, avatar, name} = socket.request.session.user;
+        onlineUsers[username] = {avatar, name};
+        io.emit("add user", JSON.stringify(socket.request.session.user));
+
+        socket.on("disconnect", () => {
+            delete onlineUsers[username];
+            io.emit("remove user", JSON.stringify(socket.request.session.user));
+
+            //TODO: if the socket is in players, remove him or her also
+        });
+
+        socket.on("get users", () => {
+            socket.emit("users", JSON.stringify(onlineUsers));
+        });
+
+        socket.on("get players", () => {
+            socket.emit("players", JSON.stringify(players));
+        });
+
+        socket.on("join game", () => {
+            //TODO: procedure to join the user to the players
+
+            //TODO: broadcast that player joined the game
+            if (players.player1 && players.player2 && players.player3 && players.player4) {
+                io.emit("start game");
+            } else {
+                io.emit("add player", name);
+            }            
+        });
+
+        socket.on("end game", (data) => {
+            //TODO: this player is dead, broadcast this to others
+
+            // save the game data of this player to scoreboard.json?
+
+            // check, if all player is dead, stop the game
+            io.emit("end game", name);
+        });
+
+        socket.on("move", (data) => {
+            //TODO: broadcast the movement to all players
+        });
+    }
+});
 
 // Use a web server to listen at port 8000
-app.listen(8000, () => {
+httpServer.listen(8000, () => {
     console.log("The game server has started...");
 });
