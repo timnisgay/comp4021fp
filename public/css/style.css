@@ -20,6 +20,7 @@
     --font-color: black;
     --date-color: gray;
 
+    --signin-form-background: #fde0c5;
     --register-form-background: linear-gradient(#fde0c5, #facba6);
     --warning-color: red;
 
@@ -41,6 +42,9 @@ body {
     padding: 0;
     margin: 0;
 }
+h1 {
+    font-size: 70px;
+}
 .center { text-align: center; }
 .shadow { box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.4); }
 
@@ -52,8 +56,8 @@ body {
 /* Flexbox related */
 .row, .col {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    /* align-items: center;
+    justify-content: center; */
     gap: 10px;
     padding: 20px;
 }
@@ -61,6 +65,8 @@ body {
 .spacer-0 { width: 0; height: 0; }
 .spacer-1 { width: 5px; height: 5px; }
 .spacer-2 { width: 10px; height: 10px; }
+.spacer-3 { width: 15px; height: 15px; }
+.spacer-4 { width: 20px; height: 20px; }
 .spacer-grow { flex-grow: 1; }
 
 /* Overlay */
@@ -100,6 +106,7 @@ button {
     font-weight: bold;
     height: 40px;
     border: 1px solid black;
+    border-radius: 15px;
     color: var(--button-color);
     background: var(--button-background);
     box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.4);
@@ -151,11 +158,11 @@ button.icon:active {
 }
 
 /* Top level container */
-#container {
+#page-container {
     align-items: stretch;
     gap: 0px;
-    width: 100%;
-    height: 100%;
+    width: 1000px;
+    height: 800px;
     padding: 0;
 }
 
@@ -234,15 +241,27 @@ button.icon:active {
     overflow-y: auto;
 }
 
-/* Signin overlay */
+/* start page */
+#front-page {
+    align-items: center;
+    justify-content: center;
+}
 #signin-form {
-    width: 270px;
-    align-self: stretch;
+    width: 300px;
+    background: var(--signin-form-background);
 }
 #register-form {
-    width: 380px;
+    width: 300px;
     background: var(--register-form-background);
     padding: 20px;
+}
+.two-button-set {
+    align-items: center;
+    justify-content: center;
+}
+#button-to-instruction {
+    width: 200px;
+    align-self: flex-start;
 }
 
 /* Edit user overlay */
@@ -251,6 +270,7 @@ button.icon:active {
     align-self: stretch;
 }
 
+/* play page */
 #mainPlayground {
 	position: relative;
 	width: 75vw;

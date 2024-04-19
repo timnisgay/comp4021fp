@@ -1,17 +1,11 @@
 {
  "tony": {
-  "avatar": "Owl",
-  "name": "Tony Lee",
   "password": "$2b$10$Yxb2fSgA5RFn9Oz9TxjLLuve/GiPXCs2DWVFhyFDr4qz39qglwp8e"
  },
  "may": {
-  "avatar": "Rabbit",
-  "name": "May Wong",
   "password": "$2b$10$gLc3Ri9W6P650EKKbexw6uvirV8Bar7gmvAtMcoMiPiR3rsY50GVu"
  },
  "test1": {
-  "avatar": "Snake",
-  "name": "testing1",
-  "password": "$2b$10$kghIGkoLuY5oXq3arqkB9eAqDwdaY.PQyocd5yPLh.zMqbP3Gjq2W"
+  "password": "$2b$10$qhLUJ85E71DMa8MFMgrUEerPRXUWE3jeU9sBGQYmSOTn4sAyQrsHu"
  }
 }

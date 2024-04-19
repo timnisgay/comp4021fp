@@ -1,11 +1,9 @@
-const SignInForm = (function() {
+const FrontPage = (function() {
     // This function initializes the UI
-    const initialize = function() {
-        // Populate the avatar selection
-        Avatar.populate($("#register-avatar"));
-        
-        // Hide it
-        $("#signin-overlay").hide();
+    const initialize = function() {        
+        // Hide
+        $("#front-page").hide();
+        $("#register-form").hide();
 
         // Submit event for the signin form
         $("#signin-form").on("submit", (e) => {
@@ -20,8 +18,8 @@ const SignInForm = (function() {
             Authentication.signin(username, password,
                 () => {
                     hide();
-                    UserPanel.update(Authentication.getUser());
-                    UserPanel.show();
+                    LobbyPage.update(Authentication.getUser());
+                    LobbyPage.show();
 
                     Socket.connect();
                 },
@@ -36,8 +34,6 @@ const SignInForm = (function() {
 
             // Get the input fields
             const username = $("#register-username").val().trim();
-            const avatar   = $("#register-avatar").val();
-            const name     = $("#register-name").val().trim();
             const password = $("#register-password").val().trim();
             const confirmPassword = $("#register-confirm").val().trim();
 
@@ -48,7 +44,7 @@ const SignInForm = (function() {
             }
 
             // Send a register request
-            Registration.register(username, avatar, name, password,
+            Registration.register(username, password,
                 () => {
                     $("#register-form").get(0).reset();
                     $("#register-message").text("You can sign in now.");
@@ -56,11 +52,28 @@ const SignInForm = (function() {
                 (error) => { $("#register-message").text(error); }
             );
         });
+
+        // Click event for "New User" button in signin form
+        $("#signin-new-user").on("click", (e) => {
+            $("#signin-form").hide();
+            $("#register-form").show();
+        });
+
+        // Click event for "Cancel" button in register form
+        $("#register-cancel").on("click", (e) => {
+            $("#register-form").hide();
+            $("#signin-form").show();
+        });
+
+        // Click event for instruction button
+        $("#button-to-instruction").on("click", (e) => {
+            $("#instruction-page").show();
+        });
     };
 
     // This function shows the form
     const show = function() {
-        $("#signin-overlay").fadeIn(500);
+        $("#front-page").show();
     };
 
     // This function hides the form
@@ -68,27 +81,27 @@ const SignInForm = (function() {
         $("#signin-form").get(0).reset();
         $("#signin-message").text("");
         $("#register-message").text("");
-        $("#signin-overlay").fadeOut(500);
+        $("#front-page").hide();
     };
 
     return { initialize, show, hide };
 })();
 
-const UserPanel = (function() {
+const LobbyPage = (function() {
     // This function initializes the UI
     const initialize = function() {
         // Hide it
-        $("#user-panel").hide();
+        $("#lobby-page").hide();
 
         // Click event for the signout button
-        $("#signout-button").on("click", () => {
+        $("#lobby-logout").on("click", () => {
             // Send a signout request
             Authentication.signout(
                 () => {
                     Socket.disconnect();
 
                     hide();
-                    SignInForm.show();
+                    FrontPage.show();
                 }
             );
         });
@@ -96,23 +109,21 @@ const UserPanel = (function() {
 
     // This function shows the form with the user
     const show = function(user) {
-        $("#user-panel").show();
+        $("#lobby-page").show();
     };
 
     // This function hides the form
     const hide = function() {
-        $("#user-panel").hide();
+        $("#lobby-page").hide();
     };
 
-    // This function updates the user panel
+    // This function updates the user stats
     const update = function(user) {
         if (user) {
-            $("#user-panel .user-avatar").html(Avatar.getCode(user.avatar));
-            $("#user-panel .user-name").text(user.name);
+            $("#lobby-page .user-name").text(user.name);
         }
         else {
-            $("#user-panel .user-avatar").html("");
-            $("#user-panel .user-name").text("");
+            $("#lobby-page .user-name").text("");
         }
     };
 
@@ -234,13 +245,11 @@ const UI = (function() {
     // This function gets the user display
     const getUserDisplay = function(user) {
         return $("<div class='field-content row shadow'></div>")
-            .append($("<span class='user-avatar'>" +
-			        Avatar.getCode(user.avatar) + "</span>"))
             .append($("<span class='user-name'>" + user.name + "</span>"));
     };
 
     // The components of the UI are put here
-    const components = [SignInForm, UserPanel, OnlineUsersPanel, ChatPanel];
+    const components = [FrontPage, LobbyPage, OnlineUsersPanel, ChatPanel];
 
     // This function initializes the UI
     const initialize = function() {
