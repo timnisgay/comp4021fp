@@ -13,5 +13,10 @@
   "avatar": "Snake",
   "name": "testing1",
   "password": "$2b$10$kghIGkoLuY5oXq3arqkB9eAqDwdaY.PQyocd5yPLh.zMqbP3Gjq2W"
+ },
+ "aa": {
+  "avatar": "Rabbit Face",
+  "name": "aa",
+  "password": "$2b$10$sc.UV0VjSWf11kXEcQ6m6evG54paLd82y1smi8Ih3/QIWRQyWET9G"
  }
 }
