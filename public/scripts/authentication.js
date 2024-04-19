@@ -20,13 +20,7 @@ const Authentication = (function() {
         // A. Preparing the user data
         //
         const userJson = JSON.stringify({username, password});
-        console.log(userJson);
  
-        //
-        // B. Sending the AJAX request to the server
-        // F. Processing any error returned by the server
-        // H. Handling the success response from the server
-        //
         fetch("/signin", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -39,7 +33,6 @@ const Authentication = (function() {
                     onSuccess();
                 }
                 else if (onError) onError(json.error);
-
             })
             .catch((err) => {
                 console.log("Error!");
@@ -54,11 +47,6 @@ const Authentication = (function() {
     //                 request fails in this form `onError(error)`
     const validate = function(onSuccess, onError) {
 
-        //
-        // A. Sending the AJAX request to the server
-        // C. Processing any error returned by the server
-        // E. Handling the success response from the server
-        //
         fetch("/validate")
             .then((res) => res.json())
             .then((json) => {

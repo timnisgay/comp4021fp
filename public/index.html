@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bomberman</title>
+    <title>A Song of Ice and Fire</title>
     <script src="game_scripts/playground.js"></script>
     <script src="game_scripts/player.js"></script>
     <script src="game_scripts/sprite.js"></script>
@@ -14,8 +14,77 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Game play screen -->
-    <div>
+    <!-- Game Front Page -->
+    <div id="front-page" class="page-container col">
+        <div id="project-title">
+            <h1>A Song of Ice and Fire</h1>
+        </div>
+
+        <form id="signin-form" class="col">
+            <div class="caption">SIGN IN WITH YOUR ACCOUNT</div>
+            <div class="spacer-0"></div>
+            <input id="signin-username" placeholder="Enter your username"></input>
+            <input id="signin-password" type="password" placeholder="Enter your password"></input>
+            <div class="spacer-0"></div>
+            <div class="row two-button-set">
+                <button type="submit">Sign In</button>
+                <div class="spacer-0"></div>
+                <button type="button" id="signin-new-user">New User</button>
+            </div>
+            <div id="signin-message" class="warning center"></div>
+            <div class="spacer-grow"></div>
+        </form>
+
+        <form id="register-form" class="col">
+            <div class="caption">OR, REGISTER IF YOU DO NOT HAVE ONE</div>
+            <div class="spacer-0"></div>
+            <input id="register-username" maxlength="10" placeholder="Enter your username"></input>
+            <input id="register-password" type="password" placeholder="Enter your password"></input>
+            <input id="register-confirm" type="password" placeholder="Enter your password again"></input>
+            <div class="spacer-0"></div>
+            <div class="row two-button-set">
+                <button type="submit">Register</button>
+                <div class="spacer-0"></div>
+                <button type="button" id="register-cancel">Cancel</button>
+            </div>
+            <div id="register-message" class="warning center"></div>
+        </form>
+        <div class="spacer-4"></div>
+        <button id="button-to-instruction">Instructions</button>
+    </div>
+
+    <!-- Instruction Page/Overlay -->
+    <div id="instruction-page">
+
+    </div>
+
+    <!-- Lobby Page -->
+    <div id="lobby-page" class="page-container col">
+        <!-- top part -->
+        <div id="looby-header" class="row" style="justify-content: space-between;">
+            <div id="lobby-title">
+                <h1>A Song of Ice and Fire</h1>
+            </div>
+            <button id="lobby-logout">Logout</button>
+        </div>
+
+        <!-- main part -->
+        <div class="row" style="justify-content: space-evenly;">
+            <div id="lobby-players-list">
+                TO BE IMPLEMENTED
+            </div>
+            <div>
+                <div id="lobby-self-stats">
+                    TO BE IMPLEMENTED
+                </div>
+                <button id="lobby-join-game">Join Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Play Page -->
+    <!-- Gary's skeleton -->
+    <!-- <div>
         <div style="float:left">
             <canvas id="mainPlayground" width="1300px" height="900px" tabindex="1" onkeydown="keyPressHandler(event)"></canvas>
             <script> init() </script>
@@ -53,55 +122,14 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- part of lab 5 code about login and register -->
-    <div id="signin-overlay" class="overlay row">
-        <div class="content shadow row">
-            <form id="signin-form" class="col">
-                <div class="caption">SIGN IN WITH YOUR ACCOUNT</div>
-                <div class="spacer-0"></div>
-                <input id="signin-username" placeholder="Enter your username"></input>
-                <input id="signin-password" type="password" placeholder="Enter your password"></input>
-                <div class="spacer-0"></div>
-                <button type="submit">Sign In</button>
-                <div id="signin-message" class="warning center"></div>
-                <div class="spacer-grow"></div>
-            </form>
-
-            <div class="spacer-0"></div>
-
-            <form id="register-form" class="col">
-                <div class="caption">OR, REGISTER IF YOU DO NOT HAVE ONE</div>
-                <div class="spacer-0"></div>
-                <input id="register-username" maxlength="10" placeholder="Enter your username"></input>
-                <select id="register-avatar">
-                    <option value="">Select your avatar</option>
-                </select>
-                <input id="register-name" maxlength="16" placeholder="Enter your name"></input>
-                <input id="register-password" type="password" placeholder="Enter your password"></input>
-                <input id="register-confirm" type="password" placeholder="Enter your password again"></input>
-                <div class="spacer-0"></div>
-                <button type="submit">Register</button>
-                <div id="register-message" class="warning center"></div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Game Start Page -->
-
-    <!-- Instruction Page/Overlay -->
-
-    <!-- Lobby Page -->
-
-    <!-- Game Play Page -->
+    </div> -->
 
     <!-- Game End Page -->
 
-    <script src="scripts/avatar.js"></script>
     <script src="scripts/ui.js"></script>
     <script src="scripts/registration.js"></script>
     <script src="scripts/authentication.js"></script>
+    <script src="scripts/socket.js"></script>
     <script src="/socket.io/socket.io.min.js"></script>
     <script>
     $(function() {
@@ -111,11 +139,11 @@
         // Validate the signin
         Authentication.validate(
             () => {
-                SignInForm.hide();
-                UserPanel.update(Authentication.getUser());
-                UserPanel.show();
+                FrontPage.hide();
+                LobbyPage.update(Authentication.getUser());
+                LobbyPage.show();
             },
-            () => { SignInForm.show(); }
+            () => { FrontPage.show(); }
         );
     });
     </script>
