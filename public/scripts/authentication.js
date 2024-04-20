@@ -16,9 +16,6 @@ const Authentication = (function() {
     //                 request fails in this form `onError(error)`
     const signin = function(username, password, onSuccess, onError) {
 
-        //
-        // A. Preparing the user data
-        //
         const userJson = JSON.stringify({username, password});
  
         fetch("/signin", {
@@ -35,7 +32,7 @@ const Authentication = (function() {
                 else if (onError) onError(json.error);
             })
             .catch((err) => {
-                console.log("Error!");
+                console.log("Error! ", err);
                 onError(err);
             });
     };
@@ -58,7 +55,7 @@ const Authentication = (function() {
 
             })
             .catch((err) => {
-                console.log("Error!");
+                console.log("Error! ", err);
                 onError(err);
             });
     };
@@ -81,7 +78,7 @@ const Authentication = (function() {
 
             })
             .catch((err) => {
-                console.log("Error!");
+                console.log("Error! ", err);
                 onError(err);
             });
     };

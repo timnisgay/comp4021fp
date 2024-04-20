@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
 
         const {username} = socket.request.session.user;
         onlineUsers[username] = {username};
-        io.emit("add user", JSON.stringify(socket.request.session.user));
+        // io.emit("add user", JSON.stringify(socket.request.session.user));
 
         console.log(onlineUsers);
 
@@ -124,30 +124,35 @@ io.on("connection", (socket) => {
                 if(index > -1) {
                     players.splice(index, 1);
                     console.log(username, "is removed from players, current players: ", players);
+                    io.emit("remove player", JSON.stringify(username));
                 }
             }
             
             delete onlineUsers[username];
-            io.emit("remove user", JSON.stringify(socket.request.session.user));
+            //io.emit("remove user", JSON.stringify(socket.request.session.user));
         });
 
-        socket.on("get users", () => {
-            socket.emit("users", JSON.stringify(onlineUsers));
-        });
+        //actually we dont need to get users
+        // socket.on("get users", () => {
+        //     socket.emit("users", JSON.stringify(onlineUsers));
+        // });
 
         socket.on("get players", () => {
             socket.emit("players", JSON.stringify(players));
         });
 
         socket.on("join game", () => {
-            const len = players.push(username);
-            console.log(len);
-
-            if (len === 4) {
-                io.emit("start game");
-            } else {
-                io.emit("add player", username);
-            }            
+            if (!players.includes(username) && players.length < 4) {
+                const len = players.push(username);
+                console.log(len);
+                console.log("current players: ", players);
+    
+                if (len === 4) {
+                    io.emit("start game");
+                } else {
+                    io.emit("add player", JSON.stringify(username));
+                }     
+            }
         });
 
         socket.on("end game", (data) => {

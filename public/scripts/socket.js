@@ -13,9 +13,6 @@ const Socket = (function() {
 
         // Wait for the socket to connect successfully
         socket.on("connect", () => {
-            // Get the online user list
-            socket.emit("get users");
-
             // Get current player list
             socket.emit("get players");
             
@@ -23,50 +20,33 @@ const Socket = (function() {
             socket.emit("get own statistics");
         });
 
-        // Set up the users event
-        socket.on("users", (onlineUsers) => {
-            onlineUsers = JSON.parse(onlineUsers);
-
-            // Show the online users
-            OnlineUsersPanel.update(onlineUsers);
-        });
-
         // Set up the players event
         socket.on("players", (players) => {
             players = JSON.parse(players);
-
+            console.log(players);
             //TODO: show the players
-
-        });
-
-        // Set up the add user event
-        socket.on("add user", (user) => {
-            user = JSON.parse(user);
-
-            // Add the online user
-            OnlineUsersPanel.addUser(user);
-        });
-
-        // Set up the remove user event
-        socket.on("remove user", (user) => {
-            user = JSON.parse(user);
-
-            // Remove the online user
-            OnlineUsersPanel.removeUser(user);
+            LobbyPage.update(players);
         });
 
         // Set up the add player event
         socket.on("add player", (name) => {
             name = JSON.parse(name);
+            console.log(name);
+            LobbyPage.addPlayer(name);
+        });
 
-            // TODO: show the player name in the lobby
-
+        socket.on("remove player", (name) => {
+            name = JSON.parse(name);
+            console.log(name);
+            LobbyPage.removePlayer(name);
         });
 
         // Set up the start game event
         socket.on("start game", () => {
             // TODO: start the game, change to another page!
-            
+            LobbyPage.hide();
+            initPlayground();
+            GamePlayPage.show();
         });
 
         // Set up the end game event

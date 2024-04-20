@@ -18,7 +18,6 @@ const FrontPage = (function() {
             Authentication.signin(username, password,
                 () => {
                     hide();
-                    LobbyPage.update(Authentication.getUser());
                     LobbyPage.show();
 
                     Socket.connect();
@@ -109,14 +108,16 @@ const LobbyPage = (function() {
         // TODO: actual handle all related sockets
         // rn it only put the player into game for debug purpose
         $("#lobby-join-game").on("click", () => {
-            $("#lobby-page").hide();
-            initPlayground();
-            $("#game-play-page").show();
+            // $("#lobby-page").hide();
+            // initPlayground();
+            // $("#game-play-page").show();
+
+            Socket.joinGame();
         });
     };
 
     // This function shows the form with the user
-    const show = function(user) {
+    const show = function() {
         $("#lobby-page").show();
     };
 
@@ -125,128 +126,75 @@ const LobbyPage = (function() {
         $("#lobby-page").hide();
     };
 
-    // This function updates the user stats
-    const update = function(user) {
-        if (user) {
-            $("#lobby-page .user-name").text(user.name);
-        }
-        else {
-            $("#lobby-page .user-name").text("");
-        }
-    };
+    // This function updates the players area
+    const update = function(players) {
+        const playerArrayArea = $("#lobby-players-list");
 
-    return { initialize, show, hide, update };
-})();
+        playerArrayArea.empty();
 
-const OnlineUsersPanel = (function() {
-    // This function initializes the UI
-    const initialize = function() {};
-
-    // This function updates the online users panel
-    const update = function(onlineUsers) {
-        const onlineUsersArea = $("#online-users-area");
-
-        // Clear the online users area
-        onlineUsersArea.empty();
-
-		// Get the current user
-        const currentUser = Authentication.getUser();
-
-        // Add the user one-by-one
-        for (const username in onlineUsers) {
-            if (username != currentUser.username) {
-                onlineUsersArea.append(
-                    $("<div id='username-" + username + "'></div>")
-                        .append(UI.getUserDisplay(onlineUsers[username]))
+        if (players !== 0) {
+            for (const playerName of players) {
+                playerArrayArea.append(
+                    $("<div id='username-" + playerName + "'></div>")
+                    .append(playerName)
                 );
             }
         }
     };
 
-    // This function adds a user in the panel
-	const addUser = function(user) {
-        const onlineUsersArea = $("#online-users-area");
-		
-		// Find the user
-		const userDiv = onlineUsersArea.find("#username-" + user.username);
-		
-		// Add the user
-		if (userDiv.length == 0) {
-			onlineUsersArea.append(
-				$("<div id='username-" + user.username + "'></div>")
-					.append(UI.getUserDisplay(user))
-			);
-		}
-	};
+    const addPlayer = function(playerName) {
+        const playerArrayArea = $("#lobby-players-list");
 
-    // This function removes a user from the panel
-	const removeUser = function(user) {
-        const onlineUsersArea = $("#online-users-area");
-		
-		// Find the user
-		const userDiv = onlineUsersArea.find("#username-" + user.username);
-		
-		// Remove the user
-		if (userDiv.length > 0) userDiv.remove();
-	};
+        //find the player
+        const playerDiv = playerArrayArea.find("#username-" + playerName);
 
-    return { initialize, update, addUser, removeUser };
-})();
-
-const ChatPanel = (function() {
-	// This stores the chat area
-    let chatArea = null;
-
-    // This function initializes the UI
-    const initialize = function() {
-		// Set up the chat area
-		chatArea = $("#chat-area");
-
-        // Submit event for the input form
-        $("#chat-input-form").on("submit", (e) => {
-            // Do not submit the form
-            e.preventDefault();
-
-            // Get the message content
-            const content = $("#chat-input").val().trim();
-
-            // Post it
-            Socket.postMessage(content);
-
-			// Clear the message
-            $("#chat-input").val("");
-        });
- 	};
-
-    // This function updates the chatroom area
-    const update = function(chatroom) {
-        // Clear the online users area
-        chatArea.empty();
-
-        // Add the chat message one-by-one
-        for (const message of chatroom) {
-			addMessage(message);
+        //Add the player
+        if (playerDiv.length == 0) {
+            playerArrayArea.append(
+               $("<div id='username-" + playerName + "'></div>")
+                .append(playerName)
+            );
         }
     };
 
-    // This function adds a new message at the end of the chatroom
-    const addMessage = function(message) {
-		const datetime = new Date(message.datetime);
-		const datetimeString = datetime.toLocaleDateString() + " " +
-							   datetime.toLocaleTimeString();
+    const removePlayer = function(playerName) {
+        const playerArrayArea = $("#lobby-players-list");
 
-		chatArea.append(
-			$("<div class='chat-message-panel row'></div>")
-				.append(UI.getUserDisplay(message.user))
-				.append($("<div class='chat-message col'></div>")
-					.append($("<div class='chat-date'>" + datetimeString + "</div>"))
-					.append($("<div class='chat-content'>" + message.content + "</div>"))
-				)
-		);
-		chatArea.scrollTop(chatArea[0].scrollHeight);
+        //find the player
+        const playerDiv = playerArrayArea.find("#username-" + playerName);
+
+        //Remove the player
+        if (playerDiv.length > 0) playerDiv.remove();
     };
 
-    return { initialize, update, addMessage };
+    return { initialize, show, hide, update, addPlayer, removePlayer };
+})();
+
+const GamePlayPage = (function() {
+    // This function initializes the UI
+    const initialize = function() {
+        // Hide it
+        $("#game-play-page").hide();
+
+        //TODO
+    };
+
+    // This function shows the form with the user
+    const show = function() {
+        $("#game-play-page").show();
+    };
+
+    // This function hides the form
+    const hide = function() {
+        $("#game-play-page").hide();
+    };
+
+    // This function updates the user stats
+    const update = function(user) {
+        //TODO
+    };
+
+    return { initialize, show, hide, update };
 })();
 
 const UI = (function() {
@@ -257,7 +205,7 @@ const UI = (function() {
     };
 
     // The components of the UI are put here
-    const components = [FrontPage, LobbyPage];
+    const components = [FrontPage, LobbyPage, GamePlayPage];
 
     // This function initializes the UI
     const initialize = function() {
