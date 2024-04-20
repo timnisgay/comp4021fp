@@ -111,7 +111,7 @@ const LobbyPage = (function() {
         $("#lobby-join-game").on("click", () => {
             $("#lobby-page").hide();
             initPlayground();
-            $("#gameplayPage").show();
+            $("#game-play-page").show();
         });
     };
 
@@ -257,7 +257,7 @@ const UI = (function() {
     };
 
     // The components of the UI are put here
-    const components = [FrontPage, LobbyPage, OnlineUsersPanel, ChatPanel];
+    const components = [FrontPage, LobbyPage];
 
     // This function initializes the UI
     const initialize = function() {

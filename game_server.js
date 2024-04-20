@@ -30,13 +30,10 @@ function containWordCharsOnly(text) {
 
 // Handle the /register endpoint
 app.post("/register", (req, res) => {
-    // Get the JSON data from the body
     const { username, password } = req.body;
 
-    // D. Reading the users.json file
     const users = JSON.parse(fs.readFileSync("data/users.json"));
 
-    // E. Checking for the user data correctness
     if (!username || !password) {
         res.json({status: "error", error: "username /password is empty!"});
         return;
@@ -50,26 +47,20 @@ app.post("/register", (req, res) => {
         return;
     }
 
-    // G. Adding the new user account
     const hash = bcrypt.hashSync(password, 10);
     users[username] = { password: hash };
 
-    // H. Saving the users.json file
     fs.writeFileSync("data/users.json", JSON.stringify(users, null, " "));
 
-    // I. Sending a success response to the browser
     res.json({status: "success"});
 });
 
 // Handle the /signin endpoint
 app.post("/signin", (req, res) => {
-    // Get the JSON data from the body
     const { username, password } = req.body;
 
-    // D. Reading the users.json file
     const users = JSON.parse(fs.readFileSync("data/users.json"));
 
-    // E. Checking for username/password
     if (username in users) {
         if (!bcrypt.compareSync(password, users[username].password)) {
             res.json({status: "error", error: "username /password incorrect!"});
@@ -80,20 +71,17 @@ app.post("/signin", (req, res) => {
         return;
     }
 
-    // G. Sending a success response with the user account
     req.session.user = {username};
     res.json({status: "success", user: {username}});
 });
 
 // Handle the /validate endpoint
 app.get("/validate", (req, res) => {
-    // B. Getting req.session.user
     if (!req.session.user) {
         res.json({status: "error", error: "You have not signed in."});
         return;
     }
 
-    // D. Sending a success response with the user account
     res.json({ status: "success", user: req.session.user });
 });
 
@@ -118,8 +106,7 @@ io.use((socket, next) => {
 });
 
 const onlineUsers = {};
-let players = {};
-let indexMarker = [];
+let players = [];
 
 io.on("connection", (socket) => {
 
@@ -132,8 +119,12 @@ io.on("connection", (socket) => {
         console.log(onlineUsers);
 
         socket.on("disconnect", () => {
-            if(username in players) {
-                delete players[username];
+            if(players.includes(username)) {
+                const index = players.indexOf(username);
+                if(index > -1) {
+                    players.splice(index, 1);
+                    console.log(username, "is removed from players, current players: ", players);
+                }
             }
             
             delete onlineUsers[username];
@@ -149,11 +140,10 @@ io.on("connection", (socket) => {
         });
 
         socket.on("join game", () => {
-            //TODO: procedure to join the user to the players
+            const len = players.push(username);
+            console.log(len);
 
-
-            //TODO: broadcast that player joined the game
-            if (Object.keys(players).length === 4) {
+            if (len === 4) {
                 io.emit("start game");
             } else {
                 io.emit("add player", username);

@@ -13,5 +13,8 @@
  },
  "bb": {
   "password": "$2b$10$YSevncNfWzelvsQPNPRdWuplVTUUjcCTSKhqZtY9PZS7Uu/45C0EW"
+ },
+ "test2": {
+  "password": "$2b$10$g6QymU/gx1ZLEXWpBa3MxOuFHTs24rhMzLxMMXANr.Q3L6e3iEN1K"
  }
 }

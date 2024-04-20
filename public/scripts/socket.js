@@ -16,8 +16,11 @@ const Socket = (function() {
             // Get the online user list
             socket.emit("get users");
 
-            // Get player list
+            // Get current player list
             socket.emit("get players");
+            
+            // Get own statistics
+            socket.emit("get own statistics");
         });
 
         // Set up the users event

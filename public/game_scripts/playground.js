@@ -54,7 +54,7 @@ function initPlayground() {
 
     socket = Socket.getSocket();
 
-    canvas = document.getElementById("mainPlayground");
+    canvas = document.getElementById("main-playground");
     context = canvas.getContext("2d");
     context.imageSmoothingEnabled = false;
 

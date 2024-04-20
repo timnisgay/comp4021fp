@@ -271,7 +271,7 @@ button.icon:active {
 }
 
 /* play page */
-#mainPlayground {
+#main-playground {
 	position: relative;
 	width: 73vw;
 	height: 90vh;
@@ -279,7 +279,7 @@ button.icon:active {
 	top:5vmin;
 }
 
-.playerStatContainer {
+.player-stat-container {
 	display: block;
 	position: relative;
 	top: 5vmin;
@@ -304,11 +304,11 @@ button.icon:active {
 	float: right;
 }
 
-#playerInfo p{
+#player-info p{
 	margin: 3vh 0;
 	text-align: center;
 }
 
-.playerStatContainer p{
+.player-stat-container p{
 	margin: 1vh 1vw;
 }
