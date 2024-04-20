@@ -6,9 +6,6 @@
     <script src="game_scripts/player.js"></script>
     <script src="game_scripts/sprite.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-    </script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -84,7 +81,7 @@
 
     <!-- Game Play Page -->
     <!-- Gary's skeleton -->
-    <!-- <div>
+    <div id="gameplayPage" style="display: none;">
         <div style="float:left">
             <canvas id="mainPlayground" width="1300px" height="900px" tabindex="1" onkeydown="keyPressHandler(event)"></canvas>
             <script> init() </script>
@@ -122,7 +119,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Game End Page -->
 
@@ -130,7 +127,6 @@
     <script src="scripts/registration.js"></script>
     <script src="scripts/authentication.js"></script>
     <script src="scripts/socket.js"></script>
-    <script src="/socket.io/socket.io.min.js"></script>
     <script>
     $(function() {
         // Initialize the UI

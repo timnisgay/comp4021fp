@@ -82,7 +82,7 @@ app.post("/signin", (req, res) => {
 
     // G. Sending a success response with the user account
     req.session.user = {username};
-    console.log(req.session.user);
+    console.log(req.session.user, "signed in");
     res.json({status: "success", user: {username}});
 });
 
@@ -102,7 +102,7 @@ app.get("/validate", (req, res) => {
 app.get("/signout", (req, res) => {
 
     // Deleting req.session.user
-    console.log(req.session.user);
+    console.log(req.session.user, "signed out");
     delete req.session.user;
 
     // Sending a success response
@@ -123,7 +123,11 @@ const onlineUsers = {};
 let players = {};
 
 io.on("connection", (socket) => {
+
     if (socket.request.session.user) {
+
+        console.log("connected");
+
         const {username} = socket.request.session.user;
         onlineUsers[username] = {username};
         io.emit("add user", JSON.stringify(socket.request.session.user));

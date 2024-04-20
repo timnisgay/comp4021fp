@@ -105,6 +105,13 @@ const LobbyPage = (function() {
                 }
             );
         });
+
+        // TODO: actual handle all related sockets
+        // rn it only put the player into game for debug purpose
+        $("#lobby-join-game").on("click", () => {
+            $("#lobby-page").hide();
+            $("#gameplayPage").show();
+        });
     };
 
     // This function shows the form with the user
