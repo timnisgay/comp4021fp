@@ -82,7 +82,6 @@ app.post("/signin", (req, res) => {
 
     // G. Sending a success response with the user account
     req.session.user = {username};
-    console.log(req.session.user, "signed in");
     res.json({status: "success", user: {username}});
 });
 
@@ -102,7 +101,6 @@ app.get("/validate", (req, res) => {
 app.get("/signout", (req, res) => {
 
     // Deleting req.session.user
-    console.log(req.session.user, "signed out");
     delete req.session.user;
 
     // Sending a success response
@@ -121,16 +119,17 @@ io.use((socket, next) => {
 
 const onlineUsers = {};
 let players = {};
+let indexMarker = [];
 
 io.on("connection", (socket) => {
 
     if (socket.request.session.user) {
 
-        console.log("connected");
-
         const {username} = socket.request.session.user;
         onlineUsers[username] = {username};
         io.emit("add user", JSON.stringify(socket.request.session.user));
+
+        console.log(onlineUsers);
 
         socket.on("disconnect", () => {
             if(username in players) {
@@ -152,6 +151,7 @@ io.on("connection", (socket) => {
         socket.on("join game", () => {
             //TODO: procedure to join the user to the players
 
+
             //TODO: broadcast that player joined the game
             if (Object.keys(players).length === 4) {
                 io.emit("start game");
@@ -169,8 +169,18 @@ io.on("connection", (socket) => {
             io.emit("end game", name);
         });
 
+        // player tells server its gonna move
+        // server add in the indicator of which player it is 
+        // the final json broadcasted to all players for them to display themselves
+        // no validation done on server side, so a player can send a move request 300 times per second
+        // and all of them would be considered valid
+        // who needs anti cheat when theres literally a cheat button anyway
         socket.on("move", (data) => {
-            //TODO: broadcast the movement to all players
+
+            newData = JSON.parse(data);
+            newData = { ...newData, playerID: 0};
+
+            io.emit("move", JSON.stringify(newData));
         });
     }
 });

@@ -110,6 +110,7 @@ const LobbyPage = (function() {
         // rn it only put the player into game for debug purpose
         $("#lobby-join-game").on("click", () => {
             $("#lobby-page").hide();
+            initPlayground();
             $("#gameplayPage").show();
         });
     };

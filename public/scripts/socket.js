@@ -73,9 +73,8 @@ const Socket = (function() {
 
         // Set up the move event
         socket.on("move", (data) => {
-            data = JSON.parse(data);
-            //TODO: from data, update the movement of corresponding player
-
+            parsedData = JSON.parse(data);
+            movePlayer(parsedData["playerID"], parsedData["x"], parsedData["y"]);
         });
     };
 

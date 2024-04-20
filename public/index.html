@@ -2,9 +2,6 @@
 <html>
 <head>
     <title>A Song of Ice and Fire</title>
-    <script src="game_scripts/playground.js"></script>
-    <script src="game_scripts/player.js"></script>
-    <script src="game_scripts/sprite.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -81,10 +78,12 @@
 
     <!-- Game Play Page -->
     <!-- Gary's skeleton -->
+    <script src="game_scripts/playground.js"></script>
+    <script src="game_scripts/player.js"></script>
+    <script src="game_scripts/sprite.js"></script>
     <div id="gameplayPage" style="display: none;">
         <div style="float:left">
             <canvas id="mainPlayground" width="1300px" height="900px" tabindex="1" onkeydown="keyPressHandler(event)"></canvas>
-            <script> init() </script>
         </div>
         
         <div class="playerStatContainer" style="float:right">

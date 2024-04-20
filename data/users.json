@@ -10,5 +10,8 @@
  },
  "aa": {
   "password": "$2b$10$sc.UV0VjSWf11kXEcQ6m6evG54paLd82y1smi8Ih3/QIWRQyWET9G"
+ },
+ "bb": {
+  "password": "$2b$10$YSevncNfWzelvsQPNPRdWuplVTUUjcCTSKhqZtY9PZS7Uu/45C0EW"
  }
 }

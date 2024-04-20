@@ -15,7 +15,7 @@ var buffer;
 
 // toggles if buffer mechanic will be allowed, it might make the game feel sluggish sometime
 const enableBuffer = true;
-
+var socket;
 
 // each tile 50px for now
 // so it is 26x18
@@ -50,7 +50,10 @@ const codeToSpriteCoordDict = {
     "G1": [32, 208]
 };
 
-function init() {
+function initPlayground() {
+
+    socket = Socket.getSocket();
+
     canvas = document.getElementById("mainPlayground");
     context = canvas.getContext("2d");
     context.imageSmoothingEnabled = false;
@@ -58,14 +61,14 @@ function init() {
     spritesheet.src = "assets/sprite.png";
     spritesheet.decode()
         .then(() => {
-            initPlayground();
+            initPlaygroundCanvas();
         })
         .catch(() => {
             console.log("why is this logged everytime when it is not even error bruhhhhhh");
         });
 }
 
-function initPlayground() {
+function initPlaygroundCanvas() {
 
     // prints out the playground according to the above 2darray
     var x = 0, y = 0;
@@ -97,13 +100,16 @@ function keyPressHandler(event) {
 
         lastTimeMoved = timeNow;
         buffer = null;
+        var data;
 
         switch(event.key.toLowerCase()) {
-            case "w": movePlayer(0, 0, -1); break;
-            case "a": movePlayer(0, -1, 0); break;
-            case "s": movePlayer(0, 0, 1); break;
-            case "d": movePlayer(0, 1, 0); break;
+            case "w": data = {x: 0, y: -1}; break;
+            case "a": data = {x: -1, y: 0}; break;
+            case "s": data = {x: 0, y: 1}; break;
+            case "d": data = {x: 1, y: 0}; break;
         }
+
+        socket.emit("move", JSON.stringify(data));
     }
     else if(enableBuffer){
 
@@ -116,6 +122,9 @@ function keyPressHandler(event) {
 }
 
 function movePlayer(playerIndex, moveX, moveY) {
+
+    console.log(playerIndex);
+
     const player = playerList[playerIndex];
     const lastTile = player.getPlayerGridPos();
 
