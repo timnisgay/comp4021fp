@@ -106,19 +106,14 @@ const LobbyPage = (function() {
         });
 
         // TODO: actual handle all related sockets
-        // rn it only put the player into game for debug purpose
         $("#lobby-join-game").on("click", () => {
-            // $("#lobby-page").hide();
-            // initPlayground();
-            // $("#game-play-page").show();
-
-            Socket.joinGame();
+            // moved socket.joinGame into playground, so the sprite is always loaded first
+            initPlayground();
         });
 
         $("#debug-join-game").on("click", () => {
-            Socket.joinGame();
-            $("#lobby-page").hide();
             initPlayground();
+            $("#lobby-page").hide();
             $("#game-play-page").show();
         });
     };

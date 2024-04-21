@@ -107,6 +107,54 @@ io.use((socket, next) => {
 
 const onlineUsers = {};
 let players = [-1, -1, -1, -1];
+let playerCoords = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+// 4 indexes refer to 4 players, the first element is direction, the second element is sprite count
+let playerSpriteCondition = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+// exist to get what was supposed to replace the player/object after it moved/vanished
+const boardInit = 
+[
+    ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2"]
+];
+// the actual board state, modify this one for game related actions
+const boardCurrent = 
+[
+    ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2"]
+];
+
 
 io.on("connection", (socket) => {
 
@@ -141,13 +189,16 @@ io.on("connection", (socket) => {
 
         socket.on("join game", () => {
             if (!players.includes(username) && getPlayerLength() < 4) {
-                if(addPlayer(username) != -1) {
+                const playerID = addPlayer(username)
+                if(playerID != -1) {
 
                     const len = getPlayerLength();
 
-                    console.log(len);
-                    console.log("current players: ", players);
-        
+                    //console.log(len);
+                    //console.log("current players: ", players);
+
+                    addPlayerOnBoard(playerID);
+
                     if (len === 4) {
                         io.emit("start game");
                     } else {
@@ -175,19 +226,7 @@ io.on("connection", (socket) => {
         socket.on("move", (data) => {
 
             newData = JSON.parse(data);
-            newData = { ...newData, playerID: 0};
-
-            io.emit("move", JSON.stringify(newData));
-        });
-
-        socket.on("getInitPlayer", () => {
-
-            const initSpawnPoint = [[0,0], [23, 0], [0, 15], [23, 15]];
-
-            const index = players.indexOf(username);
-            data = {coords: initSpawnPoint[index], playerID: index};
-
-            io.emit("initPlayer", JSON.stringify(data));
+            playerMove(getPlayerID(username), newData["x"], newData["y"]);
         });
     }
 });
@@ -203,6 +242,7 @@ function addPlayer(username) {
     if(index == -1) return -1;
 
     players[index] = username;
+    return index;
 }
 
 // returns first player slot that is empty, -1 if there are none
@@ -232,10 +272,80 @@ function getPlayerLength() {
     return playerCount;
 }
 
+// returns player list that only contains non -1 value
 function getPlayerList() {
     var playerlist = [];
     for(var i = 0; i < 4; ++i) {
         if(players[i] != -1) playerlist = [...playerlist, players[i]];
     }
     return playerlist;
+}
+
+function getPlayerID(username) {
+    return players.indexOf(username);
+}
+
+function removePlayerOnBoard(playerID) {
+
+}
+
+// tells all client to print the server side map
+function broadcastPrintPlayground() {
+    data = {base: boardInit, overlay: boardCurrent};
+    io.emit("print playground", JSON.stringify(data));
+}
+
+function addPlayerOnBoard(playerID) {
+    const initSpawnPoint = [[1, 1], [24, 1], [1, 16], [24, 16]];
+    var pc = playerCoords[playerID] = initSpawnPoint[playerID];
+    boardCurrent[pc[1]][pc[0]] = "P" + playerID + "20";
+    broadcastPrintPlayground();
+}
+
+// bear witness, the epitome of garbage coding
+function playerMove(playerID, movex, movey) {
+    const playableAreaX = 25;
+    const playableAreaY = 17;
+
+    const playerOldCoord = playerCoords[playerID];
+    const spriteCondition = playerSpriteCondition[playerID];
+
+    // clamp the final coord back within the playable area
+    var newX = Math.min(Math.max(playerOldCoord[0] + movex, 1), playableAreaX - 1);
+    var newY = Math.min(Math.max(playerOldCoord[1] + movey, 1), playableAreaY - 1);
+
+    // determine where the player is facing after the move
+    // it basically explodes if somehow the player is moving diagonally (could it be someone cheating with console :thonk:)
+    // when i said explode, it is more like giving back the wrong direction, nothing is exploding today
+    var moveDirection;
+
+    if(movex > 0) moveDirection = 3;
+    else if(movex < 0) moveDirection = 1;
+    else if(movey > 0) moveDirection = 2;
+    else moveDirection = 0;
+
+    if(spriteCondition[0] == moveDirection) {
+        // w or s, only 3 sprites
+        if(moveDirection == 0 || moveDirection == 2) {
+            spriteCondition[1]++;
+            spriteCondition[1] = spriteCondition[1] % 3;
+        }
+        else if (moveDirection == 1 || moveDirection == 3) {
+            spriteCondition[1]++;
+            spriteCondition[1] = spriteCondition[1] % 4;
+        }
+    }
+    else {
+        spriteCondition[0] = moveDirection;
+        spriteCondition[1] = 0;
+    }
+
+    const playerNewCoord = [newX, newY];
+    boardCurrent[playerOldCoord[1]][playerOldCoord[0]] = boardInit[playerOldCoord[1]][playerOldCoord[0]];
+    boardCurrent[playerNewCoord[1]][playerNewCoord[0]] = "P" + playerID + spriteCondition[0] + spriteCondition[1];
+
+    playerCoords[playerID] = playerNewCoord;
+    playerSpriteCondition[playerID] = spriteCondition;
+
+    broadcastPrintPlayground();
 }

@@ -23,7 +23,6 @@ const Socket = (function() {
         // Set up the players event
         socket.on("players", (players) => {
             players = JSON.parse(players);
-            console.log(players);
             //TODO: show the players
             LobbyPage.update(players);
         });
@@ -31,7 +30,6 @@ const Socket = (function() {
         // Set up the add player event
         socket.on("add player", (name) => {
             name = JSON.parse(name);
-            console.log(name);
             LobbyPage.addPlayer(name);
         });
 
@@ -39,13 +37,13 @@ const Socket = (function() {
             name = JSON.parse(name);
             console.log(name);
             LobbyPage.removePlayer(name);
+            socket.emit("getInitPlayer");
         });
 
         // Set up the start game event
         socket.on("start game", () => {
             // TODO: start the game, change to another page!
             LobbyPage.hide();
-            initPlayground();
             GamePlayPage.show();
         });
 
@@ -54,16 +52,10 @@ const Socket = (function() {
             // TODO: remove the player that is dead, the name should not be the same as this socket
         });
 
-        // Set up the move event
-        socket.on("move", (data) => {
+        socket.on("print playground", (data) => {
             parsedData = JSON.parse(data);
-            movePlayer(parsedData["playerID"], parsedData["x"], parsedData["y"]);
-        });
-
-        // Recieve info for how to init player on the playground
-        socket.on("initPlayer", (data) => {
-            parsedData = JSON.parse(data);
-            initPlayer(parsedData["coords"], parsedData["playerID"]);
+            console.log(parsedData);
+            printPlayground(parsedData);
         });
     };
 

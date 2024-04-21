@@ -19,37 +19,18 @@ var buffer;
 const enableBuffer = true;
 var socket;
 
-// each tile 50px for now
-// so it is 26x18
-// ignore border actual playground is 24x16
 
-
-const boardInit = 
-[
-    ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2"]
-];
-
+// dont question me pls, im on the verge of shooting myself in the foot when im writing this
 const codeToSpriteCoordDict = {
-    "W1": [160, 288],
-    "W2": [176, 288],
-    "G1": [32, 208]
+    "W1": [160, 288], "W2": [176, 288], "G1": [32, 208],
+    "P020": [0, 224], "P021": [16, 224], "P022": [32, 224], "P030": [48, 224], "P031": [64, 224], "P032": [80, 224], "P033": [96, 224],
+    "P000": [112, 224], "P001": [128, 224], "P002": [144, 224], "P010": [160, 224], "P011": [176, 224], "P012": [192, 224], "P013": [208, 224], 
+    "P120": [0, 240], "P121": [16, 240], "P122": [32, 240], "P130": [48, 240], "P131": [64, 240], "P132": [80, 240], "P133": [96, 240],
+    "P100": [112, 240], "P101": [128, 240], "P102": [144, 240], "P110": [160, 240], "P111": [176, 240], "P112": [192, 240], "P113": [208, 240],
+    "P220": [0, 256], "P221": [16, 256], "P222": [32, 256], "P230": [48, 256], "P231": [64, 256], "P232": [80, 256], "P233": [96, 256],
+    "P200": [112, 256], "P201": [128, 256], "P202": [144, 256], "P210": [160, 256], "P211": [176, 256], "P212": [192, 256], "P213": [208, 256],
+    "P320": [0, 272], "P321": [16, 272], "P322": [32, 272], "P330": [48, 272], "P331": [64, 272], "P332": [80, 272], "P333": [96, 272],
+    "P300": [112, 272], "P301": [128, 272], "P302": [144, 272], "P310": [160, 272], "P311": [176, 272], "P312": [192, 272], "P313": [208, 272]
 };
 
 function initPlayground() {
@@ -63,34 +44,11 @@ function initPlayground() {
     spritesheet.src = "assets/sprite.png";
     spritesheet.decode()
         .then(() => {
-            initPlaygroundCanvas();
+            Socket.joinGame();
         })
         .catch(() => {
-            console.log("why is this logged everytime when it is not even error bruhhhhhh");
+            console.log("error, sprite.png doesn't exist or the path is wrong");
         });
-}
-
-function initPlaygroundCanvas() {
-
-    // prints out the playground according to the above 2darray
-    var x = 0, y = 0;
-    for(const row of boardInit) {
-
-        for(const code of row) {
-            context.drawImage(spritesheet, 
-                codeToSpriteCoordDict[code][0], codeToSpriteCoordDict[code][1],
-                spriteSize[0], spriteSize[1],
-                x, y,
-                finalSize[0], finalSize[1]);
-
-            x += finalSize[0];
-        }
-
-        x = 0; 
-        y += finalSize[1];
-    }
-
-    socket.emit("getInitPlayer");
 }
 
 // get info like where to spawn, what sprite to use from the server
@@ -127,27 +85,31 @@ function keyPressHandler(event) {
 
 }
 
-function movePlayer(playerIndex, moveX, moveY) {
-
-    console.log(playerIndex);
-
-    const player = playerList[playerIndex];
-    const lastTile = player.getPlayerGridPos();
-
-    // cover up the previous position with the background (or else the player sprite will remain there)
-    const currentCode = boardInit[lastTile[1] + 1][lastTile[0] + 1];
-    const canvasCoord = localToCanvasCoord(lastTile);
-
-    context.drawImage(spritesheet, 
-        codeToSpriteCoordDict[currentCode][0], codeToSpriteCoordDict[currentCode][1],
-        spriteSize[0], spriteSize[1],
-        canvasCoord[0], canvasCoord[1],
-        finalSize[0], finalSize[1]);
-
-    // player class will handle all other stuff (orientation of sprite, validation)
-    player.movePlayer(moveX, moveY);
-}
-
 function localToCanvasCoord(localCoord) {
     return [localCoord[0] * 50 + 50, localCoord[1] * 50 + 50];
+}
+
+function printPlayground(boardstate) {
+
+    function printLayer(layer) {
+        var x = 0, y = 0;
+        for(const row of layer) {
+
+            for(const code of row) {
+                context.drawImage(spritesheet, 
+                    codeToSpriteCoordDict[code][0], codeToSpriteCoordDict[code][1],
+                    spriteSize[0], spriteSize[1],
+                    x, y,
+                    finalSize[0], finalSize[1]);
+
+                x += finalSize[0];
+            }
+
+            x = 0; 
+            y += finalSize[1];
+        }
+    }
+
+    printLayer(boardstate["base"]);
+    printLayer(boardstate["overlay"]);
 }
