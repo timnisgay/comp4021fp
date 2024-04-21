@@ -136,7 +136,7 @@ io.on("connection", (socket) => {
         // });
 
         socket.on("get players", () => {
-            socket.emit("players", JSON.stringify(players));
+            socket.emit("players", JSON.stringify(getPlayerList()));
         });
 
         socket.on("join game", () => {
@@ -230,4 +230,12 @@ function getPlayerLength() {
     }
 
     return playerCount;
+}
+
+function getPlayerList() {
+    var playerlist = [];
+    for(var i = 0; i < 4; ++i) {
+        if(players[i] != -1) playerlist = [...playerlist, players[i]];
+    }
+    return playerlist;
 }
