@@ -296,11 +296,11 @@ button.icon:active {
 	box-sizing: border-box;
 }
 
-.textLeft {
+.text-left {
 	float: left;
 }
 
-.textRight {
+.text-right {
 	float: right;
 }
 
