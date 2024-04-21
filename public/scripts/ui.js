@@ -90,6 +90,7 @@ const LobbyPage = (function() {
     // This function initializes the UI
     const initialize = function() {
         // Hide it
+        update([-1, -1, -1, -1]);
         $("#lobby-page").hide();
 
         // Click event for the signout button
@@ -133,43 +134,23 @@ const LobbyPage = (function() {
         const playerArrayArea = $("#lobby-players-list");
 
         playerArrayArea.empty();
+        console.log(players);
 
-        if (players !== 0) {
-            for (const playerName of players) {
+        for (let i = 0; i < players.length; i++) {
+            if (players[i] != -1) {
                 playerArrayArea.append(
-                    $("<div id='username-" + playerName + "'></div>")
-                    .append(playerName)
+                    $("<div id='player-" + players[i] + "'></div>")
+                    .append(players[i])
+                );
+            } else {
+                playerArrayArea.append(
+                    $("<div id='player-" + i + "'>waiting for new players...</div>")
                 );
             }
         }
     };
 
-    const addPlayer = function(playerName) {
-        const playerArrayArea = $("#lobby-players-list");
-
-        //find the player
-        const playerDiv = playerArrayArea.find("#username-" + playerName);
-
-        //Add the player
-        if (playerDiv.length == 0) {
-            playerArrayArea.append(
-               $("<div id='username-" + playerName + "'></div>")
-                .append(playerName)
-            );
-        }
-    };
-
-    const removePlayer = function(playerName) {
-        const playerArrayArea = $("#lobby-players-list");
-
-        //find the player
-        const playerDiv = playerArrayArea.find("#username-" + playerName);
-
-        //Remove the player
-        if (playerDiv.length > 0) playerDiv.remove();
-    };
-
-    return { initialize, show, hide, update, addPlayer, removePlayer };
+    return { initialize, show, hide, update };
 })();
 
 const GamePlayPage = (function() {
