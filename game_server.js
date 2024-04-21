@@ -106,10 +106,11 @@ io.use((socket, next) => {
 });
 
 const onlineUsers = {};
-let players = [-1, -1, -1, -1];
-let playerCoords = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+const players = [-1, -1, -1, -1];
+const playerCoords = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
 // 4 indexes refer to 4 players, the first element is direction, the second element is sprite count
-let playerSpriteCondition = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+const playerSpriteCondition = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+const playerSockets = [-1, -1, -1, -1];
 // exist to get what was supposed to replace the player/object after it moved/vanished
 const boardInit = 
 [
@@ -169,7 +170,9 @@ io.on("connection", (socket) => {
         socket.on("disconnect", () => {
             if(players.includes(username)) {
                 if(removePlayer(username) != -1) {
+                    playerSockets[getPlayerID(username)] = -1;
                     console.log(username, "is removed from players, current players: ", players);
+
                     io.emit("remove player", JSON.stringify(username));
                 }
             }
@@ -197,6 +200,7 @@ io.on("connection", (socket) => {
                     //console.log(len);
                     //console.log("current players: ", players);
 
+                    playerSockets[playerID] = socket;
                     addPlayerOnBoard(playerID);
 
                     if (len === 4) {
@@ -291,8 +295,14 @@ function removePlayerOnBoard(playerID) {
 
 // tells all client to print the server side map
 function broadcastPrintPlayground() {
-    data = {base: boardInit, overlay: boardCurrent};
-    io.emit("print playground", JSON.stringify(data));
+    let data = {base: boardInit, overlay: boardCurrent};
+    let jsonData = JSON.stringify(data);
+
+    for(const playerSocket of playerSockets) {
+        if (playerSocket != -1) {
+            playerSocket.emit("print playground", jsonData);
+        }
+    }
 }
 
 function addPlayerOnBoard(playerID) {

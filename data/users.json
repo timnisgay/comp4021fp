@@ -16,5 +16,11 @@
  },
  "test2": {
   "password": "$2b$10$g6QymU/gx1ZLEXWpBa3MxOuFHTs24rhMzLxMMXANr.Q3L6e3iEN1K"
+ },
+ "cc": {
+  "password": "$2b$10$0hS5ZmbsxxkZw1m7SCfLtOBg.lpNVGIGAgADmIpIaBX2DeJj2jbHa"
+ },
+ "dd": {
+  "password": "$2b$10$eNmC1se/QKFMx8lTUaFdROod9GWtjC4.Hcks1K6ObmrVn0fv.PgV."
  }
 }
