@@ -114,6 +114,13 @@ const LobbyPage = (function() {
 
             Socket.joinGame();
         });
+
+        $("#debug-join-game").on("click", () => {
+            Socket.joinGame();
+            $("#lobby-page").hide();
+            initPlayground();
+            $("#game-play-page").show();
+        });
     };
 
     // This function shows the form with the user

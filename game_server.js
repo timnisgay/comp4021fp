@@ -106,7 +106,7 @@ io.use((socket, next) => {
 });
 
 const onlineUsers = {};
-let players = [];
+let players = [-1, -1, -1, -1];
 
 io.on("connection", (socket) => {
 
@@ -120,9 +120,7 @@ io.on("connection", (socket) => {
 
         socket.on("disconnect", () => {
             if(players.includes(username)) {
-                const index = players.indexOf(username);
-                if(index > -1) {
-                    players.splice(index, 1);
+                if(removePlayer(username) != -1) {
                     console.log(username, "is removed from players, current players: ", players);
                     io.emit("remove player", JSON.stringify(username));
                 }
@@ -142,16 +140,20 @@ io.on("connection", (socket) => {
         });
 
         socket.on("join game", () => {
-            if (!players.includes(username) && players.length < 4) {
-                const len = players.push(username);
-                console.log(len);
-                console.log("current players: ", players);
-    
-                if (len === 4) {
-                    io.emit("start game");
-                } else {
-                    io.emit("add player", JSON.stringify(username));
-                }     
+            if (!players.includes(username) && getPlayerLength() < 4) {
+                if(addPlayer(username) != -1) {
+
+                    const len = getPlayerLength();
+
+                    console.log(len);
+                    console.log("current players: ", players);
+        
+                    if (len === 4) {
+                        io.emit("start game");
+                    } else {
+                        io.emit("add player", JSON.stringify(username));
+                    }
+                }  
             }
         });
 
@@ -177,6 +179,16 @@ io.on("connection", (socket) => {
 
             io.emit("move", JSON.stringify(newData));
         });
+
+        socket.on("getInitPlayer", () => {
+
+            const initSpawnPoint = [[0,0], [23, 0], [0, 15], [23, 15]];
+
+            const index = players.indexOf(username);
+            data = {coords: initSpawnPoint[index], playerID: index};
+
+            io.emit("initPlayer", JSON.stringify(data));
+        });
     }
 });
 
@@ -184,3 +196,38 @@ io.on("connection", (socket) => {
 httpServer.listen(8000, () => {
     console.log("The game server has started...");
 });
+
+// custom add player logic, returns -1 if cannot add
+function addPlayer(username) {
+    const index = getFirstAvailableIndex();
+    if(index == -1) return -1;
+
+    players[index] = username;
+}
+
+// returns first player slot that is empty, -1 if there are none
+function getFirstAvailableIndex() {
+    for(var i = 0; i < 4; ++i) {
+        if(players[i] == -1) return i;
+    }
+    return -1;
+}
+
+// returns the removed player index, -1 if username is not a player
+function removePlayer(username) {
+    const index = players.indexOf(username);
+    if(index == -1) return -1;
+
+    players[index] = -1;
+    return index;
+}
+
+// returns the length of user, needs to be implemented in this way because -1 means no player
+function getPlayerLength() {
+    var playerCount = 0;
+    for(var i = 0; i < 4; ++i) {
+        if(players[i] != -1) ++playerCount;
+    }
+
+    return playerCount;
+}

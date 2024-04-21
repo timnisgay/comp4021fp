@@ -70,6 +70,7 @@
                     TO BE IMPLEMENTED
                 </div>
                 <button id="lobby-join-game">Join Game</button>
+                <button id="debug-join-game">DEBUG</button>
             </div>
         </div>
     </div>
@@ -79,7 +80,7 @@
     <script src="game_scripts/player.js"></script>
     <script src="game_scripts/sprite.js"></script>
     <div id="game-play-page" style="display: none;">
-        <div style="float:left">
+        <div class="play-area-container" style="float:left">
             <canvas id="main-playground" width="1300px" height="900px" tabindex="1" onkeydown="keyPressHandler(event)"></canvas>
         </div>
         
@@ -89,14 +90,14 @@
                 <p>Round 1/1</p>
             </div>
             <div id="bomb-stat" style="padding-top: 10vh;">
-                <p>Bomb power detail:</p>
+                <p>Bomb stats:</p>
                 <div style="clear: both;">
                     <p class="text-left">Radius:</p>
-                    <p class="text-right">4 tiles</p>
+                    <p class="text-right">4</p>
                 </div>
                 <div style="clear: both;">
                     <p class="text-left">Max bomb: </p>
-                    <p class="text-right">2 bombs</p>
+                    <p class="text-right">2</p>
                 </div>
             </div>
             <div id="game-play-instruction" style="padding-top: 27vh;">
@@ -107,10 +108,10 @@
                 </div>
                 <div style="clear: both;">
                     <p class="text-left">B</p>
-                    <p class="text-right">Place bomb</p>
+                    <p class="text-right">Bomb</p>
                 </div>
                 <div style="clear: both;">
-                    <p class="text-left">SpaceBar</p>
+                    <p class="text-left">Space</p>
                     <p class="text-right">Cheat</p>
                 </div>
             </div>

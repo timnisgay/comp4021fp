@@ -6,7 +6,9 @@ const spriteSize = [16, 16];
 const finalSize = [50, 50];
 
 const spritesheet = new Image();
-const playerList = [];
+// this refers to the player him/herself
+// everything will be server side, so technically the player dont even need to know who is he/she
+var myPlayer;
 
 // how long must the player wait before they could move one tile;
 const movementCooldown = 150;
@@ -88,8 +90,12 @@ function initPlaygroundCanvas() {
         y += finalSize[1];
     }
 
-    // testing, add one player sin
-    playerList[0] = Player(context, [0, 0], 0, "xd");
+    socket.emit("getInitPlayer");
+}
+
+// get info like where to spawn, what sprite to use from the server
+function initPlayer(coord, playerID) {
+    myPlayer = Player(context, coord, playerID, "xd");
 }
 
 function keyPressHandler(event) {

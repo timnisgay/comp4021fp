@@ -59,6 +59,12 @@ const Socket = (function() {
             parsedData = JSON.parse(data);
             movePlayer(parsedData["playerID"], parsedData["x"], parsedData["y"]);
         });
+
+        // Recieve info for how to init player on the playground
+        socket.on("initPlayer", (data) => {
+            parsedData = JSON.parse(data);
+            initPlayer(parsedData["coords"], parsedData["playerID"]);
+        });
     };
 
     // This function disconnects the socket from the server
