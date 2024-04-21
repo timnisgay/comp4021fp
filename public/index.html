@@ -131,6 +131,7 @@
         Authentication.validate(
             () => {
                 FrontPage.hide();
+                Socket.connect();
                 LobbyPage.show();
             },
             () => { FrontPage.show(); }

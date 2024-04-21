@@ -20,27 +20,15 @@ const Socket = (function() {
             socket.emit("get own statistics");
         });
 
-        // Set up the players event
+        // socket receives the most updated players list, including -1
+        // no matter a player is added or deleted, use this function to update the lobby
         socket.on("players", (players) => {
             players = JSON.parse(players);
-            //TODO: show the players
+            console.log(players);
             LobbyPage.update(players);
         });
 
-        // Set up the add player event
-        socket.on("add player", (name) => {
-            name = JSON.parse(name);
-            LobbyPage.addPlayer(name);
-        });
-
-        socket.on("remove player", (name) => {
-            name = JSON.parse(name);
-            console.log(name);
-            LobbyPage.removePlayer(name);
-            socket.emit("getInitPlayer");
-        });
-
-        // Set up the start game event
+        // server tells socket that there are 4 players already and will now start the game
         socket.on("start game", () => {
             // TODO: start the game, change to another page!
             LobbyPage.hide();
@@ -63,6 +51,12 @@ const Socket = (function() {
     const disconnect = function() {
         socket.disconnect();
         socket = null;
+    };
+
+    const getPlayers = function() {
+        if (socket && socket.connected) {
+            socket.emit("get players");
+        }
     };
 
     // This function tells server this socket joined the game
@@ -91,5 +85,5 @@ const Socket = (function() {
         }
     };
 
-    return { getSocket, connect, disconnect, joinGame, endGame, postMovement};
+    return { getSocket, connect, disconnect, getPlayers, joinGame, endGame, postMovement};
 })();

@@ -172,8 +172,7 @@ io.on("connection", (socket) => {
                 if(removePlayer(username) != -1) {
                     playerSockets[getPlayerID(username)] = -1;
                     console.log(username, "is removed from players, current players: ", players);
-
-                    io.emit("remove player", JSON.stringify(username));
+                    io.emit("players", JSON.stringify(players));
                 }
             }
             
@@ -186,10 +185,13 @@ io.on("connection", (socket) => {
         //     socket.emit("users", JSON.stringify(onlineUsers));
         // });
 
+        //socket get the current players including -1
         socket.on("get players", () => {
-            socket.emit("players", JSON.stringify(getPlayerList()));
+            console.log("current players: ", players);
+            socket.emit("players", JSON.stringify(players));
         });
 
+        //socket joins the game
         socket.on("join game", () => {
             if (!players.includes(username) && getPlayerLength() < 4) {
                 const playerID = addPlayer(username)
@@ -197,8 +199,8 @@ io.on("connection", (socket) => {
 
                     const len = getPlayerLength();
 
-                    //console.log(len);
-                    //console.log("current players: ", players);
+                    console.log(len);
+                    console.log("current players: ", players);
 
                     playerSockets[playerID] = socket;
                     addPlayerOnBoard(playerID);
@@ -206,7 +208,7 @@ io.on("connection", (socket) => {
                     if (len === 4) {
                         io.emit("start game");
                     } else {
-                        io.emit("add player", JSON.stringify(username));
+                        io.emit("players", JSON.stringify(players));
                     }
                 }  
             }
