@@ -113,6 +113,20 @@ function printPlayground(boardstate) {
         }
     }
 
+    function printPlayer(playerSprites) {
+        for(playerSprite of playerSprites) {
+            const spriteCode = playerSprite[0];
+            const playerCoord = playerSprite[1];
+
+            context.drawImage(spritesheet, 
+                codeToSpriteCoordDict[spriteCode][0], codeToSpriteCoordDict[spriteCode][1],
+                spriteSize[0], spriteSize[1],
+                playerCoord[0] * finalSize[0], playerCoord[1] * finalSize[1],
+                finalSize[0], finalSize[1]);
+        }
+    }
+
     printLayer(boardstate["base"]);
     printLayer(boardstate["overlay"]);
+    printPlayer(boardstate["playerSprite"]);
 }

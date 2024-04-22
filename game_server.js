@@ -107,9 +107,9 @@ io.use((socket, next) => {
 
 const onlineUsers = {};
 const players = [-1, -1, -1, -1];
-const playerCoords = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+const playerCoords = [[1, 1], [24, 1], [1, 16], [24, 16]];
 // 4 indexes refer to 4 players, the first element is direction, the second element is sprite count
-const playerSpriteCondition = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+const playerSpriteCondition = [[2, 0], [2, 0], [2, 0], [2, 0]];
 const playerSockets = [-1, -1, -1, -1];
 // exist to get what was supposed to replace the player/object after it moved/vanished
 const boardInit = 
@@ -203,7 +203,7 @@ io.on("connection", (socket) => {
                     console.log("current players: ", players);
 
                     playerSockets[playerID] = socket;
-                    addPlayerOnBoard(playerID);
+                    broadcastPrintPlayground();
 
                     if (len === 4) {
                         io.emit("start game");
@@ -279,13 +279,13 @@ function getPlayerLength() {
 }
 
 // returns player list that only contains non -1 value
-function getPlayerList() {
+/*function getPlayerList() {
     var playerlist = [];
     for(var i = 0; i < 4; ++i) {
         if(players[i] != -1) playerlist = [...playerlist, players[i]];
     }
     return playerlist;
-}
+}*/
 
 function getPlayerID(username) {
     return players.indexOf(username);
@@ -297,7 +297,18 @@ function removePlayerOnBoard(playerID) {
 
 // tells all client to print the server side map
 function broadcastPrintPlayground() {
-    let data = {base: boardInit, overlay: boardCurrent};
+
+    var coordSprite = [];
+
+    for(var i = 0; i < 4; ++i) {
+        if (players[i] != -1) {
+            const psc = playerSpriteCondition[i];
+            const pc = playerCoords[i];
+            coordSprite = [...coordSprite, ["P" + i + psc[0] + psc[1], [pc[0], pc[1]]]];
+        }
+    }
+
+    let data = {base: boardInit, overlay: boardCurrent, playerSprite: coordSprite};
     let jsonData = JSON.stringify(data);
 
     for(const playerSocket of playerSockets) {
@@ -305,13 +316,6 @@ function broadcastPrintPlayground() {
             playerSocket.emit("print playground", jsonData);
         }
     }
-}
-
-function addPlayerOnBoard(playerID) {
-    const initSpawnPoint = [[1, 1], [24, 1], [1, 16], [24, 16]];
-    var pc = playerCoords[playerID] = initSpawnPoint[playerID];
-    boardCurrent[pc[1]][pc[0]] = "P" + playerID + "20";
-    broadcastPrintPlayground();
 }
 
 // bear witness, the epitome of garbage coding
@@ -353,11 +357,7 @@ function playerMove(playerID, movex, movey) {
         spriteCondition[1] = 0;
     }
 
-    const playerNewCoord = [newX, newY];
-    boardCurrent[playerOldCoord[1]][playerOldCoord[0]] = boardInit[playerOldCoord[1]][playerOldCoord[0]];
-    boardCurrent[playerNewCoord[1]][playerNewCoord[0]] = "P" + playerID + spriteCondition[0] + spriteCondition[1];
-
-    playerCoords[playerID] = playerNewCoord;
+    playerCoords[playerID] = [newX, newY];
     playerSpriteCondition[playerID] = spriteCondition;
 
     broadcastPrintPlayground();
