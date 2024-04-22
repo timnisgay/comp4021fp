@@ -65,15 +65,18 @@ function keyPressHandler(event) {
         lastTimeMoved = timeNow;
         buffer = null;
         var data;
-
-        switch(event.key.toLowerCase()) {
-            case "w": data = {x: 0, y: -1}; break;
-            case "a": data = {x: -1, y: 0}; break;
-            case "s": data = {x: 0, y: 1}; break;
-            case "d": data = {x: 1, y: 0}; break;
+        const keyInputted = event.key.toLowerCase();
+        const keyToMovementMap = {
+            "w" : {x: 0, y: -1},
+            "a" : {x: -1, y: 0},
+            "s" : {x: 0, y: 1},
+            "d" : {x: 1, y: 0}
         }
 
-        socket.emit("move", JSON.stringify(data));
+        if(keyToMovementMap[keyInputted] != undefined) {
+            data = keyToMovementMap[keyInputted];
+            socket.emit("move", JSON.stringify(data));
+        }
     }
     else if(enableBuffer){
 

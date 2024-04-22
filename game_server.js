@@ -342,6 +342,7 @@ function playerMove(playerID, movex, movey) {
             spriteCondition[1]++;
             spriteCondition[1] = spriteCondition[1] % 3;
         }
+        // a or d, have 4 sprites
         else if (moveDirection == 1 || moveDirection == 3) {
             spriteCondition[1]++;
             spriteCondition[1] = spriteCondition[1] % 4;
