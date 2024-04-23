@@ -106,11 +106,16 @@ io.use((socket, next) => {
 });
 
 const onlineUsers = {};
+
+// technically i should create a player class to store all these highly repetitive info, but if it works, dont touch it
 const players = [-1, -1, -1, -1];
 const playerCoords = [[1, 1], [24, 1], [1, 16], [24, 16]];
 // 4 indexes refer to 4 players, the first element is direction, the second element is sprite count
 const playerSpriteCondition = [[2, 0], [2, 0], [2, 0], [2, 0]];
 const playerSockets = [-1, -1, -1, -1];
+// 4 indexes again, each means the following: ice trap unlocked, bomb power, bomb limit, current placed bombs
+const playerBombInfo = [[false, 1, 1, 0], [false, 1, 1, 0], [false, 1, 1, 0], [false, 1, 1, 0]];
+
 // exist to get what was supposed to replace the player/object after it moved/vanished
 const boardInit = 
 [
@@ -230,9 +235,14 @@ io.on("connection", (socket) => {
         // and all of them would be considered valid
         // who needs anti cheat when theres literally a cheat button anyway
         socket.on("move", (data) => {
-
             newData = JSON.parse(data);
             playerMove(getPlayerID(username), newData["x"], newData["y"]);
+        });
+
+        // player attempts to place down a bomb
+        socket.on("bomb", (data) => {
+            newData = JSON.parse(data);
+            playerPlaceBomb(getPlayerID(username),newData["bombType"]);
         });
     }
 });
@@ -330,7 +340,10 @@ function playerMove(playerID, movex, movey) {
     var newX = Math.min(Math.max(playerOldCoord[0] + movex, 1), playableAreaX - 1);
     var newY = Math.min(Math.max(playerOldCoord[1] + movey, 1), playableAreaY - 1);
 
-    if(boardInit[newY][newX] == "W1" || boardInit[newY][newX] == "W2") {
+    // collision check, prevent the player from moving if the destination is obstructing
+    // extremely bad hack here, assuming all blocks with a code that starts with "B" means bomb, which are impassable
+    const targetBlock = boardInit[newY][newX];
+    if(targetBlock == "W1" || targetBlock == "W2" || boardCurrent[newY][newX][0] == "B") {
         newX = playerOldCoord[0];
         newY = playerOldCoord[1];
     }
@@ -366,4 +379,51 @@ function playerMove(playerID, movex, movey) {
     playerSpriteCondition[playerID] = spriteCondition;
 
     broadcastPrintPlayground();
+}
+
+function playerPlaceBomb(playerID, bombType) {
+
+    const bombInfo = playerBombInfo[playerID];
+    const bombCoord = playerCoords[playerID];
+
+    // if it is ice trap, check whether the player has unlocked it first
+    if(bombType == "ice" && bombInfo[0]) {
+        // havnt implement ice trap lol
+    }else if (bombType == "normal") {
+        // bomb limit havnt been reached yet, and the tile doesnt already have a bomb
+        if(bombInfo[2] >= bombInfo[3] + 1 && boardCurrent[bombCoord[1]][bombCoord[0]][0] != "B") {
+            bombInfo[3]++;
+            bombCountDownTimer(playerID, bombCoord, 0);
+        }
+    }else {
+        console.log("illegal bomb type was being placed by client!");
+        return;
+    }
+}
+
+function bombCountDownTimer(playerID, bombCoord, countdownStage) {
+    if(countdownStage < 7) {
+        // time to boom
+        if(countdownStage == 6) {
+            boardCurrent[bombCoord[1]][bombCoord[0]] = boardInit[bombCoord[1]][bombCoord[0]];
+            playerBombInfo[playerID][3]--;
+        }else {
+            boardCurrent[bombCoord[1]][bombCoord[0]] = "B" + countdownStage;
+
+            // -------------------------------look at me pls-------------------------------
+            // the second number is the ms needed to advance one frame for the bomb,
+            // there are 6 frames before it explode
+            // i wrote this comment to remind the future me, saving my hairline
+            // -------------------------------look at me pls-------------------------------
+
+            setTimeout(bombCountDownTimer, 500, playerID, bombCoord, ++countdownStage);
+
+
+        }
+
+        broadcastPrintPlayground();
+    }
+    else {
+        console.log("the bomb should have exploded lol");
+    }
 }

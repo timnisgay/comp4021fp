@@ -22,7 +22,8 @@ var socket;
 
 // dont question me pls, im on the verge of shooting myself in the foot when im writing this
 const codeToSpriteCoordDict = {
-    "W1": [160, 288], "W2": [176, 288], "G1": [32, 208],
+    "W1": [160, 288], "W2": [176, 288], "G1": [32, 208], 
+    "B0": [64, 288], "B1": [80, 288], "B2": [96, 288], "B3": [112, 288], "B4": [128, 288], "B5": [144, 288],
     "P020": [0, 224], "P021": [16, 224], "P022": [32, 224], "P030": [48, 224], "P031": [64, 224], "P032": [80, 224], "P033": [96, 224],
     "P000": [112, 224], "P001": [128, 224], "P002": [144, 224], "P010": [160, 224], "P011": [176, 224], "P012": [192, 224], "P013": [208, 224], 
     "P120": [0, 240], "P121": [16, 240], "P122": [32, 240], "P130": [48, 240], "P131": [64, 240], "P132": [80, 240], "P133": [96, 240],
@@ -58,34 +59,46 @@ function initPlayer(coord, playerID) {
 
 function keyPressHandler(event) {
 
-    const timeNow = performance.now();
-
-    if(timeNow - lastTimeMoved >= movementCooldown) {
-
-        lastTimeMoved = timeNow;
-        buffer = null;
-        var data;
-        const keyInputted = event.key.toLowerCase();
-        const keyToMovementMap = {
-            "w" : {x: 0, y: -1},
-            "a" : {x: -1, y: 0},
-            "s" : {x: 0, y: 1},
-            "d" : {x: 1, y: 0}
-        }
-
-        if(keyToMovementMap[keyInputted] != undefined) {
-            data = keyToMovementMap[keyInputted];
-            socket.emit("move", JSON.stringify(data));
-        }
-    }
-    else if(enableBuffer){
-
-        if(buffer == null) {
-            buffer = {key: event.key};
-            setTimeout(keyPressHandler, movementCooldown - (timeNow - lastTimeMoved), buffer);
-        }
+    const keyToActionMap = {
+        "b" : {bombType: "normal"},
+        "v" : {bombType: "ice"}
     }
 
+    const keyToMovementMap = {
+        "w" : {x: 0, y: -1},
+        "a" : {x: -1, y: 0},
+        "s" : {x: 0, y: 1},
+        "d" : {x: 1, y: 0}
+    }
+
+    const keyInputted = event.key.toLowerCase();
+
+    // action key, no input cooldown, only limited by bomb placement limit (server side check)
+    if(keyToActionMap[keyInputted] != undefined) {
+        socket.emit("bomb", JSON.stringify(keyToActionMap[keyInputted]));
+    // movement key, have movement cooldown, have buffer system to store the next move (client side check)
+    } else if(keyToMovementMap[keyInputted] != undefined) {
+
+        const timeNow = performance.now();
+
+        if(timeNow - lastTimeMoved >= movementCooldown) {
+
+            lastTimeMoved = timeNow;
+            buffer = null;
+            socket.emit("move", JSON.stringify(keyToMovementMap[keyInputted]));
+
+        }
+        else if(enableBuffer){
+
+            if(buffer == null) {
+                buffer = {key: event.key};
+                setTimeout(keyPressHandler, movementCooldown - (timeNow - lastTimeMoved), buffer);
+            }
+
+        }
+
+        
+    }
 }
 
 function localToCanvasCoord(localCoord) {
@@ -95,6 +108,7 @@ function localToCanvasCoord(localCoord) {
 function printPlayground(boardstate) {
 
     function printLayer(layer) {
+
         var x = 0, y = 0;
         for(const row of layer) {
 
@@ -114,7 +128,7 @@ function printPlayground(boardstate) {
     }
 
     function printPlayer(playerSprites) {
-        for(playerSprite of playerSprites) {
+        for(const playerSprite of playerSprites) {
             const spriteCode = playerSprite[0];
             const playerCoord = playerSprite[1];
 

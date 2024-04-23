@@ -42,7 +42,6 @@ const Socket = (function() {
 
         socket.on("print playground", (data) => {
             parsedData = JSON.parse(data);
-            console.log(parsedData);
             printPlayground(parsedData);
         });
     };
