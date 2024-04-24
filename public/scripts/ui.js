@@ -66,7 +66,7 @@ const FrontPage = (function() {
 
         // Click event for instruction button
         $("#button-to-instruction").on("click", (e) => {
-            $("#instruction-page").show();
+            InstructionPage.show();
         });
     };
 
@@ -81,6 +81,32 @@ const FrontPage = (function() {
         $("#signin-message").text("");
         $("#register-message").text("");
         $("#front-page").hide();
+    };
+
+    return { initialize, show, hide };
+})();
+
+const InstructionPage = (function() {
+    // This function initializes the UI
+    const initialize = function() {        
+        // Hide
+        hide();
+
+        // Click event for instruction-home button
+        $("#instruction-home").on("click", (e) => {
+            hide();
+            FrontPage.show();
+        });
+    };
+
+    // This function shows the form
+    const show = function() {
+        $("#instruction-page").show();
+    };
+
+    // This function hides the form
+    const hide = function() {
+        $("#instruction-page").hide();
     };
 
     return { initialize, show, hide };
@@ -188,7 +214,7 @@ const UI = (function() {
     };
 
     // The components of the UI are put here
-    const components = [FrontPage, LobbyPage, GamePlayPage];
+    const components = [FrontPage, InstructionPage, LobbyPage, GamePlayPage];
 
     // This function initializes the UI
     const initialize = function() {
