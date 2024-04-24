@@ -110,8 +110,8 @@ const onlineUsers = {};
 // technically i should create a player class to store all these highly repetitive info, but if it works, dont touch it
 const players = [-1, -1, -1, -1];
 const playerCoords = [[1, 1], [24, 1], [1, 16], [24, 16]];
-// 4 indexes refer to 4 players, the first element is direction, the second element is sprite count
-const playerSpriteCondition = [[2, 0], [2, 0], [2, 0], [2, 0]];
+// 3 variables: direction, sequence number, alive status
+const playerCondition = [[2, 0, false], [2, 0, false], [2, 0, false], [2, 0, false]];
 const playerSockets = [-1, -1, -1, -1];
 // 4 indexes again, each means the following: ice trap unlocked, bomb power, bomb limit, current placed bombs
 const playerBombInfo = [[false, 1, 1, 0], [false, 1, 1, 0], [false, 1, 1, 0], [false, 1, 1, 0]];
@@ -175,9 +175,12 @@ io.on("connection", (socket) => {
         socket.on("disconnect", () => {
             if(players.includes(username)) {
                 if(removePlayer(username) != -1) {
-                    playerSockets[getPlayerID(username)] = -1;
-                    console.log(username, "is removed from players, current players: ", players);
-                    io.emit("players", JSON.stringify(players));
+                    if(getPlayerID(username) != -1) {
+                        playerSockets[getPlayerID(username)] = -1;
+                        playerCondition[getPlayerID(username)][2] = false;
+                        console.log(username, "is removed from players, current players: ", players);
+                        io.emit("players", JSON.stringify(players));
+                    }
                 }
             }
             
@@ -207,7 +210,10 @@ io.on("connection", (socket) => {
                     console.log(len);
                     console.log("current players: ", players);
 
+                    // store the player socket
                     playerSockets[playerID] = socket;
+                    // set the player to be alive
+                    playerCondition[playerID][2] = true;
                     broadcastPrintPlayground();
 
                     if (len === 4) {
@@ -308,11 +314,13 @@ function removePlayerOnBoard(playerID) {
 // tells all client to print the server side map
 function broadcastPrintPlayground() {
 
+    checkDeath();
+
     var coordSprite = [];
 
     for(var i = 0; i < 4; ++i) {
-        if (players[i] != -1) {
-            const psc = playerSpriteCondition[i];
+        if (players[i] != -1 && playerCondition[i][2]) {
+            const psc = playerCondition[i];
             const pc = playerCoords[i];
             coordSprite = [...coordSprite, ["P" + i + psc[0] + psc[1], [pc[0], pc[1]]]];
         }
@@ -334,7 +342,7 @@ function playerMove(playerID, movex, movey) {
     const playableAreaY = 17;
 
     const playerOldCoord = playerCoords[playerID];
-    const spriteCondition = playerSpriteCondition[playerID];
+    const spriteCondition = playerCondition[playerID];
 
     // clamp the final coord back within the playable area
     var newX = Math.min(Math.max(playerOldCoord[0] + movex, 1), playableAreaX - 1);
@@ -376,7 +384,7 @@ function playerMove(playerID, movex, movey) {
     }
 
     playerCoords[playerID] = [newX, newY];
-    playerSpriteCondition[playerID] = spriteCondition;
+    playerCondition[playerID] = spriteCondition;
 
     broadcastPrintPlayground();
 }
@@ -397,6 +405,7 @@ function playerPlaceBomb(playerID, bombType) {
         }
     }else {
         console.log("illegal bomb type was being placed by client!");
+        console.log(bombType);
         return;
     }
 }
@@ -499,4 +508,19 @@ function removeExplosion(bombCoord, bombPower) {
     }
 
     broadcastPrintPlayground();
+}
+
+function checkDeath() {
+
+    for(var i = 0; i < 4; ++i){
+        if(players[i] != -1 && playerCondition[i][2]) {
+            const playerCoord = playerCoords[i];
+
+            // The player is in explosion
+            if(boardCurrent[playerCoord[1]][playerCoord[0]][0] == "E") {
+                playerCondition[i][2] = false;
+            }
+        }
+    }
+
 }
