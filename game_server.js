@@ -405,8 +405,8 @@ function bombCountDownTimer(playerID, bombCoord, countdownStage) {
     if(countdownStage < 7) {
         // time to boom
         if(countdownStage == 6) {
-            boardCurrent[bombCoord[1]][bombCoord[0]] = boardInit[bombCoord[1]][bombCoord[0]];
             playerBombInfo[playerID][3]--;
+            spawnExplosionTimer(bombCoord, playerBombInfo[playerID][1]);
         }else {
             boardCurrent[bombCoord[1]][bombCoord[0]] = "B" + countdownStage;
 
@@ -417,13 +417,86 @@ function bombCountDownTimer(playerID, bombCoord, countdownStage) {
             // -------------------------------look at me pls-------------------------------
 
             setTimeout(bombCountDownTimer, 500, playerID, bombCoord, ++countdownStage);
-
+            broadcastPrintPlayground();
 
         }
-
-        broadcastPrintPlayground();
     }
     else {
         console.log("the bomb should have exploded lol");
     }
+}
+
+
+function spawnExplosionTimer(bombCoord, bombPower) {
+
+    boardCurrent[bombCoord[1]][bombCoord[0]] = "EC"
+
+    // 4 directions, so 4 loops
+    for(var i = 0; i < 4; ++i) {
+        for(var j = 1; j <= bombPower; ++j) {
+
+            var targetCoord;
+
+            switch(i) {
+                // upward explosion
+                case 0: targetCoord = [bombCoord[1] - j, bombCoord[0]]; break;
+                // leftward explosion
+                case 1: targetCoord = [bombCoord[1], bombCoord[0] - j]; break;
+                // downward explosion
+                case 2: targetCoord = [bombCoord[1] + j, bombCoord[0]]; break;
+                // rightward explosion
+                case 3: targetCoord = [bombCoord[1], bombCoord[0] + j]; break;
+            }
+
+            // ignore the inconsistency of switching x and y sometimes but not others
+            const targetBlock = boardCurrent[targetCoord[0]][targetCoord[1]];
+
+            // stops the explosion if it is wall/bomb
+            if(targetBlock == "W1" || targetBlock == "W2" || targetBlock[0] == "B" || targetBlock[0] == "E") break;
+
+            // check if the explosion has reached maximum length, if yes use different set of sprite
+            const endOfExplosion = (j == bombPower);
+
+            // "EW" - E = Explosion, W = up (wasd)
+            // "EV" and "EH", Vertical and Horizontal, since they share the same sprite
+            switch(i) {
+                case 0: boardCurrent[targetCoord[0]][targetCoord[1]] = endOfExplosion ? "EW" : "EV"; break;
+                case 1: boardCurrent[targetCoord[0]][targetCoord[1]] = endOfExplosion ? "EA" : "EH"; break;
+                case 2: boardCurrent[targetCoord[0]][targetCoord[1]] = endOfExplosion ? "ES" : "EV"; break;
+                case 3: boardCurrent[targetCoord[0]][targetCoord[1]] = endOfExplosion ? "ED" : "EH"; break;
+            }
+        }
+    }
+    
+    setTimeout(removeExplosion, 2000, bombCoord, bombPower);
+    broadcastPrintPlayground();
+}
+
+function removeExplosion(bombCoord, bombPower) {
+
+    // remove center of explosion
+    if(boardCurrent[bombCoord[1]][bombCoord[0]][0] == "E") boardCurrent[bombCoord[1]][bombCoord[0]] = boardInit[bombCoord[1]][bombCoord[0]];
+
+    for(var i = 0; i < 4; ++i) {
+        for(var j = 1; j <= bombPower; ++j) {
+
+            var targetCoord;
+
+            switch(i) {
+                case 0: targetCoord = [bombCoord[1] - j, bombCoord[0]]; break;
+                case 1: targetCoord = [bombCoord[1], bombCoord[0] - j]; break;
+                case 2: targetCoord = [bombCoord[1] + j, bombCoord[0]]; break;
+                case 3: targetCoord = [bombCoord[1], bombCoord[0] + j]; break;
+            }
+
+            const targetBlock = boardCurrent[targetCoord[0]][targetCoord[1]];
+
+            if(targetBlock[0] == "E") {
+                boardCurrent[targetCoord[0]][targetCoord[1]] = boardInit[targetCoord[0]][targetCoord[1]];
+            }
+            else break;
+        }
+    }
+
+    broadcastPrintPlayground();
 }
