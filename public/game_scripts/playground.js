@@ -66,13 +66,14 @@ function keyPressHandler(event) {
     }
 
     const keyToMovementMap = {
-        "w" : {x: 0, y: -1},
-        "a" : {x: -1, y: 0},
-        "s" : {x: 0, y: 1},
-        "d" : {x: 1, y: 0}
+        "arrowup" : {x: 0, y: -1},
+        "arrowleft" : {x: -1, y: 0},
+        "arrowdown" : {x: 0, y: 1},
+        "arrowright" : {x: 1, y: 0}
     }
 
     const keyInputted = event.key.toLowerCase();
+    console.log(keyInputted);
 
     // action key, no input cooldown, only limited by bomb placement limit (server side check)
     if(keyToActionMap[keyInputted] != undefined) {
