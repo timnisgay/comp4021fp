@@ -175,12 +175,8 @@ io.on("connection", (socket) => {
         socket.on("disconnect", () => {
             if(players.includes(username)) {
                 if(removePlayer(username) != -1) {
-                    if(getPlayerID(username) != -1) {
-                        playerSockets[getPlayerID(username)] = -1;
-                        playerCondition[getPlayerID(username)][2] = false;
-                        console.log(username, "is removed from players, current players: ", players);
-                        io.emit("players", JSON.stringify(players));
-                    }
+                    console.log(username, "is removed from players, current players: ", players);
+                    io.emit("players", JSON.stringify(players));
                 }
             }
             
@@ -280,6 +276,8 @@ function removePlayer(username) {
     const index = players.indexOf(username);
     if(index == -1) return -1;
 
+    playerSockets[index] = -1;
+    playerCondition[index][2] = false;
     players[index] = -1;
     return index;
 }
