@@ -22,6 +22,13 @@ const Player = function(ctx, x, y, gameArea) {
         moveDown:  { x: 0, y: 100, width: 24, height: 25, count: 10, timing: 50, loop: true }
     };
 
+    //player stats
+    let stats = {
+        numBomb: 1, //highest limit is
+        numIceTrap: 1, //highest limit is 
+        AttackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 5*5 cross, icetrap is 3*3 rectangle
+    };
+
     // This is the sprite object of the player created from the Sprite module.
     const sprite = Sprite(ctx, x, y);
 
