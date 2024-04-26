@@ -33,6 +33,7 @@ const Socket = (function() {
             // TODO: start the game, change to another page!
             LobbyPage.hide();
             GamePlayPage.show();
+            //game.start();
         });
 
         // Set up the end game event
