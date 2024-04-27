@@ -118,13 +118,13 @@
     <script src="game_scripts/playground.js"></script>
     <script src="game_scripts/player.js"></script>
     <script src="game_scripts/sprite.js"></script>
-    <div id="game-play-page" style="display: none;">
-        <div class="play-area-container" style="float:left">
+    <div id="game-play-page" class="page-container row" style="display: none;">
+        <div class="play-area-container" >
             <canvas id="main-playground" width="1300px" height="900px" tabindex="1"></canvas>
         </div>
         
-        <div class="player-stat-container" style="float:right">
-            <div id="player-info">
+        <div class="player-stat-container col" >
+            <!-- <div id="player-info">
                 <p>Player name here</p>
                 <p>Round 1/1</p>
             </div>
@@ -153,6 +153,26 @@
                     <p class="text-left">Space</p>
                     <p class="text-right">Cheat</p>
                 </div>
+            </div> -->
+            <div id="player-info">
+                here is the player name
+            </div>
+            <div id="player-game-stats">
+                <div class="row player-game-stats-box">
+                    <p>Max bomb number:</p>
+                    <p id="player-num-bomb">1</p>
+                </div>
+                <div class="row player-game-stats-box">
+                    <p>Max ice trap number:</p>
+                    <p id="player-num-ice-trap">1</p>
+                </div>
+                <div class="row player-game-stats-box">
+                    <p>Attack radius level:</p>
+                    <p id="player-attack-radius">1</p>
+                </div>
+            </div>
+            <div id="game-play-instruction">
+                here are the key movements
             </div>
         </div>
     </div>

@@ -248,17 +248,30 @@ button.icon:active {
 }
 
 /* play page */
+#game-play-page {
+
+}
+
 #main-playground {
+	/* position: relative; */
+	width: 100%;
+	height: 100%;
+    box-sizing: border-box;
+}
+
+.play-area-container {
+	/* display: block;
 	position: relative;
-	width: 73vw;
-	height: 90vh;
+	top: 5vmin;
+	left: 5vmin; */
+    width: 80vw;
 }
 
 .player-stat-container {
-	display: block;
+	/* display: block;
 	position: relative;
 	top: 5vmin;
-	right: 5vmin;
+	right: 5vmin; */
 	width: 20vw;
 	height: 90vh;
 	font-size: 3vmin;
@@ -269,21 +282,7 @@ button.icon:active {
 	border: 1vmin solid rgb(96, 96, 96);
 	border-radius: 2vmin;
 	box-sizing: border-box;
-}
-
-.play-area-container {
-	display: block;
-	position: relative;
-	top: 5vmin;
-	left: 5vmin;
-}
-
-.text-left {
-	float: left;
-}
-
-.text-right {
-	float: right;
+    justify-content: space-between;
 }
 
 #player-info p{
@@ -291,6 +290,23 @@ button.icon:active {
 	text-align: center;
 }
 
-.player-stat-container p{
-	margin: 1vh 1vw;
+.player-game-stats-box {
+    justify-content: space-between;
+    padding: 5px;
 }
+
+#player-num-bomb, #player-num-ice-trap, #player-attack-radius{
+    align-self: baseline;
+}
+
+/* .player-stat-container p{
+	margin: 1vh 1vw;
+} 
+
+.text-left {
+	float: left;
+}
+
+.text-right {
+	float: right;
+} */
