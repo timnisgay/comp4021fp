@@ -247,6 +247,47 @@ button.icon:active {
     overflow-y: scroll;
 }
 
+/* lobby page */
+#lobby-header {
+    height: 20%;
+    justify-content: space-between;
+}
+#lobby-main {
+    height: 80%;
+    align-items: stretch;
+}
+
+#lobby-players-list {
+    background: var(--main-panel-background);
+	border: 2px solid var(--overlay-caption-color);
+	border-radius: 2vmin;
+	box-sizing: border-box;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 30%;
+}
+
+#lobby-self-stats {
+    background: var(--main-panel-background);
+	border: 2px solid var(--overlay-caption-color);
+	border-radius: 2vmin;
+	box-sizing: border-box;
+    padding: 20px 40px;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.lobby-stats-box {
+    justify-content: space-between;
+    padding: 5px;
+}
+
+#lobby-join-game {
+    align-self: flex-end;
+}
+
 /* play page */
 #game-play-page {
 
@@ -288,6 +329,10 @@ button.icon:active {
 #player-info p{
 	margin: 3vh 0;
 	text-align: center;
+}
+
+#player-game-stats {
+    align-items: stretch;
 }
 
 .player-game-stats-box {

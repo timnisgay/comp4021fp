@@ -168,7 +168,31 @@ const LobbyPage = (function() {
         }
     };
 
-    return { initialize, show, hide, update };
+    // This function updates the best stats area
+    const updateBestStats = function(stats) {
+        const lobbySelfStats = $("#lobby-self-stats");
+
+        lobbySelfStats.empty();
+        console.log(stats);
+
+        for (const stat in stats) {
+            if (stats[stat] != -1) {
+                lobbySelfStats.append(
+                    $("<div id='lobby-stats-" + stat + "' class='row lobby-stats-box'></div>")
+                        .append($("<div id='lobby-stats-title'>"+ stat +"</div>"))
+                        .append($("<div id='lobby-stats-content'>"+ stats[stat] +"</div>"))
+                );
+            } else {
+                lobbySelfStats.append(
+                    $("<div id='lobby-stats-" + stat + "' class='row lobby-stats-box'></div>")
+                        .append($("<div id='lobby-stats-title'>"+ stat +"</div>"))
+                        .append($("<div id='lobby-stats-content'>--</div>"))
+                );
+            }
+        }
+    };
+
+    return { initialize, show, hide, update, updateBestStats };
 })();
 
 const GamePlayPage = (function() {
@@ -203,6 +227,47 @@ const GamePlayPage = (function() {
     return { initialize, show, hide, update };
 })();
 
+const GameEndPage = (function() {
+    // This function initializes the UI
+    const initialize = function() {
+        // Hide it
+        $("#game-end-page").hide();
+
+        // Click event for the return to lobby button
+        $("#return-to-lobby").on("click", () => {
+            Socket.getBestGameStats();
+            Socket.getPlayers();
+            hide();
+            LobbyPage.show();
+        });
+
+        // Click event for the logout button
+        $("#game-end-logout").on("click", () => {
+            // Send a signout request
+            Authentication.signout(
+                () => {
+                    Socket.disconnect();
+
+                    hide();
+                    FrontPage.show();
+                }
+            );
+        });
+    };
+
+    // This function shows the form with the user
+    const show = function() {
+        $("#game-end-page").show();
+    };
+
+    // This function hides the form
+    const hide = function() {
+        $("#game-end-page").hide();
+    };
+
+    return { initialize, show, hide };
+})();
+
 const UI = (function() {
     // This function gets the user display
     const getUserDisplay = function(user) {
@@ -211,7 +276,7 @@ const UI = (function() {
     };
 
     // The components of the UI are put here
-    const components = [FrontPage, InstructionPage, LobbyPage, GamePlayPage];
+    const components = [FrontPage, InstructionPage, LobbyPage, GamePlayPage, GameEndPage];
 
     // This function initializes the UI
     const initialize = function() {

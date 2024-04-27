@@ -48,7 +48,7 @@ app.post("/register", (req, res) => {
     }
 
     const hash = bcrypt.hashSync(password, 10);
-    users[username] = { password: hash };
+    users[username] = { password: hash, bestStats: {bestGameTime: -1, numBombUsed: -1, numIceTrapUsed: -1, attackRadius: -1} };
 
     fs.writeFileSync("data/users.json", JSON.stringify(users, null, " "));
 
@@ -170,6 +170,13 @@ io.on("connection", (socket) => {
         socket.on("get players", () => {
             console.log("current players: ", players);
             socket.emit("players", JSON.stringify(players));
+        });
+
+        //socket get the best game statistics from users.json
+        socket.on("get best statistics", () => {
+            const users = JSON.parse(fs.readFileSync("data/users.json"));
+            const bestStats = users[username].bestStats;
+            socket.emit("best stats", JSON.stringify(bestStats));
         });
 
         //socket joins the game

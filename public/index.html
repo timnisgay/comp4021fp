@@ -95,20 +95,18 @@
     <!-- Lobby Page -->
     <div id="lobby-page" class="page-container col">
         <!-- top part -->
-        <div id="looby-header" class="row" style="justify-content: space-between;">
-            <div id="lobby-title">
-                <h1>A Song of Ice and Fire</h1>
+        <div id="lobby-header" class="row">
+            <div id="lobby-title"><h1>A Song of Ice and Fire</h1>
             </div>
             <button id="lobby-logout">Logout</button>
         </div>
 
         <!-- main part -->
-        <div class="row" style="justify-content: space-evenly;">
+        <div id="lobby-main" class="row" style="justify-content: space-evenly;">
             <div id="lobby-players-list" class="col"></div>
-            <div>
-                <div id="lobby-self-stats">
-                    TO BE IMPLEMENTED
-                </div>
+            <div class="col" style="width: 30%; justify-content: space-between;">
+                <div id="lobby-self-stats" class="col"></div>
+                <div class="spacer-2"></div>
                 <button id="lobby-join-game">Join Game</button>
             </div>
         </div>
@@ -178,6 +176,11 @@
     </div>
 
     <!-- Game End Page -->
+    <div id="game-end-page" class="page-container col">
+        <div id="current-game-stats"></div>
+        <button id="return-to-lobby">Return Lobby (with same player id?)</button>
+        <button id="game-end-logout">Logout</button>
+    </div>
 
     <script src="scripts/ui.js"></script>
     <script src="scripts/registration.js"></script>

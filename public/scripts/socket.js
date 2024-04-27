@@ -16,8 +16,8 @@ const Socket = (function() {
             // Get current player list
             socket.emit("get players");
             
-            // Get own statistics
-            socket.emit("get own statistics");
+            // Get best statistics
+            socket.emit("get best statistics");
         });
 
         // socket receives the most updated players list, including -1
@@ -26,6 +26,13 @@ const Socket = (function() {
             players = JSON.parse(players);
             console.log(players);
             LobbyPage.update(players);
+        });
+
+        // socket receives their own best statistics
+        socket.on("best stats", (stats) => {
+            stats = JSON.parse(stats);
+            console.log(stats);
+            LobbyPage.updateBestStats(stats);
         });
 
         // server tells socket that there are 4 players already and will now start the game
@@ -86,6 +93,12 @@ const Socket = (function() {
         }
     };
 
+    const getBestGameStats = function() {
+        if (socket && socket.connected) {
+            socket.emit("get best statistics");
+        }
+    };
+
     // This function tells server this socket joined the game
     const joinGame = function() {
         if (socket && socket.connected) {
@@ -133,5 +146,5 @@ const Socket = (function() {
         }
     }
 
-    return { getSocket, connect, disconnect, getPlayers, joinGame, endGame, postMovement, stopMovement, postBomb, getMap};
+    return { getSocket, connect, disconnect, getPlayers, getBestGameStats, joinGame, endGame, postMovement, stopMovement, postBomb, getMap};
 })();
