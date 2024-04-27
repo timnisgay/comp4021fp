@@ -132,16 +132,8 @@ const LobbyPage = (function() {
             );
         });
 
-        // TODO: actual handle all related sockets
         $("#lobby-join-game").on("click", () => {
-            // moved socket.joinGame into playground, so the sprite is always loaded first
-            initPlayground();
-        });
-
-        $("#debug-join-game").on("click", () => {
-            initPlayground();
-            $("#lobby-page").hide();
-            $("#game-play-page").show();
+            Socket.getMap();
         });
     };
 
@@ -184,8 +176,13 @@ const GamePlayPage = (function() {
     const initialize = function() {
         // Hide it
         $("#game-play-page").hide();
-
-        //TODO
+        // didnt use jquery here because couldnt make it work, if can change then change
+        document.getElementById("main-playground").addEventListener("keydown", function(e) {
+            Playground.keyDownHandler(e);
+        })
+        document.getElementById("main-playground").addEventListener("keyup", function(e) {
+            Playground.keyUpHandler(e);
+        })
     };
 
     // This function shows the form with the user

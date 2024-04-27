@@ -138,29 +138,6 @@ const boardInit =
     ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
     ["W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2"]
 ];
-// the actual board state, modify this one for game related actions
-const boardCurrent = 
-[
-    ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W2", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W2", "W2", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "W1"],
-    ["W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "W1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2"]
-];
-
 
 io.on("connection", (socket) => {
 
@@ -210,10 +187,11 @@ io.on("connection", (socket) => {
                     playerSockets[playerID] = socket;
                     // set the player to be alive
                     playerCondition[playerID][2] = true;
-                    broadcastPrintPlayground();
 
-                    if (len === 4) {
-                        io.emit("start game");
+                    // DEBUG purpose
+                    // if (len === 4) {
+                    if (len === 2) {
+                        io.emit("start game", playerID);
                     } else {
                         io.emit("players", JSON.stringify(players));
                     }
@@ -237,14 +215,27 @@ io.on("connection", (socket) => {
             }
         });
 
+        // Send the base board to whoever request for the info
+        socket.on("init board", () => {
+            socket.emit("init map", JSON.stringify(boardInit));
+        });
+
         // socket tells server its player movement
         socket.on("player move", (data) => {
             //TODO: server should receive the movement is up down left right, move or stop
+            var playerMovementData = JSON.parse(data);
+            playerMovementData["playerID"] = getPlayerID(username);
 
             //find the playerID of this player using is username
 
             //tell all players: player[XX] is going to move (up down left right, move/stop)
-            io.emit("move", playerMovementData);
+            io.emit("move", JSON.stringify(playerMovementData));
+        });
+
+        socket.on("player stop", (data) => {
+            var playerMovementData = JSON.parse(data);
+            playerMovementData["playerID"] = getPlayerID(username);
+            io.emit("stop", JSON.stringify(playerMovementData));
         });
 
         //socket tells server he/she places a bomb with bomb location and attack radius
@@ -319,15 +310,6 @@ function getPlayerLength() {
     return playerCount;
 }
 
-// returns player list that only contains non -1 value
-/*function getPlayerList() {
-    var playerlist = [];
-    for(var i = 0; i < 4; ++i) {
-        if(players[i] != -1) playerlist = [...playerlist, players[i]];
-    }
-    return playerlist;
-}*/
-
 function getPlayerID(username) {
     return players.indexOf(username);
 }
@@ -337,7 +319,7 @@ function removePlayerOnBoard(playerID) {
 }
 
 // tells all client to print the server side map
-function broadcastPrintPlayground() {
+/*function broadcastPrintPlayground() {
 
     checkDeath();
 
@@ -548,4 +530,4 @@ function checkDeath() {
         }
     }
 
-}
+}*/

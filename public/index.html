@@ -110,16 +110,17 @@
                     TO BE IMPLEMENTED
                 </div>
                 <button id="lobby-join-game">Join Game</button>
-                <button id="debug-join-game">DEBUG</button>
             </div>
         </div>
     </div>
 
     <!-- Game Play Page -->
     <script src="game_scripts/playground.js"></script>
+    <script src="game_scripts/player.js"></script>
+    <script src="game_scripts/sprite.js"></script>
     <div id="game-play-page" style="display: none;">
         <div class="play-area-container" style="float:left">
-            <canvas id="main-playground" width="1300px" height="900px" tabindex="1" onkeydown="keyPressHandler(event)"></canvas>
+            <canvas id="main-playground" width="1300px" height="900px" tabindex="1"></canvas>
         </div>
         
         <div class="player-stat-container" style="float:right">

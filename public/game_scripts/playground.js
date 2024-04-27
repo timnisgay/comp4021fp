@@ -1,148 +1,148 @@
-var canvas;
-var context;
+const Playground = (function() {
+    let canvas = null;
+    let context = null;
 
-// sets the original size and final size of the sprite on playground
-const spriteSize = [16, 16];
-const finalSize = [50, 50];
+    const spritesheet = new Image();
 
-const spritesheet = new Image();
-// this refers to the player him/herself
-// everything will be server side, so technically the player dont even need to know who is he/she
-var myPlayer;
+    const codeToSpriteCoordDict = {
+        "W1": [160, 288], "W2": [176, 288], "G1": [32, 208]
+    };
 
-// how long must the player wait before they could move one tile;
-const movementCooldown = 150;
-var lastTimeMoved = 0;
-var buffer;
+    // each sequence refers to the sprite that player use
+    const spawnCoords = [[75, 75], [1225, 75], [75, 825], [1225, 825]];
+    const sequences = [    
+    {
+        moveLeft:  { x: 160, y: 224, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveUp:    { x: 112, y: 224, width: 16, height: 16, count: 3, timing: 50, loop: true },
+        moveRight: { x: 48 , y: 224, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveDown:  { x: 0  , y: 224, width: 16, height: 16, count: 3, timing: 50, loop: true }
+    }
+    ,
+    {
+        moveLeft:  { x: 160, y: 240, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveUp:    { x: 112, y: 240, width: 16, height: 16, count: 3, timing: 50, loop: true },
+        moveRight: { x: 48 , y: 240, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveDown:  { x: 0  , y: 240, width: 16, height: 16, count: 3, timing: 50, loop: true }
+    }
+    ,
+    {
+        moveLeft:  { x: 160, y: 256, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveUp:    { x: 112, y: 256, width: 16, height: 16, count: 3, timing: 50, loop: true },
+        moveRight: { x: 48 , y: 256, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveDown:  { x: 0  , y: 256, width: 16, height: 16, count: 3, timing: 50, loop: true }
+    }
+    ,
+    {
+        moveLeft:  { x: 160, y: 272, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveUp:    { x: 112, y: 272, width: 16, height: 16, count: 3, timing: 50, loop: true },
+        moveRight: { x: 48 , y: 272, width: 16, height: 16, count: 4, timing: 50, loop: true },
+        moveDown:  { x: 0  , y: 272, width: 16, height: 16, count: 3, timing: 50, loop: true }
+    }];
 
-// toggles if buffer mechanic will be allowed, it might make the game feel sluggish sometime
-const enableBuffer = true;
-var socket;
+    let baseMap = null;
+    const playerList = [];
 
+    const initPlayground = function(mapArray) {
+        canvas = document.getElementById("main-playground");
+        context = canvas.getContext("2d");
+        context.imageSmoothingEnabled = false;
+        baseMap = mapArray;
 
-// dont question me pls, im on the verge of shooting myself in the foot when im writing this
-const codeToSpriteCoordDict = {
-    "W1": [160, 288], "W2": [176, 288], "G1": [32, 208], 
-    "B0": [64, 288], "B1": [80, 288], "B2": [96, 288], "B3": [112, 288], "B4": [128, 288], "B5": [144, 288],
-    "P020": [0, 224], "P021": [16, 224], "P022": [32, 224], "P030": [48, 224], "P031": [64, 224], "P032": [80, 224], "P033": [96, 224],
-    "P000": [112, 224], "P001": [128, 224], "P002": [144, 224], "P010": [160, 224], "P011": [176, 224], "P012": [192, 224], "P013": [208, 224], 
-    "P120": [0, 240], "P121": [16, 240], "P122": [32, 240], "P130": [48, 240], "P131": [64, 240], "P132": [80, 240], "P133": [96, 240],
-    "P100": [112, 240], "P101": [128, 240], "P102": [144, 240], "P110": [160, 240], "P111": [176, 240], "P112": [192, 240], "P113": [208, 240],
-    "P220": [0, 256], "P221": [16, 256], "P222": [32, 256], "P230": [48, 256], "P231": [64, 256], "P232": [80, 256], "P233": [96, 256],
-    "P200": [112, 256], "P201": [128, 256], "P202": [144, 256], "P210": [160, 256], "P211": [176, 256], "P212": [192, 256], "P213": [208, 256],
-    "P320": [0, 272], "P321": [16, 272], "P322": [32, 272], "P330": [48, 272], "P331": [64, 272], "P332": [80, 272], "P333": [96, 272],
-    "P300": [112, 272], "P301": [128, 272], "P302": [144, 272], "P310": [160, 272], "P311": [176, 272], "P312": [192, 272], "P313": [208, 272],
-    "EW": [224, 208], "EV": [224, 224], "ES": [224, 240], "EA": [0, 288], "EH": [16, 288], "EC": [32, 288], "ED": [48, 288]
-};
+        console.log(baseMap);
 
-function initPlayground() {
-
-    socket = Socket.getSocket();
-
-    canvas = document.getElementById("main-playground");
-    context = canvas.getContext("2d");
-    context.imageSmoothingEnabled = false;
-
-    spritesheet.src = "assets/sprite.png";
-    spritesheet.decode()
-        .then(() => {
-            Socket.joinGame();
-        })
-        .catch(() => {
-            console.log("error, sprite.png doesn't exist or the path is wrong");
-        });
-}
-
-// get info like where to spawn, what sprite to use from the server
-function initPlayer(coord, playerID) {
-    myPlayer = Player(context, coord, playerID, "xd");
-}
-
-function keyPressHandler(event) {
-
-    const keyToActionMap = {
-        "b" : {bombType: "normal"},
-        "v" : {bombType: "ice"}
+        spritesheet.src = "assets/sprite.png";
+        spritesheet.decode()
+            .then(() => {
+                Socket.joinGame();
+                printBaseMap();
+                initPlayers();
+                customAnimationFrame();
+            })
+            .catch(() => {
+                console.log("error, sprite.png doesn't exist or the path is wrong");
+            });
     }
 
-    const keyToMovementMap = {
-        "arrowup" : {x: 0, y: -1},
-        "arrowleft" : {x: -1, y: 0},
-        "arrowdown" : {x: 0, y: 1},
-        "arrowright" : {x: 1, y: 0}
-    }
-
-    const keyInputted = event.key.toLowerCase();
-    console.log(keyInputted);
-
-    // action key, no input cooldown, only limited by bomb placement limit (server side check)
-    if(keyToActionMap[keyInputted] != undefined) {
-        socket.emit("bomb", JSON.stringify(keyToActionMap[keyInputted]));
-    // movement key, have movement cooldown, have buffer system to store the next move (client side check)
-    } else if(keyToMovementMap[keyInputted] != undefined) {
-
-        const timeNow = performance.now();
-
-        if(timeNow - lastTimeMoved >= movementCooldown) {
-
-            lastTimeMoved = timeNow;
-            buffer = null;
-            socket.emit("move", JSON.stringify(keyToMovementMap[keyInputted]));
-
-        }
-        else if(enableBuffer){
-
-            if(buffer == null) {
-                buffer = {key: event.key};
-                setTimeout(keyPressHandler, movementCooldown - (timeNow - lastTimeMoved), buffer);
-            }
-
-        }
-
-        
-    }
-}
-
-function localToCanvasCoord(localCoord) {
-    return [localCoord[0] * 50 + 50, localCoord[1] * 50 + 50];
-}
-
-function printPlayground(boardstate) {
-
-    function printLayer(layer) {
-
+    const printBaseMap = function() {
         var x = 0, y = 0;
-        for(const row of layer) {
-
+        for(const row of baseMap) {
             for(const code of row) {
                 context.drawImage(spritesheet, 
                     codeToSpriteCoordDict[code][0], codeToSpriteCoordDict[code][1],
-                    spriteSize[0], spriteSize[1],
+                    16, 16,
                     x, y,
-                    finalSize[0], finalSize[1]);
+                    50, 50);
 
-                x += finalSize[0];
+                x += 50;
             }
 
             x = 0; 
-            y += finalSize[1];
+            y += 50;
         }
     }
 
-    function printPlayer(playerSprites) {
-        for(const playerSprite of playerSprites) {
-            const spriteCode = playerSprite[0];
-            const playerCoord = playerSprite[1];
+    const initPlayers = function() {
+        for(var i = 0; i < 4; ++i){
+            playerList[i] = Player(context, spawnCoords[i][0], spawnCoords[i][1], sequences[i]);
+            playerList[i].draw();
+        }
+    };
 
-            context.drawImage(spritesheet, 
-                codeToSpriteCoordDict[spriteCode][0], codeToSpriteCoordDict[spriteCode][1],
-                spriteSize[0], spriteSize[1],
-                playerCoord[0] * finalSize[0], playerCoord[1] * finalSize[1],
-                finalSize[0], finalSize[1]);
+    let moving = false;
+
+    const keyDownHandler = function(e) {
+
+        if(moving) return;
+
+        const keyToDirectionMapping = ["a", "w", "d", "s"];
+        const keyInput = e.key.toLowerCase();
+
+        const movementDirection = keyToDirectionMapping.indexOf(keyInput);
+
+        if(movementDirection != -1) {
+            moving = true;
+            Socket.postMovement(JSON.stringify(movementDirection + 1));
         }
     }
 
-    printLayer(boardstate["base"]);
-    printLayer(boardstate["overlay"]);
-    printPlayer(boardstate["playerSprite"]);
-}
+    const keyUpHandler = function(e) {
+        const keyToDirectionMapping = ["a", "w", "d", "s"];
+        const keyInput = e.key.toLowerCase();
+        const movementDirection = keyToDirectionMapping.indexOf(keyInput);
+
+        if(movementDirection != -1) {
+            moving = false;
+            Socket.stopMovement(JSON.stringify(movementDirection + 1));
+        }
+    }
+
+    const playerMove = function(moveData) {
+        const { direction, playerID } = moveData;
+        if(playerList[playerID] != undefined) {
+            playerList[playerID].move(direction);
+        }
+    }
+
+    const playerStop = function(moveData) {
+        const { direction, playerID } = moveData;
+        if(playerList[playerID] != undefined) {
+            playerList[playerID].stop(direction);
+        }
+    }
+
+    const customAnimationFrame = function() {
+
+        const timeNow = performance.now();
+
+        printBaseMap();
+
+        for(player of playerList) {
+            player.update(timeNow);
+            player.draw();
+        }
+
+        setTimeout(customAnimationFrame, 33);
+    }
+
+    return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove, playerStop};
+})();

@@ -21,7 +21,7 @@ const Sprite = function(ctx, x, y) {
     let index = 0;
 
     // This is the scaling factor for drawing the sprite.
-    let scale = 1;
+    let scale = 3.125;
 
     // This is the scaling factor to determine the size of the shadow, relative to the scaled sprite image size.
     // - `x` - The x scaling factor
@@ -63,13 +63,6 @@ const Sprite = function(ctx, x, y) {
         sequence = newSequence;
         index = 0;
         lastUpdate = 0;
-        return this;
-    };
-
-    // This function sets the scaling factor of the sprite.
-    // - `value` - The new scaling factor
-    const setScale = function(value) {
-        scale = value;
         return this;
     };
 
@@ -120,7 +113,7 @@ const Sprite = function(ctx, x, y) {
         ctx.fillStyle = "black";
         ctx.globalAlpha = 0.6;
         ctx.beginPath();
-        ctx.ellipse(x, y + size.height / 2,
+        ctx.ellipse(x + 2, y + size.height / 2,
                     shadowWidth / 2, shadowHeight / 2, 0, 0, 2 * Math.PI);
         ctx.fill();
 
@@ -136,9 +129,6 @@ const Sprite = function(ctx, x, y) {
         /* Get the display size of the sprite */
         const size = getDisplaySize();
 
-
-        /* TODO */
-        /* Replace the following code to draw the sprite correctly */
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(sheet, 
                     sequence.x + index * sequence.width, 
@@ -169,9 +159,6 @@ const Sprite = function(ctx, x, y) {
     const update = function(time) {
         if (lastUpdate == 0) lastUpdate = time;
 
-
-        /* TODO */
-        /* Move to the next sprite when the timing is right */
         if (time - lastUpdate >= sequence.timing) {
             index++;
             if (index >= sequence.count) {
@@ -193,7 +180,6 @@ const Sprite = function(ctx, x, y) {
         getXY: getXY,
         setXY: setXY,
         setSequence: setSequence,
-        setScale: setScale,
         setShadowScale: setShadowScale,
         getDisplaySize: getDisplaySize,
         getBoundingBox: getBoundingBox,

@@ -55,7 +55,11 @@ const Socket = (function() {
         //server tells this socket that player[XXX] moves/stops at which direction
         //moveData should contain which player is doing the movement, and what is the movement
         socket.on("move", (moveData) => {
+            Playground.playerMove(JSON.parse(moveData));
+        });
 
+        socket.on("stop", (moveData) => {
+            Playground.playerStop(JSON.parse(moveData));
         });
 
         //server tells this socket there is a bomb somewhere
@@ -63,6 +67,10 @@ const Socket = (function() {
         // and the socket should do update to show the bomb and do the self countdown and self explode
         socket.on("bomb", (bombData) => {
 
+        });
+
+        socket.on("init map", (mapJSON) => {
+            Playground.initPlayground(JSON.parse(mapJSON));
         });
     };
 
@@ -93,12 +101,18 @@ const Socket = (function() {
     };
 
     //This function tells server this socket's movement
-    const postMovement = function() {
+    const postMovement = function(movementDirection) {
         if (socket && socket.connected) {
-            //TODO: prepare data
-            const data = null;
+            const data = {"direction" : movementDirection};
+            socket.emit("player move", JSON.stringify(data));
+        }
+    };
 
-            socket.emit("player move", data);
+    // stop the animation and the last position the player was facing
+    const stopMovement = function(movementDirection) {
+        if (socket && socket.connected) {
+            const data = {"direction" : movementDirection};
+            socket.emit("player stop", JSON.stringify(data));
         }
     };
 
@@ -113,5 +127,11 @@ const Socket = (function() {
         }
     };
 
-    return { getSocket, connect, disconnect, getPlayers, joinGame, endGame, postMovement, postBomb};
+    const getMap = function() {
+        if (socket && socket.connected) {
+            socket.emit("init board");
+        }
+    }
+
+    return { getSocket, connect, disconnect, getPlayers, joinGame, endGame, postMovement, stopMovement, postBomb, getMap};
 })();
