@@ -36,14 +36,33 @@ const Socket = (function() {
             //game.start();
         });
 
-        // Set up the end game event
-        socket.on("end game", (name) => {
-            // TODO: remove the player that is dead, the name should not be the same as this socket
+        // server tells socket a player is dead, please remove that player in the playArea
+        // but can keep the player stat?
+        socket.on("remove player", (player) => {
+
+        });
+
+        // server tells socket the game is ended, please show the end game page
+        socket.on("end game", () => {
+
         });
 
         socket.on("print playground", (data) => {
             parsedData = JSON.parse(data);
             printPlayground(parsedData);
+        });
+
+        //server tells this socket that player[XXX] moves/stops at which direction
+        //moveData should contain which player is doing the movement, and what is the movement
+        socket.on("move", (moveData) => {
+
+        });
+
+        //server tells this socket there is a bomb somewhere
+        //bombData should have the bomb location, attack radius
+        // and the socket should do update to show the bomb and do the self countdown and self explode
+        socket.on("bomb", (bombData) => {
+
         });
     };
 
@@ -79,11 +98,20 @@ const Socket = (function() {
             //TODO: prepare data
             const data = null;
 
-            setTimeout(function () {
-                socket.emit("move", data);
-            }, 10);
+            socket.emit("player move", data);
         }
     };
 
-    return { getSocket, connect, disconnect, getPlayers, joinGame, endGame, postMovement};
+    //This function tells server where the bomb is placed
+    //dont tell server to place bomb if it exceeds the number of bomb it can placed
+    const postBomb = function() {
+        if (socket && socket.connected) {
+            //TODO: prepare data
+            const data = null;
+
+            socket.emit("place bomb", data);
+        }
+    };
+
+    return { getSocket, connect, disconnect, getPlayers, joinGame, endGame, postMovement, postBomb};
 })();

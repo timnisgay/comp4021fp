@@ -221,31 +221,58 @@ io.on("connection", (socket) => {
             }
         });
 
-        socket.on("end game", (data) => {
-            //TODO: this player is dead, broadcast this to others
-
-            // save the game data of this player to scoreboard.json?
-
-            // check, if all player is dead, stop the game
-            io.emit("end game", name);
+        //socket tells server he/she is dead
+        //server need to tell other players to remove this player in their display
+        //but when server realise only one player left after removing this player
+        //directly end the game
+        socket.on("end game", () => {
+            //TODO: check how many players left
+            //if current player number - 1 === 1, end game directly
+            //else io.emit all ppl remove this socket in playground
+            if (playerNum -1 === 1){
+                io.emit("end game");
+            } else {
+                io.emit("remove player", playerData);
+                // save the game data of this player to scoreboard.json?
+            }
         });
 
-        // player tells server its gonna move
-        // server add in the indicator of which player it is 
-        // the final json broadcasted to all players for them to display themselves
-        // no validation done on server side, so a player can send a move request 300 times per second
-        // and all of them would be considered valid
-        // who needs anti cheat when theres literally a cheat button anyway
-        socket.on("move", (data) => {
-            newData = JSON.parse(data);
-            playerMove(getPlayerID(username), newData["x"], newData["y"]);
+        // socket tells server its player movement
+        socket.on("player move", (data) => {
+            //TODO: server should receive the movement is up down left right, move or stop
+
+            //find the playerID of this player using is username
+
+            //tell all players: player[XX] is going to move (up down left right, move/stop)
+            io.emit("move", playerMovementData);
         });
 
-        // player attempts to place down a bomb
-        socket.on("bomb", (data) => {
-            newData = JSON.parse(data);
-            playerPlaceBomb(getPlayerID(username),newData["bombType"]);
+        //socket tells server he/she places a bomb with bomb location and attack radius
+        socket.on("place bomb", (bombData) => {
+            //TODO: server knows the bomb is placed in this exact location
+
+            //find the correct location that this bomb should be placed (according to the grid coord)
+
+            //tell all players: there is a bomb at location XXX, with attack radius XXX 
+            io.emit("bomb", newBombData);
         });
+
+        // // player tells server its gonna move
+        // // server add in the indicator of which player it is 
+        // // the final json broadcasted to all players for them to display themselves
+        // // no validation done on server side, so a player can send a move request 300 times per second
+        // // and all of them would be considered valid
+        // // who needs anti cheat when theres literally a cheat button anyway
+        // socket.on("move", (data) => {
+        //     newData = JSON.parse(data);
+        //     playerMove(getPlayerID(username), newData["x"], newData["y"]);
+        // });
+
+        // // player attempts to place down a bomb
+        // socket.on("bomb", (data) => {
+        //     newData = JSON.parse(data);
+        //     playerPlaceBomb(getPlayerID(username),newData["bombType"]);
+        // });
     }
 });
 
