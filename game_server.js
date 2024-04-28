@@ -199,6 +199,7 @@ io.on("connection", (socket) => {
                     // if (len === 4) {
                     if (len === 2) {
                         io.emit("start game", playerID);
+                        setTimeout(syncRequest, 5000);
                     } else {
                         io.emit("players", JSON.stringify(players));
                     }
@@ -255,16 +256,9 @@ io.on("connection", (socket) => {
             io.emit("bomb", newBombData);
         });
 
-        // // player tells server its gonna move
-        // // server add in the indicator of which player it is 
-        // // the final json broadcasted to all players for them to display themselves
-        // // no validation done on server side, so a player can send a move request 300 times per second
-        // // and all of them would be considered valid
-        // // who needs anti cheat when theres literally a cheat button anyway
-        // socket.on("move", (data) => {
-        //     newData = JSON.parse(data);
-        //     playerMove(getPlayerID(username), newData["x"], newData["y"]);
-        // });
+        socket.on("sync host return", (playerPositionJSON) => {
+            io.emit("sync position", playerPositionJSON);
+        })
 
         // // player attempts to place down a bomb
         // socket.on("bomb", (data) => {
@@ -321,8 +315,11 @@ function getPlayerID(username) {
     return players.indexOf(username);
 }
 
-function removePlayerOnBoard(playerID) {
+function syncRequest() {
+    const host = playerSockets[0];
+    host.emit("sync host");
 
+    setTimeout(syncRequest, 5000);
 }
 
 // tells all client to print the server side map

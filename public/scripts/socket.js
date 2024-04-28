@@ -79,6 +79,16 @@ const Socket = (function() {
         socket.on("init map", (mapJSON) => {
             Playground.initPlayground(JSON.parse(mapJSON));
         });
+
+        socket.on("sync host", () => {
+            const coordArray = Playground.getPlayerCoords();
+            socket.emit("sync host return", JSON.stringify(coordArray));
+        });
+
+        socket.on("sync position", (playerPositionJSON) => {
+            const playerPosition = JSON.parse(playerPositionJSON);
+            Playground.syncPosition(playerPosition);
+        })
     };
 
     // This function disconnects the socket from the server

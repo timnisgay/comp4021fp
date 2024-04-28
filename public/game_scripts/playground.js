@@ -144,5 +144,25 @@ const Playground = (function() {
         setTimeout(customAnimationFrame, 33);
     }
 
-    return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove, playerStop};
+    const getPlayerCoords = function() {
+
+        const playerCoords = [];
+
+        for(player of playerList) {
+            playerCoords.push(player.getXY());
+        }
+
+        return playerCoords;
+    }
+
+    const syncPosition = function(playerPositions) {
+        
+        for(var i = 0; i < 4; ++i) {
+            const x = playerPositions[i]["x"];
+            const y = playerPositions[i]["y"];
+            playerList[i].setXY(x, y);
+        }
+    }
+
+    return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove, playerStop, getPlayerCoords, syncPosition};
 })();

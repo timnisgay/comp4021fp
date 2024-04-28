@@ -75,9 +75,12 @@ const Player = function(ctx, x, y, sequence) {
         speed = 150;
     };*/
 
+    var debugCount = 0;
+    var debugCount2 = 0;
     // This function updates the player depending on his movement.
     // - `time` - The timestamp when this function is called
     const update = function(time) {
+        ++debugCount;
         // Update the player if the player is moving
         if (direction != 0) {
             let { x, y } = sprite.getXY();
@@ -92,6 +95,7 @@ const Player = function(ctx, x, y, sequence) {
 
             if (running) 
             {
+                console.log(debugCount, ++debugCount2);
                 sprite.setXY(x, y)
                       .update(time);
             }
@@ -105,6 +109,8 @@ const Player = function(ctx, x, y, sequence) {
         //speedUp: speedUp,
         //slowDown: slowDown,
         //getBoundingBox: sprite.getBoundingBox,
+        setXY: sprite.setXY,
+        getXY: sprite.getXY,
         draw: sprite.draw,
         update: update
     };
