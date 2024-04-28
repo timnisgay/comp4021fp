@@ -229,16 +229,12 @@ io.on("connection", (socket) => {
 
         // socket tells server its player movement
         socket.on("player move", (data) => {
-            //TODO: server should receive the movement is up down left right, move or stop
             var playerMovementData = JSON.parse(data);
             playerMovementData["playerID"] = getPlayerID(username);
-
-            //find the playerID of this player using is username
-
-            //tell all players: player[XX] is going to move (up down left right, move/stop)
             io.emit("move", JSON.stringify(playerMovementData));
         });
 
+        // socket tells server the player it is controlling has stopped
         socket.on("player stop", (data) => {
             var playerMovementData = JSON.parse(data);
             playerMovementData["playerID"] = getPlayerID(username);
@@ -255,6 +251,7 @@ io.on("connection", (socket) => {
             io.emit("bomb", newBombData);
         });
 
+        // host tells server the player coords, time to broadcast it
         socket.on("sync host return", (playerPositionJSON) => {
             io.emit("sync position", playerPositionJSON);
         })
@@ -267,7 +264,7 @@ io.on("connection", (socket) => {
     }
 });
 
-// Use a web server to listen at port 8000
+// Use a web servers to listen at port 8000
 httpServer.listen(8000, () => {
     console.log("The game server has started...");
 });
@@ -310,6 +307,7 @@ function getPlayerLength() {
     return playerCount;
 }
 
+// does what it says
 function getPlayerID(username) {
     return players.indexOf(username);
 }

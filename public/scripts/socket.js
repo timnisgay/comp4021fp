@@ -76,15 +76,18 @@ const Socket = (function() {
 
         });
 
+        // socket received base map from server, ask playground to init
         socket.on("init map", (mapJSON) => {
             Playground.initPlayground(JSON.parse(mapJSON));
         });
 
+        // only "host" would receive this, host would need to get all player coords and return back to server
         socket.on("sync host", () => {
             const coordArray = Playground.getPlayerCoords();
             socket.emit("sync host return", JSON.stringify(coordArray));
         });
 
+        // everyone will receive this, sync player position according to the JSON received
         socket.on("sync position", (playerPositionJSON) => {
             const playerPosition = JSON.parse(playerPositionJSON);
             Playground.syncPosition(playerPosition);
@@ -150,6 +153,7 @@ const Socket = (function() {
         }
     };
 
+    // asking server to send the base map
     const getMap = function() {
         if (socket && socket.connected) {
             socket.emit("init board");

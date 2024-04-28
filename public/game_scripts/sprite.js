@@ -21,6 +21,7 @@ const Sprite = function(ctx, x, y) {
     let index = 0;
 
     // This is the scaling factor for drawing the sprite.
+    // this is hardcoded, because 50/16=3.125
     let scale = 3.125;
 
     // This is the scaling factor to determine the size of the shadow, relative to the scaled sprite image size.

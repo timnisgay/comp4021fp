@@ -91,6 +91,7 @@ const Player = function(ctx, x, y, sequence) {
                 }
             }
 
+            // update the sprite position
             sprite.setXY(x, y)
                   .update(time);
         }
