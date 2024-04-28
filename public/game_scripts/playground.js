@@ -203,7 +203,7 @@ const Playground = (function() {
         switch(direction) {
             case 1:
                 coordsToTestFor[0] = [Math.floor((x - 17) / 50), Math.floor((y - 10) / 50)];
-                coordsToTestFor[1] = [Math.floor((x - 17) / 50), Math.floor((y + 10) / 50)];
+                coordsToTestFor[1] = [Math.floor((x - 17) / 50), Math.floor((y + 20) / 50)];
             break;
             case 2: 
                 coordsToTestFor[0] = [Math.floor((x - 7) / 50), Math.floor((y - 20) / 50)];
@@ -211,11 +211,11 @@ const Playground = (function() {
             break;
             case 3: 
                 coordsToTestFor[0] = [Math.floor((x + 17) / 50), Math.floor((y - 10) / 50)];
-                coordsToTestFor[1] = [Math.floor((x + 17) / 50), Math.floor((y + 10) / 50)];
+                coordsToTestFor[1] = [Math.floor((x + 17) / 50), Math.floor((y + 20) / 50)];
             break;
             case 4:
-                coordsToTestFor[0] = [Math.floor((x - 7) / 50), Math.floor((y + 25) / 50)];
-                coordsToTestFor[1] = [Math.floor((x + 7) / 50), Math.floor((y + 25) / 50)];
+                coordsToTestFor[0] = [Math.floor((x - 7) / 50), Math.floor((y + 27) / 50)];
+                coordsToTestFor[1] = [Math.floor((x + 7) / 50), Math.floor((y + 27) / 50)];
             break;
         }
 
