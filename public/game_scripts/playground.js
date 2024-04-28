@@ -88,19 +88,21 @@ const Playground = (function() {
         }
     };
 
-    let moving = false;
+    let lastDirection = -1;
 
     const keyDownHandler = function(e) {
-
-        if(moving) return;
 
         const keyToDirectionMapping = ["a", "w", "d", "s"];
         const keyInput = e.key.toLowerCase();
 
         const movementDirection = keyToDirectionMapping.indexOf(keyInput);
 
+        console.log(lastDirection, movementDirection);
+
+        if(lastDirection == movementDirection) return;
+
         if(movementDirection != -1) {
-            moving = true;
+            lastDirection = movementDirection;
             Socket.postMovement(JSON.stringify(movementDirection + 1));
         }
     }
@@ -111,7 +113,7 @@ const Playground = (function() {
         const movementDirection = keyToDirectionMapping.indexOf(keyInput);
 
         if(movementDirection != -1) {
-            moving = false;
+            lastDirection = -1;
             Socket.stopMovement(JSON.stringify(movementDirection + 1));
         }
     }
@@ -164,5 +166,38 @@ const Playground = (function() {
         }
     }
 
-    return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove, playerStop, getPlayerCoords, syncPosition};
+    // return true if it is going to collide with something
+    // false otherwise
+    const collisionCheck = function(x, y, direction) {
+
+        const coordsToTestFor = [];
+
+        switch(direction) {
+            case 1:
+                coordsToTestFor[0] = [Math.floor((x - 17) / 50), Math.floor((y - 10) / 50)];
+                coordsToTestFor[1] = [Math.floor((x - 17) / 50), Math.floor((y + 10) / 50)];
+            break;
+            case 2: 
+                coordsToTestFor[0] = [Math.floor((x - 7) / 50), Math.floor((y - 20) / 50)];
+                coordsToTestFor[1] = [Math.floor((x + 7) / 50), Math.floor((y - 20) / 50)];
+            break;
+            case 3: 
+                coordsToTestFor[0] = [Math.floor((x + 17) / 50), Math.floor((y - 10) / 50)];
+                coordsToTestFor[1] = [Math.floor((x + 17) / 50), Math.floor((y + 10) / 50)];
+            break;
+            case 4:
+                coordsToTestFor[0] = [Math.floor((x - 7) / 50), Math.floor((y + 20) / 50)];
+                coordsToTestFor[1] = [Math.floor((x + 7) / 50), Math.floor((y + 20) / 50)];
+            break;
+        }
+
+        const girdBlockCode1 = baseMap[coordsToTestFor[0][1]][coordsToTestFor[0][0]];
+        const girdBlockCode2 = baseMap[coordsToTestFor[1][1]][coordsToTestFor[1][0]];
+
+        if( girdBlockCode1[0] == "W" || girdBlockCode2[0] == "W" ) return true;
+
+        return false;
+    }
+
+    return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove, playerStop, getPlayerCoords, syncPosition, collisionCheck};
 })();

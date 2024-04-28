@@ -147,7 +147,7 @@ const Sprite = function(ctx, x, y) {
     // This function draws the shadow and the sprite.
     const draw = function() {
         if (isReady()) {
-            drawShadow();
+            //drawShadow();
             drawSprite();
         }
         return this;

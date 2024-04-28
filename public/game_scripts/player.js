@@ -74,31 +74,25 @@ const Player = function(ctx, x, y, sequence) {
     const slowDown = function() {
         speed = 150;
     };*/
-
-    var debugCount = 0;
-    var debugCount2 = 0;
+    
     // This function updates the player depending on his movement.
     // - `time` - The timestamp when this function is called
     const update = function(time) {
-        ++debugCount;
         // Update the player if the player is moving
-        if (direction != 0) {
+        if (direction != 0 && running) {
             let { x, y } = sprite.getXY();
-
-            // Move the player
-            switch (direction) {
-                case 1: x -= speed / 20; break;
-                case 2: y -= speed / 20; break;
-                case 3: x += speed / 20; break;
-                case 4: y += speed / 20; break;
+            if(!Playground.collisionCheck(x, y, direction)) {
+                // Move the player
+                switch (direction) {
+                    case 1: x -= speed / 20; break;
+                    case 2: y -= speed / 20; break;
+                    case 3: x += speed / 20; break;
+                    case 4: y += speed / 20; break;
+                }
             }
 
-            if (running) 
-            {
-                console.log(debugCount, ++debugCount2);
-                sprite.setXY(x, y)
-                      .update(time);
-            }
+            sprite.setXY(x, y)
+                  .update(time);
         }
     };
 

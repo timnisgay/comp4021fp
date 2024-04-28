@@ -109,7 +109,6 @@ const onlineUsers = {};
 
 // technically i should create a player class to store all these highly repetitive info, but if it works, dont touch it
 const players = [-1, -1, -1, -1];
-const playerCoords = [[1, 1], [24, 1], [1, 16], [24, 16]];
 // 3 variables: direction, sequence number, alive status
 const playerCondition = [[2, 0, false], [2, 0, false], [2, 0, false], [2, 0, false]];
 const playerSockets = [-1, -1, -1, -1];
@@ -315,11 +314,13 @@ function getPlayerID(username) {
     return players.indexOf(username);
 }
 
+// Send request to host every 1 second, asking for the hosts player positions
 function syncRequest() {
     const host = playerSockets[0];
-    host.emit("sync host");
 
-    setTimeout(syncRequest, 5000);
+    if(host != -1) host.emit("sync host");
+
+    setTimeout(syncRequest, 1000);
 }
 
 // tells all client to print the server side map
