@@ -306,6 +306,7 @@ button.icon:active {
 	top: 5vmin;
 	left: 5vmin; */
     width: 80vw;
+    height: 90vh;
 }
 
 .player-stat-container {
