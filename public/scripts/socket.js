@@ -36,11 +36,10 @@ const Socket = (function() {
         });
 
         // server tells socket that there are 4 players already and will now start the game
-        socket.on("start game", () => {
-            // TODO: start the game, change to another page!
+        socket.on("start game", (playerID) => {
             LobbyPage.hide();
             GamePlayPage.show();
-            //game.start();
+            Playground.setMyID(playerID);
         });
 
         // server tells socket a player is dead, please remove that player in the playArea
@@ -72,9 +71,16 @@ const Socket = (function() {
         //server tells this socket there is a bomb somewhere
         //bombData should have the bomb location, attack radius
         // and the socket should do update to show the bomb and do the self countdown and self explode
-        socket.on("bomb", (bombData) => {
+        socket.on("bomb", (data) => {
+            const bombData = JSON.parse(data);
+            const {bombInfo, gridCoord} = bombData
 
+            Playground.addBomb(bombInfo, gridCoord);
         });
+
+        socket.on("explode bomb", (bombID) => {
+            Playground.explodeBomb(bombID);
+        })
 
         // socket received base map from server, ask playground to init
         socket.on("init map", (mapJSON) => {
@@ -83,14 +89,18 @@ const Socket = (function() {
 
         // only "host" would receive this, host would need to get all player coords and return back to server
         socket.on("sync host", () => {
-            const coordArray = Playground.getPlayerCoords();
-            socket.emit("sync host return", JSON.stringify(coordArray));
+            const coord = Playground.getPlayerCoords();
+            if(coord) socket.emit("sync host return", JSON.stringify(coord));
         });
 
         // everyone will receive this, sync player position according to the JSON received
         socket.on("sync position", (playerPositionJSON) => {
             const playerPosition = JSON.parse(playerPositionJSON);
             Playground.syncPosition(playerPosition);
+        })
+
+        socket.on("player died", (playerID) => {
+            Playground.playerDied(playerID);
         })
     };
 
@@ -144,11 +154,9 @@ const Socket = (function() {
 
     //This function tells server where the bomb is placed
     //dont tell server to place bomb if it exceeds the number of bomb it can placed
-    const postBomb = function() {
+    const postBomb = function(bombInfo, canvasCoords) {
         if (socket && socket.connected) {
-            //TODO: prepare data
-            const data = null;
-
+            const data = JSON.stringify({bombInfo, canvasCoords});
             socket.emit("place bomb", data);
         }
     };
@@ -160,5 +168,14 @@ const Socket = (function() {
         }
     }
 
-    return { getSocket, connect, disconnect, getPlayers, getBestGameStats, joinGame, endGame, postMovement, stopMovement, postBomb, getMap};
+    // player death can only be announced by themselves
+    const playerDied = function() {
+        if (socket && socket.connected) {
+            socket.emit("dead");
+        }
+    }
+
+    return { getSocket, connect, disconnect, getPlayers, getBestGameStats, 
+            joinGame, endGame, postMovement, stopMovement, postBomb, getMap,
+            playerDied};
 })();

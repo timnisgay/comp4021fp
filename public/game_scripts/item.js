@@ -48,7 +48,6 @@ const Item = function(ctx, x, y) {
         getXY: sprite.getXY,
         setXY: sprite.setXY,
         getAge: getAge,
-        getBoundingBox: sprite.getBoundingBox,
         randomize: randomize,
         draw: sprite.draw,
         update: sprite.update

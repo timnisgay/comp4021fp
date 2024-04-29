@@ -40,7 +40,6 @@ const Wall = function(ctx, x, y) {
         getXY: sprite.getXY,
         setXY: sprite.setXY,
         getAge: getAge,
-        getBoundingBox: sprite.getBoundingBox,
         draw: sprite.draw,
         update: sprite.update
     };

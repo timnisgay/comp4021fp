@@ -2,7 +2,6 @@
 // - `ctx` - A canvas context for drawing
 // - `x` - The initial x position of the player
 // - `y` - The initial y position of the player
-// - `gameArea` - The bounding box of the game area
 const Player = function(ctx, x, y, sequence) {
 
     //player stats
@@ -12,12 +11,19 @@ const Player = function(ctx, x, y, sequence) {
         AttackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 5*5 cross, icetrap is 3*3 rectangle
     };
 
+    // bomb stats
+    let bombStats = {
+        maxBomb: 1,
+        currentPlaced: 0,
+        power: 1,
+        iceTrapUnlocked: false
+    };
+
     // This is the sprite object of the player created from the Sprite module.
     const sprite = Sprite(ctx, x, y);
 
     // The sprite object is configured for the player sprite here.
     sprite.setSequence(sequence.moveDown)
-          .setShadowScale({ x: 0.75, y: 0.20 })
           .useSheet("assets/sprite.png");
 
     // This is the moving direction, which can be a number from 0 to 4:
@@ -97,16 +103,46 @@ const Player = function(ctx, x, y, sequence) {
         }
     };
 
+    const attemptPlaceBomb = function(bombType, ownerID) {
+        // normal bomb
+        if(bombType == 0) {
+            // no bombs left
+            if(bombStats.currentPlaced == bombStats.maxBomb) return;
+
+            ++bombStats.currentPlaced;
+
+            const bombData = {
+                "bombType" : 0,
+                "bombPower" : bombStats.power,
+                "bombOwner" : ownerID
+            }
+
+            Socket.postBomb(bombData, sprite.getXY());
+
+        }
+    }
+
+    const bombExploded = function() {
+        bombStats.currentPlaced--;
+    }
+
+    const getGridXY = function() {
+        const {x, y} = sprite.getXY();
+        return {"x" : Math.floor(x / 50), "y" : Math.floor(y / 50)};
+    }
+
     // The methods are returned as an object here.
     return {
         move: move,
         stop: stop,
         //speedUp: speedUp,
         //slowDown: slowDown,
-        //getBoundingBox: sprite.getBoundingBox,
         setXY: sprite.setXY,
         getXY: sprite.getXY,
         draw: sprite.draw,
+        getGridXY: getGridXY,
+        attemptPlaceBomb: attemptPlaceBomb,
+        bombExploded: bombExploded,
         update: update
     };
 };

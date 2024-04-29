@@ -109,11 +109,13 @@ const onlineUsers = {};
 
 // technically i should create a player class to store all these highly repetitive info, but if it works, dont touch it
 const players = [-1, -1, -1, -1];
-// 3 variables: direction, sequence number, alive status
-const playerCondition = [[2, 0, false], [2, 0, false], [2, 0, false], [2, 0, false]];
+const playerDead = [true, true, true, true];
 const playerSockets = [-1, -1, -1, -1];
-// 4 indexes again, each means the following: ice trap unlocked, bomb power, bomb limit, current placed bombs
-const playerBombInfo = [[false, 1, 1, 0], [false, 1, 1, 0], [false, 1, 1, 0], [false, 1, 1, 0]];
+
+var gameRunning = false;
+
+// starts from 0, each bomb will be given their own bombID for easier identification
+var currentBombID = 0;
 
 // exist to get what was supposed to replace the player/object after it moved/vanished
 const boardInit = 
@@ -153,6 +155,7 @@ io.on("connection", (socket) => {
                 if(removePlayer(username) != -1) {
                     console.log(username, "is removed from players, current players: ", players);
                     io.emit("players", JSON.stringify(players));
+                    gameRunning = false;
                 }
             }
             
@@ -181,7 +184,7 @@ io.on("connection", (socket) => {
         //socket joins the game
         socket.on("join game", () => {
             if (!players.includes(username) && getPlayerLength() < 4) {
-                const playerID = addPlayer(username)
+                const playerID = addPlayer(username);
                 if(playerID != -1) {
 
                     const len = getPlayerLength();
@@ -192,13 +195,18 @@ io.on("connection", (socket) => {
                     // store the player socket
                     playerSockets[playerID] = socket;
                     // set the player to be alive
-                    playerCondition[playerID][2] = true;
+                    playerDead[playerID] = false;
 
                     // DEBUG purpose
                     // if (len === 4) {
                     if (len === 2) {
-                        io.emit("start game", playerID);
-                        setTimeout(syncRequest, 5000);
+                        for(var i = 0; i < 4; ++i){
+                            if(playerSockets[i] != -1) playerSockets[i].emit("start game", i);
+                        }
+
+                        gameRunning = true;
+                        // 3000 here, in the future maybe 3 seconds count down before start
+                        setTimeout(syncRequest, 3000);
                     } else {
                         io.emit("players", JSON.stringify(players));
                     }
@@ -214,7 +222,7 @@ io.on("connection", (socket) => {
             //TODO: check how many players left
             //if current player number - 1 === 1, end game directly
             //else io.emit all ppl remove this socket in playground
-            if (playerNum -1 === 1){
+            if (playerNum - 1 === 1){
                 io.emit("end game");
             } else {
                 io.emit("remove player", playerData);
@@ -243,17 +251,40 @@ io.on("connection", (socket) => {
 
         //socket tells server he/she places a bomb with bomb location and attack radius
         socket.on("place bomb", (bombData) => {
-            //TODO: server knows the bomb is placed in this exact location
 
-            //find the correct location that this bomb should be placed (according to the grid coord)
+            // adding this to prevent extreme corner case
+            // maybe 2 players place bomb at same time
+            // since js async, data integrity might be affected
+            // causing currentBombID to change midway and weird stuff happen
+            const bombIDnow = currentBombID++;
 
-            //tell all players: there is a bomb at location XXX, with attack radius XXX 
-            io.emit("bomb", newBombData);
+            const { bombInfo, canvasCoords } = JSON.parse(bombData);
+            bombInfo.bombID = bombIDnow;
+            const { x, y} = canvasCoords;
+
+            const gridCoord = {x : Math.floor(x / 50), y : Math.floor(y / 50)}
+
+            io.emit("bomb", JSON.stringify({bombInfo, gridCoord}));
+            setTimeout(bombExplode, 2400, bombIDnow);
         });
 
         // host tells server the player coords, time to broadcast it
         socket.on("sync host return", (playerPositionJSON) => {
-            io.emit("sync position", playerPositionJSON);
+
+            const coord = JSON.parse(playerPositionJSON);
+
+            const playerPosition = {
+                "playerID" : getPlayerID(username),
+                "coord" : coord
+            }
+
+            io.emit("sync position", JSON.stringify(playerPosition));
+        })
+
+        socket.on("dead", () => {
+            const playerID = getPlayerID(username);
+            playerDead[playerID] = true;
+            io.emit("player died", playerID);
         })
 
         // // player attempts to place down a bomb
@@ -288,11 +319,11 @@ function getFirstAvailableIndex() {
 
 // returns the removed player index, -1 if username is not a player
 function removePlayer(username) {
-    const index = players.indexOf(username);
+    const index = getPlayerID(username);
     if(index == -1) return -1;
 
     playerSockets[index] = -1;
-    playerCondition[index][2] = false;
+    playerDead[index] = true;
     players[index] = -1;
     return index;
 }
@@ -312,13 +343,20 @@ function getPlayerID(username) {
     return players.indexOf(username);
 }
 
-// Send request to host every 1 second, asking for the hosts player positions
+// Send request to host every 200 ms, asking for the hosts player positions
 function syncRequest() {
-    const host = playerSockets[0];
 
-    if(host != -1) host.emit("sync host");
+    if(!gameRunning) return;
 
-    setTimeout(syncRequest, 1000);
+    for(var i = 0; i < 4; ++i) {
+        if(!playerDead[i]) playerSockets[i].emit("sync host");
+    }
+
+    setTimeout(syncRequest, 200);
+}
+
+function bombExplode(bombID) {
+    io.emit("explode bomb", bombID);
 }
 
 // tells all client to print the server side map
