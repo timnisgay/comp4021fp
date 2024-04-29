@@ -42,15 +42,10 @@ const Socket = (function() {
             Playground.setMyID(playerID);
         });
 
-        // server tells socket a player is dead, please remove that player in the playArea
-        // but can keep the player stat?
-        socket.on("remove player", (player) => {
-
-        });
-
         // server tells socket the game is ended, please show the end game page
         socket.on("end game", () => {
-
+            GamePlayPage.hide();
+            GameEndPage.show(); //remove this line later and change the line to emit the Stat to server
         });
 
         socket.on("print playground", (data) => {
@@ -129,13 +124,6 @@ const Socket = (function() {
         }
     };
 
-    //This function tells server this socket died in the game
-    const endGame = function() {
-        if (socket && socket.connected) {
-            socket.emit("end game");
-        }
-    };
-
     //This function tells server this socket's movement
     const postMovement = function(movementDirection) {
         if (socket && socket.connected) {
@@ -176,6 +164,6 @@ const Socket = (function() {
     }
 
     return { getSocket, connect, disconnect, getPlayers, getBestGameStats, 
-            joinGame, endGame, postMovement, stopMovement, postBomb, getMap,
+            joinGame, postMovement, stopMovement, postBomb, getMap,
             playerDied};
 })();

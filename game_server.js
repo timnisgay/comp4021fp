@@ -214,22 +214,6 @@ io.on("connection", (socket) => {
             }
         });
 
-        //socket tells server he/she is dead
-        //server need to tell other players to remove this player in their display
-        //but when server realise only one player left after removing this player
-        //directly end the game
-        socket.on("end game", () => {
-            //TODO: check how many players left
-            //if current player number - 1 === 1, end game directly
-            //else io.emit all ppl remove this socket in playground
-            if (playerNum - 1 === 1){
-                io.emit("end game");
-            } else {
-                io.emit("remove player", playerData);
-                // save the game data of this player to scoreboard.json?
-            }
-        });
-
         // Send the base board to whoever request for the info
         socket.on("init board", () => {
             socket.emit("init map", JSON.stringify(boardInit));
@@ -284,7 +268,14 @@ io.on("connection", (socket) => {
         socket.on("dead", () => {
             const playerID = getPlayerID(username);
             playerDead[playerID] = true;
-            io.emit("player died", playerID);
+
+            console.log(playerDead);
+            console.log("how many player left: ", playerDead.filter(value => value === false).length);
+            if (playerDead.filter(value => value === false).length <= 1) {
+                io.emit("end game");
+            } else {
+                io.emit("player died", playerID);
+            }
         })
 
         // // player attempts to place down a bomb
