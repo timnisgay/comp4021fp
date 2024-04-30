@@ -5,7 +5,7 @@ const Playground = (function() {
     const spritesheet = new Image();
 
     const codeToSpriteCoordDict = {
-        "W1": [160, 288], "W2": [176, 288], "G1": [32, 208],
+        "W1": [160, 288], "W2": [176, 288], "WR": [192, 288], "G1": [32, 208],
         "EW": [224, 208], "EV": [224, 224], "ES": [224, 240], 
         "EA": [0, 288], "EH": [16, 288], "EC": [32, 288], "ED": [48, 288]
     };
@@ -54,7 +54,7 @@ const Playground = (function() {
     // this client's player id (0 - 3)
     var myID = -1;
     // the player is dead
-    var dead = false;
+    var dead = true;
     // individual explosion id to keep track
     var explosionID = 0;
 
@@ -64,6 +64,8 @@ const Playground = (function() {
         context = canvas.getContext("2d");
         context.imageSmoothingEnabled = false;
         baseMap = mapArray;
+        dead = false;
+        gameEnd = false;
 
         // ensures that other init functions would only be called after the sprite is loaded
         spritesheet.src = "assets/sprite.png";
@@ -176,6 +178,8 @@ const Playground = (function() {
         }
     }
 
+    var gameEnd = false;
+
     // it runs at 30 fps, can be changed by changing the setTimeout delay
     const customAnimationFrame = function() {
 
@@ -227,7 +231,7 @@ const Playground = (function() {
             }
         }
 
-        setTimeout(customAnimationFrame, 33);
+        if(!gameEnd) setTimeout(customAnimationFrame, 33);
     }
 
     // for replying to server's sync check
@@ -284,8 +288,6 @@ const Playground = (function() {
         // getting the code of the two test points on base map
         const girdBlockCode1 = baseMap[coordsToTestFor[0][1]][coordsToTestFor[0][0]];
         const girdBlockCode2 = baseMap[coordsToTestFor[1][1]][coordsToTestFor[1][0]];
-
-        // in the future, need to test for bomb, explosion, item collision
 
         // wall collision here
         if( girdBlockCode1[0] == "W" || girdBlockCode2[0] == "W" ) return true;
@@ -352,7 +354,13 @@ const Playground = (function() {
                 // but it shouldnt happen if wall check is performed correctly, and bombs dont appear inside wall somehow...
                 const blockToPaintOver = baseMap[ctpo[1]][ctpo[0]];
                 // stop this branch of explosion if it hits wall
-                if(blockToPaintOver[0] == "W") break;
+                if(blockToPaintOver[0] == "W") {
+                    if(blockToPaintOver == "WR") 
+                    {
+                        Socket.removeWall({"x" : ctpo[0] , "y" : ctpo[1]});
+                    }
+                    break;
+                }
 
                 const endOfExplosion = (j == bombPower);
                 
@@ -385,11 +393,21 @@ const Playground = (function() {
 
     // remove player according to ID
     const playerDied = function(ID) {
-        console.log("died");
         playerList[ID] = null;
+    }
+
+    const removeWall = function(coord) {
+        const {x, y} = coord;
+        if(baseMap[y][x] == "WR") {
+            baseMap[y][x] = "G1";
+        }
+    }
+
+    const gameEnded = function() {
+        gameEnd = true;
     }
 
     return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove,
             playerStop, getPlayerCoords, syncPosition, collisionCheck, setMyID, addBomb,
-            explodeBomb, playerDied};
+            explodeBomb, playerDied, removeWall, gameEnded};
 })();

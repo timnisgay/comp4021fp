@@ -44,6 +44,7 @@ const Socket = (function() {
 
         // server tells socket the game is ended, please show the end game page
         socket.on("end game", () => {
+            Playground.gameEnded();
             GamePlayPage.hide();
             GameEndPage.show(); //remove this line later and change the line to emit the Stat to server
         });
@@ -96,6 +97,10 @@ const Socket = (function() {
 
         socket.on("player died", (playerID) => {
             Playground.playerDied(playerID);
+        })
+
+        socket.on("remove wall", (data) => {
+            Playground.removeWall(JSON.parse(data));
         })
     };
 
@@ -163,7 +168,13 @@ const Socket = (function() {
         }
     }
 
+    const removeWall = function(coord) {
+        if (socket && socket.connected) {
+            socket.emit("remove wall", JSON.stringify(coord));
+        }
+    }
+
     return { getSocket, connect, disconnect, getPlayers, getBestGameStats, 
             joinGame, postMovement, stopMovement, postBomb, getMap,
-            playerDied};
+            playerDied, removeWall};
 })();
