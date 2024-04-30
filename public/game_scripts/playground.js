@@ -55,7 +55,7 @@ const Playground = (function() {
     var myID = -1;
     // the player is dead
     var dead = true;
-    // individual explosion id to keep track
+    // individual id to keep track of things
     var explosionID = 0;
 
     // only called once to init everything
@@ -187,7 +187,10 @@ const Playground = (function() {
 
         printBaseMap();
 
-        // print all bombs first
+        for(var item of itemList) {
+            item.draw();
+        }
+        
         for(var bomb of bombList) {
             bomb.update(timeNow);
             bomb.draw();
@@ -407,7 +410,12 @@ const Playground = (function() {
         gameEnd = true;
     }
 
+    const addPowerUp = function(data) {
+        const { coord, powerUpInfo } = data;
+        itemList.push(Item(context, powerUpInfo, coord));
+    }
+
     return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove,
             playerStop, getPlayerCoords, syncPosition, collisionCheck, setMyID, addBomb,
-            explodeBomb, playerDied, removeWall, gameEnded};
+            explodeBomb, playerDied, removeWall, gameEnded, addPowerUp};
 })();

@@ -116,13 +116,14 @@ var gameRunning = false;
 
 // starts from 0, each bomb will be given their own bombID for easier identification
 var currentBombID = 0;
+var currentItemID = 0;
 
 // exist to get what was supposed to replace the player/object after it moved/vanished
 const boardInit = 
 [
     ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
     ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "WR", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W1", "G1", "G1", "W2", "WR", "W2", "WR", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
     ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W2", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
     ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
     ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
@@ -287,8 +288,16 @@ io.on("connection", (socket) => {
             }
         })
 
-        socket.on("remove wall", (data) => {
-            io.emit("remove wall", data);
+        socket.on("remove wall", (coord) => {
+            io.emit("remove wall", coord);
+            const powerUp = spawnPowerUp();
+            if(powerUp != "nothing") {
+                const powerUpInfo = {
+                    powerUp : powerUp,
+                    itemID : currentItemID++
+                }
+                io.emit("spawn powerup", JSON.stringify({"powerUpInfo" : powerUpInfo, "coord" : JSON.parse(coord)}));
+            }
         })
     }
 });
@@ -355,4 +364,38 @@ function syncRequest() {
 
 function bombExplode(bombID) {
     io.emit("explode bomb", bombID);
+}
+
+// chanceToSpawnPowerUp - chance to spawn a power up after breaking a wall
+const chanceToSpawnPowerUp = 1.0;
+
+// chance for each power up to spawn (if something is going to spawn for sure)
+// the chances should add up to 1 in the end, 
+// if the sum is less than 1: might cause an originally spawning item to not spawn
+// if the sum is larger than 1: some power up might spawn more than they should, some power up might never spawn
+// just make them add up to 1 lol
+const chanceBombCount = 0.3;
+const chanceBombPower = 0.3;
+const chanceIceTrap = 0.4;
+function spawnPowerUp() {
+    if(Math.random() < chanceToSpawnPowerUp) {
+        var randomSeed = Math.random();
+
+        randomSeed -= chanceBombCount;
+        if(randomSeed <= 0) {
+            return "bombCount";
+        }
+
+        randomSeed -= chanceBombPower;
+        if(randomSeed <= 0) {
+            return "bombPower";
+        }
+
+        randomSeed -= chanceIceTrap;
+        if(randomSeed <= 0) {
+            return "iceTrapUnlock";
+        }
+
+    }
+    return "nothing";
 }

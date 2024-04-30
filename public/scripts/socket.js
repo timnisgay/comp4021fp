@@ -102,6 +102,10 @@ const Socket = (function() {
         socket.on("remove wall", (data) => {
             Playground.removeWall(JSON.parse(data));
         })
+
+        socket.on("spawn powerup", (data) => {
+            Playground.addPowerUp(JSON.parse(data));
+        })
     };
 
     // This function disconnects the socket from the server
