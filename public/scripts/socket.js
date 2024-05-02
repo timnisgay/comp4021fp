@@ -36,10 +36,10 @@ const Socket = (function() {
         });
 
         // server tells socket that there are 4 players already and will now start the game
-        socket.on("start game", (playerID) => {
+        socket.on("start game", (playerInfo) => {
             LobbyPage.hide();
             GamePlayPage.show();
-            Playground.setMyID(playerID);
+            Playground.setMyInfo(JSON.parse(playerInfo));
         });
 
         // server tells socket the game is ended, please show the end game page
@@ -121,6 +121,10 @@ const Socket = (function() {
 
         socket.on("unfreeze player", (playerID) => {
             Playground.unfreezePlayer(playerID);
+        })
+
+        socket.on("get personal stat", () => {
+            Playground.getMyStat();
         })
     };
 
@@ -206,7 +210,18 @@ const Socket = (function() {
         }
     }
 
+    const returnPersonalStat = function(stats, myID, myName) {
+        if (socket && socket.connected) {
+            const data = {
+                stats : stats,
+                playerID : myID,
+                playerName : myName
+            }
+            socket.emit("return stat", JSON.stringify(stats));
+        }
+    }
+
     return { getSocket, connect, disconnect, getPlayers, getBestGameStats, 
             joinGame, postMovement, stopMovement, postBomb, getMap,
-            playerDied, removeWall, powerUpPickUp, playerFrozen};
+            playerDied, removeWall, powerUpPickUp, playerFrozen, returnPersonalStat};
 })();

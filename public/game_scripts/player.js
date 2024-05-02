@@ -105,6 +105,8 @@ const Player = function(ctx, x, y, sequence) {
 
             ++bombStats.currentPlaced;
 
+            bombType == 0 ? ++stats.numBomb : ++stats.numIceTrap;
+
             const bombData = {
                 "bombType" : bombType,
                 "bombPower" : bombStats.power,
@@ -127,13 +129,12 @@ const Player = function(ctx, x, y, sequence) {
     }
 
     const increaseBombCount = function(num) {
-        console.log("added bomb by " + num);
         bombStats.maxBomb += num;
     }
 
     const increaseBombPower = function(num) {
-        console.log("added bomb power by " + num);
         bombStats.power += num;
+        stats.AttackRadius += num;
     }
 
     const unlockIceTrap = function() {
@@ -142,6 +143,7 @@ const Player = function(ctx, x, y, sequence) {
 
     const setDead = function(bool) {
         dead = bool;
+        if(bool) stats.timeDied = performance.now();
     }
 
     const setFrozen = function(bool) {
@@ -155,6 +157,10 @@ const Player = function(ctx, x, y, sequence) {
 
     const getFrozen = function() {
         return frozen;
+    }
+
+    const getStats = function() {
+        return stats;
     }
 
     // The methods are returned as an object here.
@@ -174,6 +180,7 @@ const Player = function(ctx, x, y, sequence) {
         setDead: setDead,
         setFrozen: setFrozen,
         getDead: getDead,
-        getFrozen: getFrozen
+        getFrozen: getFrozen,
+        getStats: getStats
     };
 };

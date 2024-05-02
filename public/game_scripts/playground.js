@@ -52,6 +52,7 @@ const Playground = (function() {
 
     // this client's player id (0 - 3)
     var myID = -1;
+    var myName = null;
     // individual id to keep track of things
     var explosionID = 0;
 
@@ -71,6 +72,7 @@ const Playground = (function() {
                 printBaseMap();
                 initPlayers();
                 customAnimationFrame();
+                console.log("init once");
             })
             .catch(() => {
                 console.log("error, sprite.png doesn't exist or the path is wrong");
@@ -216,8 +218,8 @@ const Playground = (function() {
                     if(myCoord.x == x && myCoord.y == y) {
                         const frozen = playerList[myID].getFrozen();
                         if(code[0] == "E") {
+                            playerList[myID].setDead(true);
                             Socket.playerDied();
-                            playerList[myID].setDead() = true;
                         }
                         else if(code == "IE" && !frozen) {
                             Socket.playerFrozen();
@@ -308,8 +310,9 @@ const Playground = (function() {
         return false;
     }
 
-    const setMyID = function(id) {
-        myID = id;
+    const setMyInfo = function(playerInfo) {
+        myID = playerInfo.playerID;
+        myName = playerInfo.playerName;
     }
 
     // add the bomb to bomb list by creating a new bomb object
@@ -484,8 +487,15 @@ const Playground = (function() {
         }
     }
 
+    const getMyStat = function() {
+        if(playerList[myID]) {
+            const stats = playerList[myID].getStats();
+            Socket.returnPersonalStat(stats, myID, myName);
+        }
+    }
+
     return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove,
-            playerStop, getPlayerCoords, syncPosition, collisionCheck, setMyID, addBomb,
+            playerStop, getPlayerCoords, syncPosition, collisionCheck, setMyInfo, addBomb,
             explodeBomb, playerDied, removeWall, gameEnded, addPowerUp, applyPowerUp,
-            removePowerUp, freezePlayer, unfreezePlayer};
+            removePowerUp, freezePlayer, unfreezePlayer, getMyStat};
 })();
