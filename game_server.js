@@ -299,14 +299,14 @@ io.on("connection", (socket) => {
                 io.emit("end game");
 
                 // reset all player related data
-                /*
+                
                 gameRunning = false;
                 players = [-1, -1, -1, -1];
                 playerDead = [true, true, true, true];
                 playerSockets = [-1, -1, -1, -1];
                 io.emit("players", JSON.stringify(players));
                 boardInit = boardRestartInit;
-                */
+                
             } else {
                 io.emit("player died", playerID);
             }

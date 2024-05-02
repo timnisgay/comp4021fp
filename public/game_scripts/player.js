@@ -6,8 +6,9 @@ const Player = function(ctx, x, y, sequence) {
 
     //player stats
     let stats = {
-        numBomb: 1, //highest limit is
-        numIceTrap: 1, //highest limit is 
+        timeDied: 0,
+        numBomb: 0,
+        numIceTrap: 0,
         AttackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 5*5 cross, icetrap is 3*3 rectangle
     };
 
