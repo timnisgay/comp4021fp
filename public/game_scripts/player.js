@@ -9,15 +9,18 @@ const Player = function(ctx, x, y, sequence) {
         timeDied: 0,
         numBomb: 0,
         numIceTrap: 0,
+        maxBomb: 1,
+        maxIce: 1,
         AttackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 3*3 cross, icetrap is 3*3 rectangle
     };
 
     // bomb stats
     let bombStats = {
         maxBomb: 1,
-        currentPlaced: 0,
+        maxIce: 1,
+        currentPlacedBomb: 0,
+        currentPlacedIce: 0,
         power: 1,
-        iceTrapUnlocked: false
     };
 
     var dead = false;
@@ -98,14 +101,12 @@ const Player = function(ctx, x, y, sequence) {
 
     const attemptPlaceBomb = function(bombType, ownerID) {
 
-        // no bombs left
-        if(bombStats.currentPlaced == bombStats.maxBomb) return;
+        if(bombType == 0) {
 
-        if(bombType == 0 || bombType == 1) {
+            if(bombStats.maxBomb == bombStats.currentPlacedBomb) return;
 
-            ++bombStats.currentPlaced;
-
-            bombType == 0 ? ++stats.numBomb : ++stats.numIceTrap;
+            ++bombStats.currentPlacedBomb;
+            ++stats.numBomb;
 
             const bombData = {
                 "bombType" : bombType,
@@ -116,11 +117,27 @@ const Player = function(ctx, x, y, sequence) {
             Socket.postBomb(bombData, sprite.getXY());
 
         }
+        else if(bombType == 1) {
+
+            if(bombStats.maxIce == bombStats.currentPlacedIce) return;
+
+            ++bombStats.currentPlacedIce;
+            ++stats.numIceTrap;
+
+            const bombData = {
+                "bombType" : bombType,
+                "bombPower" : bombStats.power,
+                "bombOwner" : ownerID
+            }
+
+            Socket.postBomb(bombData, sprite.getXY());
+        }
     }
 
     // bombType used for statistic collection
     const bombExploded = function(bombType) {
-        bombStats.currentPlaced--;
+        if(bombType == 0) bombStats.currentPlacedBomb--;
+        else if(bombType == 1) bombStats.currentPlacedIce--;
     }
 
     const getGridXY = function() {
@@ -129,16 +146,27 @@ const Player = function(ctx, x, y, sequence) {
     }
 
     const increaseBombCount = function(num) {
-        bombStats.maxBomb += num;
+
+        if(cheating) copyStats.maxBomb += num;
+        else bombStats.maxBomb += num;
+
+        stats.maxBomb += num;
     }
 
     const increaseBombPower = function(num) {
-        bombStats.power += num;
+
+        if(cheating) copyStats.power += num;
+        else bombStats.power += num;
+
         stats.AttackRadius += num;
     }
 
-    const unlockIceTrap = function() {
-        bombStats.iceTrapUnlocked = true;
+    const increaseIceCount = function(num) {
+
+        if(cheating) copyStats.maxIce += num;
+        else bombStats.maxIce += num;
+
+        stats.maxIce += num;
     }
 
     const setDead = function(bool) {
@@ -160,7 +188,31 @@ const Player = function(ctx, x, y, sequence) {
     }
 
     const getStats = function() {
+
+        // the winner will also have correct timeDied now
+        if(stats.timeDied == 0) stats.timeDied = performance.now();
         return stats;
+    }
+
+    // stat to revert to after stop cheating
+    var cheating = false;
+    var copyStats;
+    const startCheating = function() {
+        if(!cheating) {
+            cheating = true;
+            copyStats = {...bombStats};
+    
+            bombStats.maxBomb = 100000;
+            bombStats.maxIce = 100000;
+            bombStats.power = 30;
+        }
+    }
+
+    const stopCheating = function() {
+        if(cheating) {
+            cheating = false;
+            bombStats = copyStats;
+        }
     }
 
     // The methods are returned as an object here.
@@ -176,11 +228,13 @@ const Player = function(ctx, x, y, sequence) {
         update: update,
         increaseBombCount: increaseBombCount,
         increaseBombPower: increaseBombPower,
-        unlockIceTrap: unlockIceTrap,
+        increaseIceCount: increaseIceCount,
         setDead: setDead,
         setFrozen: setFrozen,
         getDead: getDead,
         getFrozen: getFrozen,
-        getStats: getStats
+        getStats: getStats,
+        startCheating: startCheating,
+        stopCheating: stopCheating
     };
 };

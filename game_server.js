@@ -168,11 +168,6 @@ io.on("connection", (socket) => {
             //io.emit("remove user", JSON.stringify(socket.request.session.user));
         });
 
-        //actually we dont need to get users
-        // socket.on("get users", () => {
-        //     socket.emit("users", JSON.stringify(onlineUsers));
-        // });
-
         //socket get the current players including -1
         socket.on("get players", () => {
             console.log("current players: ", players);
@@ -426,7 +421,7 @@ const chanceToSpawnPowerUp = 1.0;
 // just make them add up to 1 lol
 const chanceBombCount = 0.3;
 const chanceBombPower = 0.3;
-const chanceIceTrap = 0.4;
+const chanceIceCount = 0.4;
 function spawnPowerUp() {
     if(Math.random() < chanceToSpawnPowerUp) {
         var randomSeed = Math.random();
@@ -441,9 +436,9 @@ function spawnPowerUp() {
             return "bombPower";
         }
 
-        randomSeed -= chanceIceTrap;
+        randomSeed -= chanceIceCount;
         if(randomSeed <= 0) {
-            return "iceTrapUnlock";
+            return "iceCount";
         }
 
     }

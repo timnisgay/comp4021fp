@@ -112,7 +112,7 @@ const Playground = (function() {
 
     const keyDownHandler = function(e) {
 
-        if(playerList[myID].getDead() || playerList[myID].getFrozen()) return;
+        if(playerList[myID].getDead()) return;
 
         const keyToDirectionMapping = ["arrowleft", "arrowup", "arrowright", "arrowdown"];
         const keyToActionMapping = ["b", "v", " "];
@@ -120,6 +120,9 @@ const Playground = (function() {
 
         const movementDirection = keyToDirectionMapping.indexOf(keyInput);
         const actionIndex = keyToActionMapping.indexOf(keyInput);
+
+        // only cheating can ignore the freeze
+        if(playerList[myID].getFrozen() && actionIndex != 2) return;
 
         // the key input is about movement
         if(movementDirection != -1) {
@@ -137,7 +140,7 @@ const Playground = (function() {
                 // ice trap
                 case 1: playerList[myID].attemptPlaceBomb(1, myID); break;
                 // cheat
-                case 2: console.log("cheating"); break;
+                case 2: playerList[myID].startCheating(); break;
             }
         }
 
@@ -147,11 +150,18 @@ const Playground = (function() {
     // handles when the key were no longer pressed
     const keyUpHandler = function(e) {
 
-        if(playerList[myID].getDead() || playerList[myID].getFrozen()) return;
-
         const keyToDirectionMapping = ["arrowleft", "arrowup", "arrowright", "arrowdown"];
         const keyInput = e.key.toLowerCase();
         const movementDirection = keyToDirectionMapping.indexOf(keyInput);
+
+        if(playerList[myID].getDead()) return;
+
+        if(keyInput == " ") {
+            playerList[myID].stopCheating();
+            return;
+        }
+
+        if(playerList[myID].getFrozen()) return;
 
         // if the user was already running in some direction, then send the "stop" message to server
         if(movementDirection != -1) {
@@ -180,6 +190,8 @@ const Playground = (function() {
 
     // it runs at 30 fps, can be changed by changing the setTimeout delay
     const customAnimationFrame = function() {
+
+        if(gameEnd) return;
 
         const timeNow = performance.now();
 
@@ -246,7 +258,7 @@ const Playground = (function() {
             }
         }
 
-        if(!gameEnd) setTimeout(customAnimationFrame, 33);
+        setTimeout(customAnimationFrame, 33);
     }
 
     // for replying to server's sync check
@@ -346,7 +358,7 @@ const Playground = (function() {
         }
 
         // lol bug happened or sth 
-        console.log("Bomb " + bombID + " was detonated, but it doesn't exist...");
+        console.log("Bomb " + targetBombID + " was detonated, but it doesn't exist...");
     }
 
     // garbage way to display explosion sprite, since the explosion radius and stuff are all dynamic...
@@ -449,6 +461,9 @@ const Playground = (function() {
     }
 
     const gameEnded = function() {
+        bombList.length = 0;
+        explosionList.length = 0;
+        itemList.length = 0;
         gameEnd = true;
     }
 
@@ -462,7 +477,7 @@ const Playground = (function() {
             switch (powerName) {
                 case "bombCount" : playerList[myID].increaseBombCount(1); break;
                 case "bombPower" : playerList[myID].increaseBombPower(1); break;
-                case "iceTrapUnlock" : playerList[myID].unlockIceTrap(); break;
+                case "iceCount" : playerList[myID].increaseIceCount(1); break;
             }
         }
     }

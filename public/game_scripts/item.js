@@ -12,9 +12,9 @@ const Item = function(ctx, itemInfo, itemCoord) {
 
     // This is the sprite sequences of all items
     const sequences = {
-        bombCount:  { x: 192, y: 208, width: 16, height: 16, count: 1, timing: 200, loop: false },
-        bombPower:    { x: 160, y: 208, width: 16, height: 16, count: 1, timing: 200, loop: false },
-        iceTrapUnlock: { x: 176, y: 208, width: 16, height: 16, count: 1, timing: 200, loop: false },
+        bombCount:  { x: 160, y: 208, width: 16, height: 16, count: 1, timing: 200, loop: false },
+        bombPower:    { x: 192, y: 208, width: 16, height: 16, count: 1, timing: 200, loop: false },
+        iceCount: { x: 176, y: 208, width: 16, height: 16, count: 1, timing: 200, loop: false },
     };
 
     const {x, y} = itemCoord;
