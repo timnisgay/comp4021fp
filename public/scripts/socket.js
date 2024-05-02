@@ -106,6 +106,22 @@ const Socket = (function() {
         socket.on("spawn powerup", (data) => {
             Playground.addPowerUp(JSON.parse(data));
         })
+
+        socket.on("receive powerup", (data) => {
+            Playground.applyPowerUp(JSON.parse(data));
+        })
+
+        socket.on("remove item", (itemID) => {
+            Playground.removePowerUp(itemID);
+        })
+
+        socket.on("player frozen", (playerID) => {
+            Playground.freezePlayer(playerID);
+        })
+
+        socket.on("unfreeze player", (playerID) => {
+            Playground.unfreezePlayer(playerID);
+        })
     };
 
     // This function disconnects the socket from the server
@@ -178,7 +194,19 @@ const Socket = (function() {
         }
     }
 
+    const powerUpPickUp = function(item) {
+        if (socket && socket.connected) {
+            socket.emit("power up get", JSON.stringify(item));
+        }
+    }
+
+    const playerFrozen = function(coord) {
+        if (socket && socket.connected) {
+            socket.emit("player frozen", JSON.stringify(coord));
+        }
+    }
+
     return { getSocket, connect, disconnect, getPlayers, getBestGameStats, 
             joinGame, postMovement, stopMovement, postBomb, getMap,
-            playerDied, removeWall};
+            playerDied, removeWall, powerUpPickUp, playerFrozen};
 })();

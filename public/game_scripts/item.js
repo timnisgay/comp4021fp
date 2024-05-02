@@ -30,11 +30,22 @@ const Item = function(ctx, itemInfo, itemCoord) {
         return itemID;
     }
 
+    const getCoord = function() {
+        return {x, y};
+    }
+
+    const getPower = function() {
+        return powerUp;
+    }
+    
+
     // The methods are returned as an object here.
     return {
         getXY: sprite.getXY,
         setXY: sprite.setXY,
         getID: getID,
+        getCoord: getCoord,
+        getPower: getPower,
         draw: sprite.draw
     };
 };

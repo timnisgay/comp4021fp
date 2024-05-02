@@ -118,8 +118,31 @@ var gameRunning = false;
 var currentBombID = 0;
 var currentItemID = 0;
 
+// exist for later restart game
+const boardRestartInit = 
+[
+    ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W1", "G1", "G1", "W2", "WR", "W2", "WR", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W2", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W2", "W2", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "W1"],
+    ["W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "W1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2"]
+];
+
 // exist to get what was supposed to replace the player/object after it moved/vanished
-const boardInit = 
+var boardInit = 
 [
     ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
     ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
@@ -264,7 +287,7 @@ io.on("connection", (socket) => {
             }
 
             io.emit("sync position", JSON.stringify(playerPosition));
-        })
+        });
 
         socket.on("dead", () => {
             const playerID = getPlayerID(username);
@@ -282,14 +305,22 @@ io.on("connection", (socket) => {
                 playerDead = [true, true, true, true];
                 playerSockets = [-1, -1, -1, -1];
                 io.emit("players", JSON.stringify(players));
+                boardInit = boardRestartInit;
                 */
             } else {
                 io.emit("player died", playerID);
             }
-        })
+        });
 
         socket.on("remove wall", (coord) => {
+            // tell everyone to remove the wall
             io.emit("remove wall", coord);
+
+            // chance server own board
+            const {x, y} = JSON.parse(coord);
+            if(boardInit[y][x] == "WR") boardInit[y][x] = "G1";
+
+            // tries to spawn a power up
             const powerUp = spawnPowerUp();
             if(powerUp != "nothing") {
                 const powerUpInfo = {
@@ -298,7 +329,20 @@ io.on("connection", (socket) => {
                 }
                 io.emit("spawn powerup", JSON.stringify({"powerUpInfo" : powerUpInfo, "coord" : JSON.parse(coord)}));
             }
-        })
+        });
+
+        socket.on("power up get", (data) => {
+            const {powerUp, itemID} = JSON.parse(data);
+
+            socket.emit("receive powerup", JSON.stringify(powerUp));
+            io.emit("remove item", itemID);
+        });
+
+        socket.on("player frozen", () => {
+            const playerID = getPlayerID(username);
+            io.emit("player frozen", playerID);
+            setTimeout(unfreezePlayer, 4000, playerID);
+        });
     }
 });
 
@@ -398,4 +442,8 @@ function spawnPowerUp() {
 
     }
     return "nothing";
+}
+
+function unfreezePlayer(playerID) {
+    io.emit("unfreeze player", playerID);
 }

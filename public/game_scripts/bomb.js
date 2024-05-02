@@ -13,7 +13,7 @@ const Bomb = function(ctx, bombInfo, bombCoord) {
     // This is the sprite sequences of the normal 
     const sequences = {
         normal:  { x: 64, y:  288, width: 16, height: 16, count: 6, timing: 400, loop: false },
-        ice:    { x: 192, y: 16, width: 16, height: 16, count: 4, timing: 200, loop: true },
+        ice:    { x: 64, y: 208, width: 16, height: 16, count: 6, timing: 400, loop: false },
     };
 
     const bombIndexToName = ["normal", "ice"];
@@ -41,12 +41,17 @@ const Bomb = function(ctx, bombInfo, bombCoord) {
         return {x, y};
     }
 
+    const getInfo = function() {
+        return {bombType, bombPower, bombID, bombOwner, x, y};
+    }
+
     // The methods are returned as an object here.
     return {
         getID: getID,
         getOwner: getOwner,
         getPower: getPower,
         getGridXY: getGridXY,
+        getInfo: getInfo,
         getXY: sprite.getXY,
         setXY: sprite.setXY,
         draw: sprite.draw,

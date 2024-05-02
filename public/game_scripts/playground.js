@@ -6,7 +6,7 @@ const Playground = (function() {
 
     const codeToSpriteCoordDict = {
         "W1": [160, 288], "W2": [176, 288], "WR": [192, 288], "G1": [32, 208],
-        "EW": [224, 208], "EV": [224, 224], "ES": [224, 240], 
+        "EW": [224, 208], "EV": [224, 224], "ES": [224, 240], "IE": [208, 208],
         "EA": [0, 288], "EH": [16, 288], "EC": [32, 288], "ED": [48, 288]
     };
 
@@ -48,13 +48,10 @@ const Playground = (function() {
     const playerList = [];
     const bombList = [];
     const explosionList = [];
-    const iceTrapList = [];
     const itemList = [];
 
     // this client's player id (0 - 3)
     var myID = -1;
-    // the player is dead
-    var dead = true;
     // individual id to keep track of things
     var explosionID = 0;
 
@@ -64,7 +61,6 @@ const Playground = (function() {
         context = canvas.getContext("2d");
         context.imageSmoothingEnabled = false;
         baseMap = mapArray;
-        dead = false;
         gameEnd = false;
 
         // ensures that other init functions would only be called after the sprite is loaded
@@ -114,7 +110,7 @@ const Playground = (function() {
 
     const keyDownHandler = function(e) {
 
-        if(dead) return;
+        if(playerList[myID].getDead() || playerList[myID].getFrozen()) return;
 
         const keyToDirectionMapping = ["arrowleft", "arrowup", "arrowright", "arrowdown"];
         const keyToActionMapping = ["b", "v", " "];
@@ -149,7 +145,7 @@ const Playground = (function() {
     // handles when the key were no longer pressed
     const keyUpHandler = function(e) {
 
-        if(dead) return;
+        if(playerList[myID].getDead() || playerList[myID].getFrozen()) return;
 
         const keyToDirectionMapping = ["arrowleft", "arrowup", "arrowright", "arrowdown"];
         const keyInput = e.key.toLowerCase();
@@ -185,20 +181,27 @@ const Playground = (function() {
 
         const timeNow = performance.now();
 
+        // perform death check if not dead
+        var myCoord = undefined;
+        if(myID != -1 && !playerList[myID].getDead()) myCoord = playerList[myID].getGridXY();
+
         printBaseMap();
 
         for(var item of itemList) {
             item.draw();
+
+            if(myCoord) {
+                const {x , y} = item.getCoord();
+                if(myCoord.x == x && myCoord.y == y) {
+                    Socket.powerUpPickUp({"powerUp" : item.getPower(), "itemID" : item.getID()});
+                }
+            }
         }
         
         for(var bomb of bombList) {
             bomb.update(timeNow);
             bomb.draw();
         }
-
-        // perform death check if not dead
-        var myCoord = undefined;
-        if(myID != -1 && !dead) myCoord = playerList[myID].getGridXY();
 
         // print all explosion clusters
         for(const explosion of explosionList) {
@@ -211,8 +214,15 @@ const Playground = (function() {
                 // here is where death detection occurs
                 if(myCoord) {
                     if(myCoord.x == x && myCoord.y == y) {
-                        Socket.playerDied();
-                        dead = true;
+                        const frozen = playerList[myID].getFrozen();
+                        if(code[0] == "E") {
+                            Socket.playerDied();
+                            playerList[myID].setDead() = true;
+                        }
+                        else if(code == "IE" && !frozen) {
+                            Socket.playerFrozen();
+                        }
+                        
                     }
                 }
 
@@ -239,7 +249,7 @@ const Playground = (function() {
 
     // for replying to server's sync check
     const getPlayerCoords = function() {
-        if(dead) return null;
+        if(playerList[myID].getDead()) return null;
         return playerList[myID].getXY();
     }
 
@@ -308,17 +318,23 @@ const Playground = (function() {
     }
 
     // explode bomb with given bombID
-    const explodeBomb = function(bombID) {
+    const explodeBomb = function(targetBombID) {
         for(var i = 0; i < bombList.length; ++i) {
-            if(bombList[i].getID() == bombID) {
-                const bombOwner = playerList[bombList[i].getOwner()];
+            const {bombType, bombPower, bombID, bombOwner, x, y} = bombList[i].getInfo();
+            if(bombID == targetBombID) {
 
                 // tell the player entity that the bomb has exploded
-                if(bombOwner) {
-                    bombOwner.bombExploded();
+                if(playerList[bombOwner]) {
+                    playerList[bombOwner].bombExploded(bombType);
                 }
 
-                scuffBombExplosionSprite(bombList[i]);
+                if(bombType == 0) {
+                    scuffBombExplosionSprite(bombOwner, bombPower, x, y);
+                }
+                else if(bombType == 1) {
+                    scuffIceTrapExplosionSprite(bombPower, x, y);
+                }
+                
                 bombList.splice(i, 1);
 
                 // prevent unneeded calculation
@@ -331,9 +347,7 @@ const Playground = (function() {
     }
 
     // garbage way to display explosion sprite, since the explosion radius and stuff are all dynamic...
-    const scuffBombExplosionSprite = function(bomb) {
-        const {x, y} = bomb.getGridXY();
-        const bombPower = bomb.getPower();
+    const scuffBombExplosionSprite = function(bombOwner, bombPower, x, y) {
 
         // every sprite with their coord that belongs to this explosion stored here
         const explosionClusters = [];
@@ -358,7 +372,7 @@ const Playground = (function() {
                 const blockToPaintOver = baseMap[ctpo[1]][ctpo[0]];
                 // stop this branch of explosion if it hits wall
                 if(blockToPaintOver[0] == "W") {
-                    if(blockToPaintOver == "WR") 
+                    if(blockToPaintOver == "WR" && bombOwner == myID)
                     {
                         Socket.removeWall({"x" : ctpo[0] , "y" : ctpo[1]});
                     }
@@ -370,14 +384,39 @@ const Playground = (function() {
                 // spriteCodeToUse
                 var sctu;
                 switch(i) {
-                    case 0: endOfExplosion ? sctu = "EW" : "EV"; break;
-                    case 1: endOfExplosion ? sctu = "EA" : "EH"; break;
-                    case 2: endOfExplosion ? sctu = "ES" : "EV"; break;
-                    case 3: endOfExplosion ? sctu = "ED" : "EH"; break;
+                    case 0: sctu = (endOfExplosion ? "EW" : "EV"); break;
+                    case 1: sctu = (endOfExplosion ? "EA" : "EH"); break;
+                    case 2: sctu = (endOfExplosion ? "ES" : "EV"); break;
+                    case 3: sctu = (endOfExplosion ? "ED" : "EH"); break;
                 }
 
                 const explosionCluster = {"code" : sctu, "coord" : {"x" : ctpo[0] , "y" : ctpo[1]}};
                 explosionClusters.push(explosionCluster);
+            }
+        }
+
+        const thisExplosionID = explosionID++;
+
+        explosionList.push({"ID" : thisExplosionID, "explosionClusters" : explosionClusters});
+        setTimeout(removeExplosionSprite, 2000, thisExplosionID);
+    }
+
+    const scuffIceTrapExplosionSprite = function(bombPower, x, y) {
+        // every sprite with their coord that belongs to this explosion stored here
+        const explosionClusters = [];
+        
+        const boundedX0 = Math.max(1, x - bombPower);
+        const boundedX1 = Math.min(24, x + bombPower);
+        const boundedY0 = Math.max(1, y - bombPower);
+        const boundedY1 = Math.min(16, y + bombPower);
+
+        for(var i = boundedX0; i <= boundedX1; ++i) {
+            for(var j = boundedY0; j <= boundedY1; ++j) {
+                const blockToPaintOver = baseMap[j][i];
+                if(blockToPaintOver[0] != "W") {
+                    const explosionCluster = {"code" : "IE", "coord" : {"x" : i , "y" : j}};
+                    explosionClusters.push(explosionCluster);
+                }
             }
         }
 
@@ -415,7 +454,38 @@ const Playground = (function() {
         itemList.push(Item(context, powerUpInfo, coord));
     }
 
+    const applyPowerUp = function(powerName) {
+        if(powerName) {
+            switch (powerName) {
+                case "bombCount" : playerList[myID].increaseBombCount(1); break;
+                case "bombPower" : playerList[myID].increaseBombPower(1); break;
+                case "iceTrapUnlock" : playerList[myID].unlockIceTrap(); break;
+            }
+        }
+    }
+
+    const removePowerUp = function(itemID) {
+        for(var i = 0; i < itemList.length; ++i) {
+            if(itemList[i].getID() == itemID) {
+                itemList.splice(i, 1);
+            }
+        }
+    }
+
+    const freezePlayer = function(playerID) {
+        if(playerList[playerID]) {
+            playerList[playerID].setFrozen(true);
+        }
+    }
+
+    const unfreezePlayer = function(playerID) {
+        if(playerList[playerID]) {
+            playerList[playerID].setFrozen(false);
+        }
+    }
+
     return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove,
             playerStop, getPlayerCoords, syncPosition, collisionCheck, setMyID, addBomb,
-            explodeBomb, playerDied, removeWall, gameEnded, addPowerUp};
+            explodeBomb, playerDied, removeWall, gameEnded, addPowerUp, applyPowerUp,
+            removePowerUp, freezePlayer, unfreezePlayer};
 })();

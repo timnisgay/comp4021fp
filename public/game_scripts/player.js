@@ -19,6 +19,9 @@ const Player = function(ctx, x, y, sequence) {
         iceTrapUnlocked: false
     };
 
+    var dead = false;
+    var frozen = false;
+
     // This is the sprite object of the player created from the Sprite module.
     const sprite = Sprite(ctx, x, y);
 
@@ -69,17 +72,6 @@ const Player = function(ctx, x, y, sequence) {
             direction = 0;
         }
     };
-
-    /*
-    // This function speeds up the player.
-    const speedUp = function() {
-        speed = 250;
-    };
-
-    // This function slows down the player.
-    const slowDown = function() {
-        speed = 150;
-    };*/
     
     // This function updates the player depending on his movement.
     // - `time` - The timestamp when this function is called
@@ -104,15 +96,16 @@ const Player = function(ctx, x, y, sequence) {
     };
 
     const attemptPlaceBomb = function(bombType, ownerID) {
-        // normal bomb
-        if(bombType == 0) {
-            // no bombs left
-            if(bombStats.currentPlaced == bombStats.maxBomb) return;
+
+        // no bombs left
+        if(bombStats.currentPlaced == bombStats.maxBomb) return;
+
+        if(bombType == 0 || bombType == 1) {
 
             ++bombStats.currentPlaced;
 
             const bombData = {
-                "bombType" : 0,
+                "bombType" : bombType,
                 "bombPower" : bombStats.power,
                 "bombOwner" : ownerID
             }
@@ -122,7 +115,8 @@ const Player = function(ctx, x, y, sequence) {
         }
     }
 
-    const bombExploded = function() {
+    // bombType used for statistic collection
+    const bombExploded = function(bombType) {
         bombStats.currentPlaced--;
     }
 
@@ -131,18 +125,54 @@ const Player = function(ctx, x, y, sequence) {
         return {"x" : Math.floor(x / 50), "y" : Math.floor(y / 50)};
     }
 
+    const increaseBombCount = function(num) {
+        console.log("added bomb by " + num);
+        bombStats.maxBomb += num;
+    }
+
+    const increaseBombPower = function(num) {
+        console.log("added bomb power by " + num);
+        bombStats.power += num;
+    }
+
+    const unlockIceTrap = function() {
+        bombStats.iceTrapUnlocked = true;
+    }
+
+    const setDead = function(bool) {
+        dead = bool;
+    }
+
+    const setFrozen = function(bool) {
+        frozen = bool;
+        if(bool) stop(direction);
+    }
+
+    const getDead = function() {
+        return dead;
+    }
+
+    const getFrozen = function() {
+        return frozen;
+    }
+
     // The methods are returned as an object here.
     return {
         move: move,
         stop: stop,
-        //speedUp: speedUp,
-        //slowDown: slowDown,
         setXY: sprite.setXY,
         getXY: sprite.getXY,
         draw: sprite.draw,
         getGridXY: getGridXY,
         attemptPlaceBomb: attemptPlaceBomb,
         bombExploded: bombExploded,
-        update: update
+        update: update,
+        increaseBombCount: increaseBombCount,
+        increaseBombPower: increaseBombPower,
+        unlockIceTrap: unlockIceTrap,
+        setDead: setDead,
+        setFrozen: setFrozen,
+        getDead: getDead,
+        getFrozen: getFrozen
     };
 };
