@@ -38,6 +38,7 @@ const Socket = (function() {
         // server tells socket that there are 4 players already and will now start the game
         socket.on("start game", (playerInfo) => {
             LobbyPage.hide();
+            GamePlayPage.updatePlayerInfo(Authentication.getUser());
             GamePlayPage.show();
             Playground.setMyInfo(JSON.parse(playerInfo));
         });

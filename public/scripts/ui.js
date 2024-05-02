@@ -224,7 +224,14 @@ const GamePlayPage = (function() {
         //TODO
     };
 
-    return { initialize, show, hide, update };
+    // This function update the player info in right panel
+    const updatePlayerInfo = function(user) {
+        console.log(user);
+
+        $("#player-info").html("<h1>" + user.username + "</h1>");
+    };
+
+    return { initialize, show, hide, update, updatePlayerInfo };
 })();
 
 const GameEndPage = (function() {

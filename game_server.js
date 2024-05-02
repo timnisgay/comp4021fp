@@ -111,6 +111,7 @@ const onlineUsers = {};
 var players = [-1, -1, -1, -1];
 var playerDead = [true, true, true, true];
 var playerSockets = [-1, -1, -1, -1];
+var playerStats = {};
 
 var gameRunning = false;
 
@@ -286,9 +287,9 @@ io.on("connection", (socket) => {
                 io.emit("get personal stat");
                 
                 gameRunning = false;
-                players = [-1, -1, -1, -1];
-                playerDead = [true, true, true, true];
-                playerSockets = [-1, -1, -1, -1];
+                // players = [-1, -1, -1, -1];
+                // playerDead = [true, true, true, true];
+                // playerSockets = [-1, -1, -1, -1];
                 io.emit("players", JSON.stringify(players));
                 boardInit = boardRestartInit;
                 
@@ -332,7 +333,21 @@ io.on("connection", (socket) => {
         // stats socket here
         socket.on("return stat", (data) => {
             const stats = JSON.parse(data);
-            console.log(stats);
+            const playerID = getPlayerID(username);
+            if(playerID != -1) {
+                playerStats[username] = stats;
+                playerStats[username]["playerID"] = playerID;
+                console.log(playerStats[username]);
+
+                removePlayer(username); //after storing the stat, can remove this player
+                console.log("currentPlayer: ", players);
+            }
+
+            // if(Object.keys(playerStats).length === 4) {
+            if(Object.keys(playerStats).length === 2) {
+                console.log("playerStats: ", playerStats);
+                io.emit("show all stats", playerStats);
+            }
         });
     }
 });

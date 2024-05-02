@@ -9,7 +9,7 @@ const Player = function(ctx, x, y, sequence) {
         timeDied: 0,
         numBomb: 0,
         numIceTrap: 0,
-        AttackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 5*5 cross, icetrap is 3*3 rectangle
+        AttackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 3*3 cross, icetrap is 3*3 rectangle
     };
 
     // bomb stats

@@ -316,7 +316,7 @@ button.icon:active {
 	right: 5vmin; */
 	width: 20vw;
 	height: 90vh;
-	font-size: 3vmin;
+	font-size: 100%;
 	text-align: left;
 	background: rgb(238, 238, 238);
 	color: black;
@@ -338,21 +338,9 @@ button.icon:active {
 
 .player-game-stats-box {
     justify-content: space-between;
-    padding: 5px;
+    padding: 2px;
 }
 
 #player-num-bomb, #player-num-ice-trap, #player-attack-radius{
     align-self: baseline;
 }
-
-/* .player-stat-container p{
-	margin: 1vh 1vw;
-} 
-
-.text-left {
-	float: left;
-}
-
-.text-right {
-	float: right;
-} */
