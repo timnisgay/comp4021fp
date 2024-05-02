@@ -94,39 +94,44 @@ const Socket = (function() {
         socket.on("sync position", (playerPositionJSON) => {
             const playerPosition = JSON.parse(playerPositionJSON);
             Playground.syncPosition(playerPosition);
-        })
+        });
 
         socket.on("player died", (playerID) => {
             Playground.playerDied(playerID);
-        })
+        });
 
         socket.on("remove wall", (data) => {
             Playground.removeWall(JSON.parse(data));
-        })
+        });
 
         socket.on("spawn powerup", (data) => {
             Playground.addPowerUp(JSON.parse(data));
-        })
+        });
 
         socket.on("receive powerup", (data) => {
             Playground.applyPowerUp(JSON.parse(data));
-        })
+        });
 
         socket.on("remove item", (itemID) => {
             Playground.removePowerUp(itemID);
-        })
+        });
 
         socket.on("player frozen", (playerID) => {
             Playground.freezePlayer(playerID);
-        })
+        });
 
         socket.on("unfreeze player", (playerID) => {
             Playground.unfreezePlayer(playerID);
-        })
+        });
 
         socket.on("get personal stat", () => {
             Playground.getMyStat();
-        })
+        });
+
+        socket.on("show all stats", (playerStats) => {
+            playerStats = JSON.parse(playerStats);
+            GameEndPage.update(playerStats);
+        });
     };
 
     // This function disconnects the socket from the server

@@ -11,7 +11,7 @@ const Player = function(ctx, x, y, sequence) {
         numIceTrap: 0,
         maxBomb: 1,
         maxIce: 1,
-        AttackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 3*3 cross, icetrap is 3*3 rectangle
+        attackRadius: 1, //bomb and ice trap share same level, bombradius 1 means is 3*3 cross, icetrap is 3*3 rectangle
     };
 
     // bomb stats
@@ -151,6 +151,7 @@ const Player = function(ctx, x, y, sequence) {
         else bombStats.maxBomb += num;
 
         stats.maxBomb += num;
+        $("#player-num-bomb").text(stats.maxBomb);
     }
 
     const increaseBombPower = function(num) {
@@ -158,7 +159,8 @@ const Player = function(ctx, x, y, sequence) {
         if(cheating) copyStats.power += num;
         else bombStats.power += num;
 
-        stats.AttackRadius += num;
+        stats.attackRadius += num;
+        $("#player-attack-radius").text(stats.attackRadius);
     }
 
     const increaseIceCount = function(num) {
@@ -167,6 +169,7 @@ const Player = function(ctx, x, y, sequence) {
         else bombStats.maxIce += num;
 
         stats.maxIce += num;
+        $("#player-num-ice-trap").text(stats.maxIce);
     }
 
     const setDead = function(bool) {

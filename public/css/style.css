@@ -57,7 +57,7 @@ h1 {
 .row, .col {
     display: flex;
     /* align-items: center;
-    justify-content: center; */
+    justify-content: space-around; */
     gap: 10px;
     padding: 20px;
 }
@@ -193,7 +193,7 @@ button.icon:active {
 /* start page */
 #front-page {
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
 }
 #signin-form {
     width: 300px;
@@ -316,7 +316,7 @@ button.icon:active {
 	right: 5vmin; */
 	width: 20vw;
 	height: 90vh;
-	font-size: 100%;
+	/* font-size: 90%; */
 	text-align: left;
 	background: rgb(238, 238, 238);
 	color: black;
@@ -327,13 +327,14 @@ button.icon:active {
     justify-content: space-between;
 }
 
-#player-info p{
-	margin: 3vh 0;
+#player-info {
+	/* margin: 3vh 0; */
 	text-align: center;
+    font-weight: bold;
 }
 
 #player-game-stats {
-    align-items: stretch;
+    /* align-items: stretch; */
 }
 
 .player-game-stats-box {
@@ -343,4 +344,9 @@ button.icon:active {
 
 #player-num-bomb, #player-num-ice-trap, #player-attack-radius{
     align-self: baseline;
+}
+
+/* End Game */
+#current-game-stats {
+    font-size: small;
 }

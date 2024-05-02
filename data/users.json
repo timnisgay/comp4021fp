@@ -2,82 +2,37 @@
  "tony": {
   "password": "$2b$10$Yxb2fSgA5RFn9Oz9TxjLLuve/GiPXCs2DWVFhyFDr4qz39qglwp8e",
   "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
+   "bestGameTime": 36515.09999996424,
+   "numBombUsed": 3,
+   "numIceTrapUsed": 0,
+   "attackRadius": 2
   }
  },
  "may": {
   "password": "$2b$10$gLc3Ri9W6P650EKKbexw6uvirV8Bar7gmvAtMcoMiPiR3rsY50GVu",
   "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
+   "bestGameTime": null,
+   "numBombUsed": null,
+   "numIceTrapUsed": null,
+   "attackRadius": null
   }
  },
  "test1": {
-  "password": "$2b$10$kghIGkoLuY5oXq3arqkB9eAqDwdaY.PQyocd5yPLh.zMqbP3Gjq2W",
+  "password": "$2b$10$nQpWxEhbNDAcdbtU5MUS5OHEmd6xXcjGWUrRbJDc0IxRCeG7t4Nfi",
   "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
-  }
- },
- "aa": {
-  "password": "$2b$10$sc.UV0VjSWf11kXEcQ6m6evG54paLd82y1smi8Ih3/QIWRQyWET9G",
-  "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
-  }
- },
- "bb": {
-  "password": "$2b$10$YSevncNfWzelvsQPNPRdWuplVTUUjcCTSKhqZtY9PZS7Uu/45C0EW",
-  "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
+   "bestGameTime": null,
+   "numBombUsed": null,
+   "numIceTrapUsed": null,
+   "attackRadius": null
   }
  },
  "test2": {
-  "password": "$2b$10$g6QymU/gx1ZLEXWpBa3MxOuFHTs24rhMzLxMMXANr.Q3L6e3iEN1K",
+  "password": "$2b$10$6oBbqZ8I9Y1PKv/PuMol3OefmnPn4ta5CleinMN9gzalt.IMSX3YK",
   "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
-  }
- },
- "cc": {
-  "password": "$2b$10$0hS5ZmbsxxkZw1m7SCfLtOBg.lpNVGIGAgADmIpIaBX2DeJj2jbHa",
-  "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
-  }
- },
- "dd": {
-  "password": "$2b$10$eNmC1se/QKFMx8lTUaFdROod9GWtjC4.Hcks1K6ObmrVn0fv.PgV.",
-  "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
-  }
- },
- "newTest1": {
-  "password": "$2b$10$4htE.XnUReUmxqck1NAWueGg87fC/HjwGAbtPOdlKcJXQ1WZzC.tC",
-  "bestStats": {
-   "bestGameTime": -1,
-   "numBombUsed": -1,
-   "numIceTrapUsed": -1,
-   "attackRadius": -1
+   "bestGameTime": null,
+   "numBombUsed": null,
+   "numIceTrapUsed": null,
+   "attackRadius": null
   }
  }
 }

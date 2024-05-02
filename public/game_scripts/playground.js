@@ -479,6 +479,7 @@ const Playground = (function() {
                 case "bombPower" : playerList[myID].increaseBombPower(1); break;
                 case "iceCount" : playerList[myID].increaseIceCount(1); break;
             }
+            // GamePlayPage.updatePlayerStats(playerList[myID].getStats());
         }
     }
 

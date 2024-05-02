@@ -48,7 +48,7 @@ app.post("/register", (req, res) => {
     }
 
     const hash = bcrypt.hashSync(password, 10);
-    users[username] = { password: hash, bestStats: {bestGameTime: -1, numBombUsed: -1, numIceTrapUsed: -1, attackRadius: -1} };
+    users[username] = { password: hash, bestStats: {bestGameTime: null, numBombUsed: null, numIceTrapUsed: null, attackRadius: null} };
 
     fs.writeFileSync("data/users.json", JSON.stringify(users, null, " "));
 
@@ -278,6 +278,7 @@ io.on("connection", (socket) => {
             console.log(playerDead);
             console.log("how many player left: ", playerDead.filter(value => value === false).length);
             if (playerDead.filter(value => value === false).length <= 1) {
+                
                 io.emit("end game");
                 io.emit("get personal stat");
                 
@@ -325,7 +326,7 @@ io.on("connection", (socket) => {
             setTimeout(unfreezePlayer, 4000, playerID);
         });
 
-        // stats socket here
+        // sockets tell server the current game stats
         socket.on("return stat", (data) => {
             const stats = JSON.parse(data);
             const playerID = getPlayerID(username);
@@ -335,13 +336,39 @@ io.on("connection", (socket) => {
                 console.log(playerStats[username]);
 
                 removePlayer(username); //after storing the stat, can remove this player
-                console.log("currentPlayer: ", players);
             }
 
             // if(Object.keys(playerStats).length === 4) {
             if(Object.keys(playerStats).length === 2) {
-                console.log("playerStats: ", playerStats);
-                io.emit("show all stats", playerStats);
+                // console.log("emit show all stats: ", playerStats);
+                io.emit("show all stats", JSON.stringify(playerStats));
+
+                //check winner stats, overwrite the best stats if needed
+                var winnerName = -1;
+                var tempShortestTime = 0;
+
+                // find the winner who has the longest timeDied
+                for (const name in playerStats) {
+                    if (tempShortestTime < playerStats[name].timeDied) {
+                        winnerName = name;
+                        tempShortestTime = playerStats[name].timeDied;
+                    }
+                }
+
+                const users = JSON.parse(fs.readFileSync("data/users.json"));
+                if (winnerName in users) {
+                    const bestStat = users[winnerName].bestStats;
+                    if (bestStat.bestGameTime == null || bestStat.bestGameTime > stats.timeDied) {
+                        console.log("update best stats of player: ", winnerName);
+                        users[winnerName].bestStats = {
+                            bestGameTime: stats.timeDied, 
+                            numBombUsed: stats.numBomb,
+                            numIceTrapUsed: stats.numIceTrap, 
+                            attackRadius: stats.attackRadius
+                        };
+                        fs.writeFileSync("data/users.json", JSON.stringify(users, null, " "));
+                    }
+                }
             }
         });
     }

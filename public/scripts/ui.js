@@ -176,7 +176,7 @@ const LobbyPage = (function() {
         console.log(stats);
 
         for (const stat in stats) {
-            if (stats[stat] != -1) {
+            if (stats[stat] != null) {
                 lobbySelfStats.append(
                     $("<div id='lobby-stats-" + stat + "' class='row lobby-stats-box'></div>")
                         .append($("<div id='lobby-stats-title'>"+ stat +"</div>"))
@@ -220,18 +220,23 @@ const GamePlayPage = (function() {
     };
 
     // This function updates the user stats
-    const update = function(user) {
-        //TODO
+    // not used now and seperated in player.js
+    const updatePlayerStats = function(userStats) {
+        console.log(userStats);
+
+        $("#player-num-bomb").text(userStats[maxBomb]);
+        $("#player-num-ice-trap").text(userStats[maxIce]);
+        $("#player-attack-radius").text(userStats[attackRadius]);
     };
 
     // This function update the player info in right panel
     const updatePlayerInfo = function(user) {
         console.log(user);
 
-        $("#player-info").html("<h1>" + user.username + "</h1>");
+        $("#player-info").html("<p>" + user.username + "</p>");
     };
 
-    return { initialize, show, hide, update, updatePlayerInfo };
+    return { initialize, show, hide, updatePlayerStats, updatePlayerInfo };
 })();
 
 const GameEndPage = (function() {
@@ -272,7 +277,36 @@ const GameEndPage = (function() {
         $("#game-end-page").hide();
     };
 
-    return { initialize, show, hide };
+    // update the player stats
+    const update = function(playerStats) {
+        console.log(playerStats);
+
+        const currentGameStats = $("#current-game-stats");
+        currentGameStats.empty();
+
+        for (const player in playerStats) {
+
+            if (playerStats.hasOwnProperty(player)) {
+                const playerData = playerStats[player];
+    
+                const statsBox = $("<div id='current-game-stats-" + player + "' class='col'></div>");
+                const statsBoxContent = $("<div class='current-game-stats-box'></div>");
+    
+                for (const key in playerData) {
+                    if (playerData.hasOwnProperty(key)) {
+                        const value = playerData[key];
+                        const keyValueElement = $("<span></span><br>").text(key + ": " + value);
+                        statsBoxContent.append(keyValueElement);
+                    }
+                }
+    
+                statsBox.append(statsBoxContent);
+                currentGameStats.append(statsBox);
+            }
+        }
+    };
+
+    return { initialize, show, hide, update };
 })();
 
 const UI = (function() {

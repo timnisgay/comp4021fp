@@ -10,9 +10,11 @@
 <body>
     <!-- Game Front Page -->
     <div id="front-page" class="page-container col">
+        <div class="spacer-2"></div>
         <div id="project-title">
-            <h1>A Song of Ice and Fire</h1>
+            <span style="font-weight: bold; font-size: 10vh;">A Song of Ice and Fire</span>
         </div>
+        <div class="spacer-4"></div>
 
         <form id="signin-form" class="col">
             <div class="caption">SIGN IN WITH YOUR ACCOUNT</div>
@@ -96,7 +98,8 @@
     <div id="lobby-page" class="page-container col">
         <!-- top part -->
         <div id="lobby-header" class="row">
-            <div id="lobby-title"><h1>A Song of Ice and Fire</h1>
+            <div id="lobby-title">
+                <span style="font-weight: bold; font-size: 10vh;">A Song of Ice and Fire</span>
             </div>
             <button id="lobby-logout">Logout</button>
         </div>
@@ -126,34 +129,34 @@
         <div class="player-stat-container col" >
             <div id="player-info"></div>
             <div id="player-game-stats">
-                <h2>Game Statistics:</h2>
+                <span style="font-weight: bold;">Game Statistics:</span>
                 <div class="row player-game-stats-box">
-                    <p>Max bomb number:</p>
-                    <p id="player-num-bomb">1</p>
+                    <span>Max bomb number:</span>
+                    <span id="player-num-bomb">1</span>
                 </div>
                 <div class="row player-game-stats-box">
-                    <p>Max ice trap number:</p>
-                    <p id="player-num-ice-trap">1</p>
+                    <span>Max ice trap number:</span>
+                    <span id="player-num-ice-trap">1</span>
                 </div>
                 <div class="row player-game-stats-box">
-                    <p>Attack radius level:</p>
-                    <p id="player-attack-radius">1</p>
+                    <span>Attack radius level:</span>
+                    <span id="player-attack-radius">1</span>
                 </div>
             </div>
             <div id="game-play-instruction">
-                <h2>Instructions:</h2>
-                <ul>use up down left right to move.</ul>
-                <ul>use "b" to place bomb.</ul>
-                <ul>use "v" to place ice trap.</ul>
-                <ul>use whitespace to cheat.</ul>
+                <span style="font-weight: bold;">Instructions:</span><br>
+                <span>use up down left right to move.</span><br>
+                <span>use "b" to place bomb.</span><br>
+                <span>use "v" to place ice trap.</span><br>
+                <span>use whitespace to cheat.</span>
             </div>
         </div>
     </div>
 
     <!-- Game End Page -->
     <div id="game-end-page" class="page-container col">
-        <div id="current-game-stats"></div>
-        <button id="return-to-lobby">Return Lobby (with same player id?)</button>
+        <div id="current-game-stats" class="row"></div>
+        <button id="return-to-lobby">Return Lobby</button>
         <button id="game-end-logout">Logout</button>
     </div>
 
