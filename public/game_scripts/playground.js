@@ -72,7 +72,6 @@ const Playground = (function() {
                 printBaseMap();
                 initPlayers();
                 customAnimationFrame();
-                console.log("init once");
             })
             .catch(() => {
                 console.log("error, sprite.png doesn't exist or the path is wrong");

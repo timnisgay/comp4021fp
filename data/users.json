@@ -20,17 +20,17 @@
  "test1": {
   "password": "$2b$10$nQpWxEhbNDAcdbtU5MUS5OHEmd6xXcjGWUrRbJDc0IxRCeG7t4Nfi",
   "bestStats": {
-   "bestGameTime": null,
-   "numBombUsed": null,
-   "numIceTrapUsed": null,
-   "attackRadius": null
+   "bestGameTime": 10997.900000002235,
+   "numBombUsed": 2,
+   "numIceTrapUsed": 0,
+   "attackRadius": 1
   }
  },
  "test2": {
   "password": "$2b$10$6oBbqZ8I9Y1PKv/PuMol3OefmnPn4ta5CleinMN9gzalt.IMSX3YK",
   "bestStats": {
-   "bestGameTime": 68018.90000009537,
-   "numBombUsed": 0,
+   "bestGameTime": 11344.89999999851,
+   "numBombUsed": 4,
    "numIceTrapUsed": 0,
    "attackRadius": 1
   }

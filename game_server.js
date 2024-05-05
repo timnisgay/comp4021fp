@@ -143,7 +143,7 @@ const boardRestartInit =
 ];
 
 // exist to get what was supposed to replace the player/object after it moved/vanished
-var boardInit = boardRestartInit;
+var boardInit = boardRestartInit.map(a => a.slice());
 
 io.on("connection", (socket) => {
 
@@ -200,8 +200,6 @@ io.on("connection", (socket) => {
                     // DEBUG purpose
                     // if (len === 4) {
                     if (len === 2) {
-                        //do map init
-                        boardInit = boardRestartInit;
                         playerStats = {};
 
                         for(var i = 0; i < 4; ++i){
@@ -285,13 +283,11 @@ io.on("connection", (socket) => {
                 
                 io.emit("end game");
                 io.emit("get personal stat");
+
+                // reset board
+                boardInit = boardRestartInit.map(a => a.slice());
                 
                 gameRunning = false;
-                // players = [-1, -1, -1, -1];
-                // playerDead = [true, true, true, true];
-                // playerSockets = [-1, -1, -1, -1];
-                // io.emit("players", JSON.stringify(players));
-                // boardInit = boardRestartInit;
                 
             } else {
                 io.emit("player died", playerID);
