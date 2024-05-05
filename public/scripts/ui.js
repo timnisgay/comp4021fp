@@ -297,13 +297,24 @@ const GameEndPage = (function() {
     // update the player stats
     const update = function(playerStats) {
         const sortedPlayerStats = Object.fromEntries(
-            Object.entries(playerStats).sort((a, b) => a[1].playerID - b[1].playerID)
+            Object.entries(playerStats).sort((a, b) => {
+                if (a[1].timeDied === null && b[1].timeDied === null) {
+                    return 0; // No change in order when both timeDied are null
+                  } else if (a[1].timeDied === null) {
+                    return 1; // b comes first when a.timeDied is null
+                  } else if (b[1].timeDied === null) {
+                    return -1; // a comes first when b.timeDied is null
+                  } else {
+                    return b[1].timeDied - a[1].timeDied; // Sort by timeDied in descending order
+                  }
+            })
         );
         console.log(sortedPlayerStats);
 
         const currentGameStats = $("#current-game-stats");
         currentGameStats.empty();
 
+        var counter = 0;
         for (const player in sortedPlayerStats) {
             if (sortedPlayerStats.hasOwnProperty(player)) {
                 const playerData = sortedPlayerStats[player];
@@ -311,60 +322,78 @@ const GameEndPage = (function() {
                 const statsBox = $("<div id='current-game-stats-" + player + "' class='game-stats-box'></div>");
                 const statsBoxContent = $("<div class='col current-game-stats-box'></div>");
                 
+                var rankingPhrase;
+                switch(counter) {
+                    case 0: rankingPhrase = "Winner"; break;
+                    case 1: rankingPhrase = "1st runner up"; break;
+                    case 2: rankingPhrase = "2nd runner up"; break;
+                    case 3: rankingPhrase = "4th place"; break;
+                    default: rankingPhrase = ""; break;
+                }
+
                 statsBoxContent.append(
-                    $("<div class='current-game-stats-title'>" + player + "</div><br>")
+                    $("<div class='current-game-stats-title'>" + rankingPhrase + "</div><br>")
                 ).append(
-                    $("<span style='font-weight: bold;'>Player " + playerData["playerID"] + "</span><br>")
+                    $("<span style='font-weight: bold;'>Player " + playerData["playerID"] + ": "+ player +"</span><br>")
                 );
-            
-                for (const key in playerData) {
-                    if (playerData.hasOwnProperty(key)) {
-                        const value = playerData[key];
-                        console.log(value);
-                        switch (key) {
-                            case "timeDied":
-                                const minutes = Math.floor(value / 60000);
-                                const seconds = Math.floor((value % 60000) / 1000);
-                                const milliseconds = Math.floor(value % 1000);
 
-                                const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(3, '0')}`;
-
-                                console.log(formattedTime);
-                                const timeElement = $("<span class='game-stats-line'></span>").text("Survival Time: " + formattedTime);
-                                statsBoxContent.append(timeElement).append($("<br>"));
-                                break;
-                            case "numBomb":
-                                const numBombElement = $("<span class='game-stats-line'></span>").text("No. of Bomb Placed: " + value);
-                                statsBoxContent.append(numBombElement).append($("<br>"));
-                                break;
-                            case "numIceTrap":
-                                const numIceTrapElement = $("<span class='game-stats-line'></span>").text("No. of Bomb Placed: " + value);
-                                statsBoxContent.append(numIceTrapElement).append($("<br>"));
-                                break;
-                            case "maxBomb":
-                                const maxBombElement = $("<span class='game-stats-line'></span>").text("Max Placeable Bomb: " + value);
-                                statsBoxContent.append(maxBombElement).append($("<br>"));
-                                break;
-                            case "maxIce":
-                                const maxIceElement = $("<span class='game-stats-line'></span>").text("Max Placeable Ice Trap: " + value);
-                                statsBoxContent.append(maxIceElement).append($("<br>"));
-                                break;
-                            case "attackRadius":
-                                const attackRadiusElement = $("<span class='game-stats-line'></span>").text("Attack Radius Level: " + value);
-                                statsBoxContent.append(attackRadiusElement);
-                                break;
-                            case "playerID":
-                            default:
-                                // const keyValueElement = $("<span></span><br>").text(key + ": " + value);
-                                // statsBoxContent.append(keyValueElement);
-                                break;
+                if(playerData["message"] === "disconnected") {
+                    statsBoxContent.append(
+                        $("<span style='font-weight: bold;'>Player " + 
+                        playerData["playerID"] + 
+                        " is disconnected in the middle of the game.<br>Will not show game statistics.</span><br>")
+                    );
+                } else {
+                    for (const key in playerData) {
+                        if (playerData.hasOwnProperty(key)) {
+                            const value = playerData[key];
+                            console.log(value);
+                            switch (key) {
+                                case "timeDied":
+                                    const minutes = Math.floor(value / 60000);
+                                    const seconds = Math.floor((value % 60000) / 1000);
+                                    const milliseconds = Math.floor(value % 1000);
+    
+                                    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(3, '0')}`;
+    
+                                    console.log(formattedTime);
+                                    const timeElement = $("<span class='game-stats-line'></span>").text("Survival Time: " + formattedTime);
+                                    statsBoxContent.append(timeElement).append($("<br>"));
+                                    break;
+                                case "numBomb":
+                                    const numBombElement = $("<span class='game-stats-line'></span>").text("No. of Bomb Placed: " + value);
+                                    statsBoxContent.append(numBombElement).append($("<br>"));
+                                    break;
+                                case "numIceTrap":
+                                    const numIceTrapElement = $("<span class='game-stats-line'></span>").text("No. of Bomb Placed: " + value);
+                                    statsBoxContent.append(numIceTrapElement).append($("<br>"));
+                                    break;
+                                case "maxBomb":
+                                    const maxBombElement = $("<span class='game-stats-line'></span>").text("Max Placeable Bomb: " + value);
+                                    statsBoxContent.append(maxBombElement).append($("<br>"));
+                                    break;
+                                case "maxIce":
+                                    const maxIceElement = $("<span class='game-stats-line'></span>").text("Max Placeable Ice Trap: " + value);
+                                    statsBoxContent.append(maxIceElement).append($("<br>"));
+                                    break;
+                                case "attackRadius":
+                                    const attackRadiusElement = $("<span class='game-stats-line'></span>").text("Attack Radius Level: " + value);
+                                    statsBoxContent.append(attackRadiusElement);
+                                    break;
+                                case "playerID":
+                                default:
+                                    // const keyValueElement = $("<span></span><br>").text(key + ": " + value);
+                                    // statsBoxContent.append(keyValueElement);
+                                    break;
+                            }
+                            
                         }
-                        
                     }
                 }
     
                 statsBox.append(statsBoxContent);
                 currentGameStats.append(statsBox);
+                counter++;
             }
         }
     };

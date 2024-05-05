@@ -163,6 +163,16 @@ io.on("connection", (socket) => {
                 const playerID = removePlayer(username);
                 if(playerID != -1) {
                     deathHandling(playerID);
+                    playerStats[username] = {
+                        timeDied: null,
+                        numBomb: null,
+                        numIceTrap: null,
+                        maxBomb: null,
+                        maxIce: null,
+                        attackRadius: null,
+                        playerID: playerID,
+                        message: "disconnected"
+                    };
                     console.log(username, "is removed from players, current players: ", players);
                     io.emit("players", JSON.stringify(players));
                 }
@@ -220,9 +230,9 @@ io.on("connection", (socket) => {
 
                         gameRunning = true;
                         syncRequest();
-                    } else {
-                        io.emit("players", JSON.stringify(players));
                     }
+                    io.emit("players", JSON.stringify(players));
+                    
                 } 
             // full, spectate instead
             } else if (!players.includes(username)){
