@@ -331,7 +331,7 @@ button.disabled {
     justify-content: space-between;
 }
 
-#player-info {
+#player-info, #game-play-time {
 	/* margin: 3vh 0; */
 	text-align: center;
     font-weight: bold;

@@ -138,7 +138,7 @@ const Socket = (function() {
             Playground.syncItem(JSON.parse(data));
             GamePlayPage.updatePlayerInfo(Authentication.getUser());
             GamePlayPage.show();
-        })
+        });
 
         socket.on("get sync item", () => {
             const item = Playground.getSyncItem();
@@ -147,6 +147,10 @@ const Socket = (function() {
 
         socket.on("player status", (data) => {
             Playground.initDeath(data);
+        });
+
+        socket.on("update game time", (time) => {
+            GamePlayPage.updateGameTime(time);
         });
     };
 

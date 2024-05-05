@@ -253,7 +253,18 @@ const GamePlayPage = (function() {
         $("#player-info").html("<p>" + user.username + "</p>");
     };
 
-    return { initialize, show, hide, updatePlayerStats, updatePlayerInfo };
+    // This function updates the game duration
+    // it should be called every 1 second
+    const updateGameTime = function(time) {
+        //change the format of time from seconds to mm:ss
+        let minute = Math.floor(time / 60);
+        let second = Math.floor(time % 60).toString().padStart(2, '0');
+
+        console.log(minute +" : "+ second);
+        $("#game-play-time").html("<p>" + minute + " : " + second + "</p>");
+    };
+
+    return { initialize, show, hide, updatePlayerStats, updatePlayerInfo, updateGameTime };
 })();
 
 const GameEndPage = (function() {
@@ -314,7 +325,7 @@ const GameEndPage = (function() {
         const currentGameStats = $("#current-game-stats");
         currentGameStats.empty();
 
-        var counter = 0;
+        let counter = 0;
         for (const player in sortedPlayerStats) {
             if (sortedPlayerStats.hasOwnProperty(player)) {
                 const playerData = sortedPlayerStats[player];
@@ -322,7 +333,7 @@ const GameEndPage = (function() {
                 const statsBox = $("<div id='current-game-stats-" + player + "' class='game-stats-box'></div>");
                 const statsBoxContent = $("<div class='col current-game-stats-box'></div>");
                 
-                var rankingPhrase;
+                let rankingPhrase;
                 switch(counter) {
                     case 0: rankingPhrase = "Winner"; break;
                     case 1: rankingPhrase = "1st runner up"; break;

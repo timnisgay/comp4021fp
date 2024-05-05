@@ -112,6 +112,7 @@ const maxPlayer = 3;
 // technically i should create a player class to store all these highly repetitive info, but if it works, dont touch it
 var players = [-1, -1, -1, -1];
 var playerDead = [true, true, true, true];
+var gameStartTime = 0; //in seconds
 var playerSockets = [-1, -1, -1, -1];
 var spectatorSockets = [];
 var playerStats = {};
@@ -163,6 +164,7 @@ io.on("connection", (socket) => {
                 const playerID = removePlayer(username);
                 if(playerID != -1) {
                     deathHandling(playerID);
+                    
                     playerStats[username] = {
                         timeDied: null,
                         numBomb: null,
@@ -227,9 +229,11 @@ io.on("connection", (socket) => {
                                 playerSockets[i].emit("start game", JSON.stringify(playerInfo));
                             }
                         }
-
                         gameRunning = true;
                         syncRequest();
+
+                        gameStartTime = 0; //init the time again to make sure it is 0 at the beginning
+                        updateGameTime();
                     }
                     io.emit("players", JSON.stringify(players));
                     
@@ -478,6 +482,17 @@ function syncRequest() {
     }
 
     setTimeout(syncRequest, 200);
+}
+
+// update the game time every seconds to all sockets
+function updateGameTime() {
+
+    if(!gameRunning) return;
+
+    gameStartTime++;
+    io.emit("update game time", gameStartTime);
+
+    setTimeout(updateGameTime, 1000);
 }
 
 function bombExplode(bombID) {
