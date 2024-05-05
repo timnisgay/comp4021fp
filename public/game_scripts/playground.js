@@ -252,8 +252,10 @@ const Playground = (function() {
         // draw each player that still exist / is alive
         for(var player of playerList) {
             if(player) {
-                player.update(timeNow);
-                player.draw();
+                if(!player.getDead()) {
+                    player.update(timeNow);
+                    player.draw();
+                }
             }
         }
 
@@ -449,7 +451,7 @@ const Playground = (function() {
 
     // remove player according to ID
     const playerDied = function(ID) {
-        playerList[ID] = null;
+        playerList[ID].setDead(true);
     }
 
     const removeWall = function(coord) {

@@ -106,6 +106,8 @@ io.use((socket, next) => {
 });
 
 const onlineUsers = {};
+// debug, is 4
+const maxPlayer = 3;
 
 // technically i should create a player class to store all these highly repetitive info, but if it works, dont touch it
 var players = [-1, -1, -1, -1];
@@ -199,7 +201,7 @@ io.on("connection", (socket) => {
 
                     // DEBUG purpose
                     // if (len === 4) {
-                    if (len === 2) {
+                    if (len === maxPlayer) {
                         playerStats = {};
 
                         for(var i = 0; i < 4; ++i){
@@ -341,7 +343,7 @@ io.on("connection", (socket) => {
             }
 
             // if(Object.keys(playerStats).length === 4) {
-            if(Object.keys(playerStats).length === 2) {
+            if(Object.keys(playerStats).length === maxPlayer) {
                 io.emit("show all stats", JSON.stringify(playerStats));
                 console.log("emit show all stats: ", playerStats);
 
