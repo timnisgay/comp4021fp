@@ -36,8 +36,8 @@
 
 /* Basic */
 body {
-    min-width: 600px;
-    min-height: 300px;
+    min-width: 500px;
+    min-height: 200px;
     height: 100vh;
     padding: 0;
     margin: 0;
@@ -138,6 +138,10 @@ button.icon:hover {
 }
 button.icon:active {
     margin: 2px -2px -2px 2px;
+}
+button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Data field caption and content */
@@ -349,4 +353,27 @@ button.icon:active {
 /* End Game */
 #current-game-stats {
     font-size: small;
+    justify-content: space-evenly;
+}
+
+.game-stats-box {
+    box-sizing: border-box;
+    border: 1vmin solid #f8b58b;
+    border-radius: 2vmin;
+    height: min-content;
+}
+
+.current-game-stats-box {
+    display: flex;
+    justify-content: space-between;
+    gap: 2px;
+}
+
+.current-game-stats-title {
+    align-self: center;
+    font-weight: bold; 
+    font-size: 3vmin;
+}
+
+.game-stats-line {
 }

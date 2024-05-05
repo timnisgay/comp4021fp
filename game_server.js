@@ -200,6 +200,10 @@ io.on("connection", (socket) => {
                     // DEBUG purpose
                     // if (len === 4) {
                     if (len === 2) {
+                        //do map init
+                        boardInit = boardRestartInit;
+                        playerStats = {};
+
                         for(var i = 0; i < 4; ++i){
                             if(playerSockets[i] != -1) {
                                 const playerInfo = {
@@ -286,8 +290,8 @@ io.on("connection", (socket) => {
                 // players = [-1, -1, -1, -1];
                 // playerDead = [true, true, true, true];
                 // playerSockets = [-1, -1, -1, -1];
-                io.emit("players", JSON.stringify(players));
-                boardInit = boardRestartInit;
+                // io.emit("players", JSON.stringify(players));
+                // boardInit = boardRestartInit;
                 
             } else {
                 io.emit("player died", playerID);
@@ -330,18 +334,20 @@ io.on("connection", (socket) => {
         socket.on("return stat", (data) => {
             const stats = JSON.parse(data);
             const playerID = getPlayerID(username);
+            console.log(playerID);
             if(playerID != -1) {
                 playerStats[username] = stats;
                 playerStats[username]["playerID"] = playerID;
                 console.log(playerStats[username]);
 
                 removePlayer(username); //after storing the stat, can remove this player
+                io.emit("players", JSON.stringify(players));
             }
 
             // if(Object.keys(playerStats).length === 4) {
             if(Object.keys(playerStats).length === 2) {
-                // console.log("emit show all stats: ", playerStats);
                 io.emit("show all stats", JSON.stringify(playerStats));
+                console.log("emit show all stats: ", playerStats);
 
                 //check winner stats, overwrite the best stats if needed
                 var winnerName = -1;

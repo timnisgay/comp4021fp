@@ -47,7 +47,7 @@ const Socket = (function() {
         socket.on("end game", () => {
             Playground.gameEnded();
             GamePlayPage.hide();
-            GameEndPage.show(); //remove this line later and change the line to emit the Stat to server
+            GameEndPage.show();
         });
 
         socket.on("print playground", (data) => {

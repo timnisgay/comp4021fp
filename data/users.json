@@ -2,19 +2,19 @@
  "tony": {
   "password": "$2b$10$Yxb2fSgA5RFn9Oz9TxjLLuve/GiPXCs2DWVFhyFDr4qz39qglwp8e",
   "bestStats": {
-   "bestGameTime": 36515.09999996424,
-   "numBombUsed": 3,
+   "bestGameTime": 12839,
+   "numBombUsed": 0,
    "numIceTrapUsed": 0,
-   "attackRadius": 2
+   "attackRadius": 1
   }
  },
  "may": {
   "password": "$2b$10$gLc3Ri9W6P650EKKbexw6uvirV8Bar7gmvAtMcoMiPiR3rsY50GVu",
   "bestStats": {
-   "bestGameTime": null,
-   "numBombUsed": null,
-   "numIceTrapUsed": null,
-   "attackRadius": null
+   "bestGameTime": 11231.799999952316,
+   "numBombUsed": 2,
+   "numIceTrapUsed": 2,
+   "attackRadius": 1
   }
  },
  "test1": {
@@ -29,10 +29,10 @@
  "test2": {
   "password": "$2b$10$6oBbqZ8I9Y1PKv/PuMol3OefmnPn4ta5CleinMN9gzalt.IMSX3YK",
   "bestStats": {
-   "bestGameTime": null,
-   "numBombUsed": null,
-   "numIceTrapUsed": null,
-   "attackRadius": null
+   "bestGameTime": 68018.90000009537,
+   "numBombUsed": 0,
+   "numIceTrapUsed": 0,
+   "attackRadius": 1
   }
  }
 }
