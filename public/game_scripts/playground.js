@@ -111,6 +111,8 @@ const Playground = (function() {
 
     const keyDownHandler = function(e) {
 
+        if(myID == -1) return;
+
         if(playerList[myID].getDead()) return;
 
         const keyToDirectionMapping = ["arrowleft", "arrowup", "arrowright", "arrowdown"];
@@ -149,11 +151,13 @@ const Playground = (function() {
     // handles when the key were no longer pressed
     const keyUpHandler = function(e) {
 
+        if(myID == -1) return;
+
+        if(playerList[myID].getDead()) return;
+
         const keyToDirectionMapping = ["arrowleft", "arrowup", "arrowright", "arrowdown"];
         const keyInput = e.key.toLowerCase();
         const movementDirection = keyToDirectionMapping.indexOf(keyInput);
-
-        if(playerList[myID].getDead()) return;
 
         if(keyInput == " ") {
             playerList[myID].stopCheating();
@@ -264,6 +268,7 @@ const Playground = (function() {
 
     // for replying to server's sync check
     const getPlayerCoords = function() {
+        if(myID == -1) return;
         if(playerList[myID].getDead()) return null;
         return playerList[myID].getXY();
     }
@@ -511,8 +516,29 @@ const Playground = (function() {
         }
     }
 
-    return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove,
+    const getSyncItem = function() {
+        const itemInfoList = [];
+        for(const item of itemList) {
+            itemInfoList.push(item.getEverything());
+        }
+        return itemInfoList;
+    }
+
+    const syncItem = function(items) {
+
+        for(const item of items) {
+            itemList.push(Item(context, item.itemInfo, item.itemCoord));
+        }
+    }
+
+    const initDeath = function(status) {
+        for(var i = 0; i < 4; ++i) {
+            playerList[i].setDead(status[i]);
+        }
+    }
+
+    return {initPlayground, printBaseMap, keyDownHandler, keyUpHandler, playerMove, initDeath,
             playerStop, getPlayerCoords, syncPosition, collisionCheck, setMyInfo, addBomb,
             explodeBomb, playerDied, removeWall, gameEnded, addPowerUp, applyPowerUp,
-            removePowerUp, freezePlayer, unfreezePlayer, getMyStat};
+            removePowerUp, freezePlayer, unfreezePlayer, getMyStat, syncItem, getSyncItem};
 })();

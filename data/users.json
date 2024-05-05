@@ -38,6 +38,15 @@
  "aa": {
   "password": "$2b$10$sZX0a9Qx0egN3JOeJFXBA.YC.O3slnOh3EWNttkX8oCd7BQB/2y1.",
   "bestStats": {
+   "bestGameTime": 14431,
+   "numBombUsed": 0,
+   "numIceTrapUsed": 0,
+   "attackRadius": 1
+  }
+ },
+ "bb": {
+  "password": "$2b$10$qoxFivi7jDwgWRJWyVpWAu5UTTxWEPoJoEwrDCRpxUaxUulNSNZBq",
+  "bestStats": {
    "bestGameTime": null,
    "numBombUsed": null,
    "numIceTrapUsed": null,

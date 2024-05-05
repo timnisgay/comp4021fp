@@ -113,6 +113,7 @@ const maxPlayer = 3;
 var players = [-1, -1, -1, -1];
 var playerDead = [true, true, true, true];
 var playerSockets = [-1, -1, -1, -1];
+var spectatorSockets = [];
 var playerStats = {};
 
 var gameRunning = false;
@@ -159,11 +160,16 @@ io.on("connection", (socket) => {
 
         socket.on("disconnect", () => {
             if(players.includes(username)) {
-                if(removePlayer(username) != -1) {
+                const playerID = removePlayer(username);
+                if(playerID != -1) {
+                    deathHandling(playerID);
                     console.log(username, "is removed from players, current players: ", players);
                     io.emit("players", JSON.stringify(players));
-                    gameRunning = false;
                 }
+            }
+
+            if(spectatorSockets.indexOf(socket) != -1) {
+                spectatorSockets.splice(spectatorSockets.indexOf(socket), 1);
             }
             
             delete onlineUsers[username];
@@ -185,7 +191,7 @@ io.on("connection", (socket) => {
 
         //socket joins the game
         socket.on("join game", () => {
-            if (!players.includes(username) && getPlayerLength() < 4) {
+            if (!players.includes(username) && getPlayerLength() < maxPlayer && !gameRunning) {
                 const playerID = addPlayer(username);
                 if(playerID != -1) {
 
@@ -199,12 +205,10 @@ io.on("connection", (socket) => {
                     // set the player to be alive
                     playerDead[playerID] = false;
 
-                    // DEBUG purpose
-                    // if (len === 4) {
                     if (len === maxPlayer) {
                         playerStats = {};
 
-                        for(var i = 0; i < 4; ++i){
+                        for(var i = 0; i < maxPlayer; ++i){
                             if(playerSockets[i] != -1) {
                                 const playerInfo = {
                                     playerID : i,
@@ -215,12 +219,21 @@ io.on("connection", (socket) => {
                         }
 
                         gameRunning = true;
-                        // 3000 here, in the future maybe 3 seconds count down before start
-                        setTimeout(syncRequest, 3000);
+                        syncRequest();
                     } else {
                         io.emit("players", JSON.stringify(players));
                     }
-                }  
+                } 
+            // full, spectate instead
+            } else if (!players.includes(username)){
+                spectatorSockets.push(socket);
+                // pulling all the info from one player
+                const tempSyncSource = getFirstAvailablePlayerIndex();
+                if(tempSyncSource != -1) {
+                    playerSockets[tempSyncSource].emit("get sync item");
+                }
+                else console.log("spectator joined when theres no player??????");
+                
             }
         });
 
@@ -276,24 +289,7 @@ io.on("connection", (socket) => {
         });
 
         socket.on("dead", () => {
-            const playerID = getPlayerID(username);
-            playerDead[playerID] = true;
-
-            console.log(playerDead);
-            console.log("how many player left: ", playerDead.filter(value => value === false).length);
-            if (playerDead.filter(value => value === false).length <= 1) {
-                
-                io.emit("end game");
-                io.emit("get personal stat");
-
-                // reset board
-                boardInit = boardRestartInit.map(a => a.slice());
-                
-                gameRunning = false;
-                
-            } else {
-                io.emit("player died", playerID);
-            }
+            deathHandling(getPlayerID(username));
         });
 
         socket.on("remove wall", (coord) => {
@@ -341,8 +337,8 @@ io.on("connection", (socket) => {
                 removePlayer(username); //after storing the stat, can remove this player
                 io.emit("players", JSON.stringify(players));
             }
-
-            // if(Object.keys(playerStats).length === 4) {
+            
+            // Need some special handling
             if(Object.keys(playerStats).length === maxPlayer) {
                 io.emit("show all stats", JSON.stringify(playerStats));
                 console.log("emit show all stats: ", playerStats);
@@ -375,6 +371,14 @@ io.on("connection", (socket) => {
                 }
             }
         });
+
+        // sync the board state from a player
+        socket.on("sync item", (data) => {
+            for(const spectator of spectatorSockets) {
+                spectator.emit("spectate", data);
+                spectator.emit("player status", playerDead);
+            }
+        })
     }
 });
 
@@ -383,7 +387,27 @@ httpServer.listen(8000, () => {
     console.log("The game server has started...");
 });
 
-// custom add player logic, returns -1 if cannot add
+function deathHandling(playerID) {
+    playerDead[playerID] = true;
+
+    console.log(playerDead);
+    console.log("how many player left: ", playerDead.filter(value => value === false).length);
+    if (playerDead.filter(value => value === false).length <= 1) {
+        
+        io.emit("end game");
+        io.emit("get personal stat");
+
+        // reset board
+        boardInit = boardRestartInit.map(a => a.slice());
+        
+        gameRunning = false;
+        
+    } else {
+        io.emit("player died", playerID);
+    }
+}
+
+// custom add player logic, returns -1 if cannot add, other wise returns the added player index
 function addPlayer(username) {
     const index = getFirstAvailableIndex();
     if(index == -1) return -1;
@@ -396,6 +420,14 @@ function addPlayer(username) {
 function getFirstAvailableIndex() {
     for(var i = 0; i < 4; ++i) {
         if(players[i] == -1) return i;
+    }
+    return -1;
+}
+
+// returns first player that exist in game, -1 if no one exist
+function getFirstAvailablePlayerIndex() {
+    for(var i = 0; i < 4; ++i) {
+        if(players[i] != -1) return i;
     }
     return -1;
 }

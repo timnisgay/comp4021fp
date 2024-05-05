@@ -132,12 +132,29 @@ const Socket = (function() {
             playerStats = JSON.parse(playerStats);
             GameEndPage.update(playerStats);
         });
+
+        socket.on("spectate", (data) => {
+            LobbyPage.hide();
+            Playground.syncItem(JSON.parse(data));
+            GamePlayPage.updatePlayerInfo(Authentication.getUser());
+            GamePlayPage.show();
+        })
+
+        socket.on("get sync item", () => {
+            const item = Playground.getSyncItem();
+            if(item) socket.emit("sync item", JSON.stringify(item));
+        });
+
+        socket.on("player status", (data) => {
+            Playground.initDeath(data);
+        });
     };
 
     // This function disconnects the socket from the server
     const disconnect = function() {
         socket.disconnect();
         socket = null;
+        Playground.gameEnded();
     };
 
     const getPlayers = function() {
