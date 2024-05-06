@@ -259,6 +259,16 @@ const Playground = (function() {
                 if(!player.getDead()) {
                     player.update(timeNow);
                     player.draw();
+                    if(player.getFrozen()) {
+
+                        const {x, y} = player.getGridXY();
+
+                        context.drawImage(spritesheet, 
+                            208, 288,
+                            16, 16,
+                            x * 50, y * 50,
+                            50, 50);
+                    }
                 }
             }
         }

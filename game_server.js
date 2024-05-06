@@ -127,22 +127,22 @@ var currentItemID = 0;
 const boardRestartInit = 
 [
     ["W1", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W1", "G1", "G1", "W2", "WR", "W2", "WR", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W2", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W2", "W2", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "W1"],
-    ["W1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "W1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
-    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
-    ["W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "W1"],
+    ["W1", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W1", "WR", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "G1", "W1"],
+    ["W1", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W2", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "W1"],
+    ["W1", "WR", "W2", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "G1", "WR", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "G1", "W2", "WR", "W1"],
+    ["W1", "G1", "WR", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "WR", "G1", "W1"],
+    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W1", "WR", "WR", "W2", "WR", "W2", "WR", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "WR", "G1", "WR", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "W1", "WR", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "WR", "G1", "WR", "G1", "W1"],
+    ["W1", "WR", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W2", "W2", "WR", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "G1", "W1", "W1"],
+    ["W1", "WR", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "WR", "WR", "W1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "G1", "W2", "W1"],
+    ["W1", "G1", "WR", "G1", "WR", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "WR", "W1", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "WR", "G1", "WR", "G1", "W1"],
+    ["W1", "G1", "W2", "G1", "W2", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "G1", "W2", "G1", "W2", "G1", "W1"],
+    ["W1", "G1", "WR", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "W1"],
+    ["W1", "WR", "W2", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "WR", "G1", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "G1", "W2", "WR", "W1"],
+    ["W1", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "W1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "W1"],
+    ["W1", "G1", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "WR", "W2", "G1", "W1"],
+    ["W1", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "WR", "G1", "G1", "G1", "W1"],
     ["W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2", "W2"]
 ];
 
@@ -500,15 +500,15 @@ function bombExplode(bombID) {
 }
 
 // chanceToSpawnPowerUp - chance to spawn a power up after breaking a wall
-const chanceToSpawnPowerUp = 1.0;
+const chanceToSpawnPowerUp = 0.5;
 
 // chance for each power up to spawn (if something is going to spawn for sure)
 // the chances should add up to 1 in the end, 
 // if the sum is less than 1: might cause an originally spawning item to not spawn
 // if the sum is larger than 1: some power up might spawn more than they should, some power up might never spawn
 // just make them add up to 1 lol
-const chanceBombCount = 0.3;
-const chanceBombPower = 0.3;
+const chanceBombCount = 0.4;
+const chanceBombPower = 0.2;
 const chanceIceCount = 0.4;
 function spawnPowerUp() {
     if(Math.random() < chanceToSpawnPowerUp) {
