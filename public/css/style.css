@@ -5,13 +5,13 @@
     --field-background: white;
     --field-background-hover: #eee;
     --input-background: #eee;
-    --overlay-background: rgba(245, 158, 114, 0.8);
-    --overlay-caption-color: #eb4a40;
-    --overlay-content-background: linear-gradient(white, #fde0c5);
+    --overlay-background: rgba(178, 240, 178, 0.8);
+    --overlay-caption-color: #156a15;
+    --overlay-content-background: linear-gradient(white, #eafbea);
 
-    --header-background: linear-gradient(to right, #eb4a40, #f59e72);
-    --main-panel-background: linear-gradient(white, #fde0c5);
-    --online-users-panel-background: linear-gradient(to right, #fde0c5, #facba6);
+    --header-background: linear-gradient(to right, #156a15, #7fe67f);
+    --main-panel-background: linear-gradient(white, #eafbea);
+    --online-users-panel-background: linear-gradient(to right, #eafbea, #6ae26a);
     --chat-panel-background: none;
 
     --title-color: white;
@@ -20,13 +20,13 @@
     --font-color: black;
     --date-color: gray;
 
-    --signin-form-background: #fde0c5;
-    --register-form-background: linear-gradient(#fde0c5, #facba6);
+    --signin-form-background: #eafbea;
+    --register-form-background: linear-gradient(#eafbea, #6ae26a);
     --warning-color: red;
 
     --button-color: white;
-    --button-background: #f2855d;
-    --button-background-hover: #f8b58b;
+    --button-background: #6ac86a;
+    --button-background-hover: #7dcf7d;
 }
 * {
     font-family: "Abel", sans-serif;
@@ -239,7 +239,7 @@ button.disabled {
 }
 
 .instruction-title {
-    font-size: 100px;
+    font-size: 80px;
     margin-bottom: 20px;
 }
 
@@ -249,6 +249,12 @@ button.disabled {
     width: 90%;
     height: 90%;
     overflow-y: scroll;
+}
+
+.instruction-subHeadings {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 /* lobby page */
@@ -358,7 +364,7 @@ button.disabled {
 
 .game-stats-box {
     box-sizing: border-box;
-    border: 1vmin solid #f8b58b;
+    border: 1vmin solid #156a15;
     border-radius: 2vmin;
     height: min-content;
 }
