@@ -345,13 +345,13 @@ const GameEndPage = (function() {
                 statsBoxContent.append(
                     $("<div class='current-game-stats-title'>" + rankingPhrase + "</div><br>")
                 ).append(
-                    $("<span style='font-weight: bold;'>Player " + playerData["playerID"] + ": "+ player +"</span><br>")
+                    $("<span style='font-weight: bold;'>Player " + (playerData["playerID"] + 1) + ": "+ player +"</span><br>")
                 );
 
                 if(playerData["message"] === "disconnected") {
                     statsBoxContent.append(
                         $("<span style='font-weight: bold;'>Player " + 
-                        playerData["playerID"] + 
+                        (playerData["playerID"] + 1) + 
                         " is disconnected in the middle of the game.<br>Will not show game statistics.</span><br>")
                     );
                 } else {
