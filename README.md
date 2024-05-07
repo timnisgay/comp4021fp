@@ -18,7 +18,7 @@ Once 4 players are all waiting to get in game, the game will start automatically
 Also, the player can log out by pressing the log out button at the top right.
 
 ## Gameplay page:
-Use the controls stated above to play the game, breaking the destroyable walls (look like boxes) sometimes drops power up.
+Use the controls stated above to play the game, breaking the destroyable walls ![The sprite of breakable wall](assets/images/box.png) sometimes drops power up.
 There are three types of power up:
 
 - ![The sprite of ice trap amount plus power up](assets/images/icetrapamt.png) : Increases the maximum amount of placeable ice trap.
