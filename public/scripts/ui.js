@@ -277,6 +277,7 @@ const GameEndPage = (function() {
         $("#return-to-lobby").on("click", () => {
             Socket.getBestGameStats();
             Socket.getPlayers();
+            Sound.stopGameoverSound();
             hide();
             LobbyPage.show();
         });
@@ -287,7 +288,7 @@ const GameEndPage = (function() {
             Authentication.signout(
                 () => {
                     Socket.disconnect();
-
+                    Sound.stopGameoverSound();
                     hide();
                     FrontPage.show();
                 }

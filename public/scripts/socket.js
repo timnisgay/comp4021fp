@@ -41,11 +41,13 @@ const Socket = (function() {
             GameEndPage.hide();
             GamePlayPage.updatePlayerInfo(Authentication.getUser());
             GamePlayPage.show();
+            Sound.startBgm();
             Playground.setMyInfo(JSON.parse(playerInfo));
         });
 
         // server tells socket the game is ended, please show the end game page
         socket.on("end game", () => {
+            Sound.gameoverSound();
             Playground.gameEnded();
             GamePlayPage.hide();
             GameEndPage.show();
@@ -135,6 +137,7 @@ const Socket = (function() {
         });
 
         socket.on("spectate", (data) => {
+            Sound.startBgm();
             LobbyPage.hide();
             Playground.syncItem(JSON.parse(data));
             GamePlayPage.updatePlayerInfo(Authentication.getUser());
@@ -220,24 +223,29 @@ const Socket = (function() {
         }
     }
 
+    // tell the server remove the wall at designated coord
     const removeWall = function(coord) {
         if (socket && socket.connected) {
             socket.emit("remove wall", JSON.stringify(coord));
         }
     }
 
+    // tell the server the player has picked us "item"
     const powerUpPickUp = function(item) {
+        Sound.collectPowerUpSound();
         if (socket && socket.connected) {
             socket.emit("power up get", JSON.stringify(item));
         }
     }
 
+    // tell the server the player is frozen
     const playerFrozen = function(coord) {
         if (socket && socket.connected) {
             socket.emit("player frozen", JSON.stringify(coord));
         }
     }
 
+    // returns all related stats when game over
     const returnPersonalStat = function(stats, myID, myName) {
         if (socket && socket.connected) {
             const data = {
