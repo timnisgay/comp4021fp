@@ -52,5 +52,23 @@
    "numIceTrapUsed": null,
    "attackRadius": null
   }
+ },
+ "cc": {
+  "password": "$2b$10$.g8Tsg2PKUnfEOOmRCdCcOZ4QfNJMZFbOatMeOTVw9Qk.m4yLTiQa",
+  "bestStats": {
+   "bestGameTime": null,
+   "numBombUsed": null,
+   "numIceTrapUsed": null,
+   "attackRadius": null
+  }
+ },
+ "dd": {
+  "password": "$2b$10$6CLSeXMDLvmRQe8aDDZkJ.98jcy8UcLCM6iRI4bxpPDZv6teQA.B.",
+  "bestStats": {
+   "bestGameTime": null,
+   "numBombUsed": null,
+   "numIceTrapUsed": null,
+   "attackRadius": null
+  }
  }
 }

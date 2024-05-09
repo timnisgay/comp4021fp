@@ -405,7 +405,7 @@ function deathHandling(playerID) {
 
     console.log(playerDead);
     console.log("how many player left: ", playerDead.filter(value => value === false).length);
-    if (playerDead.filter(value => value === false).length <= 1) {
+    if (playerDead.filter(value => value === false).length <= 1 && gameRunning) {
         
         io.emit("end game");
         io.emit("get personal stat");
@@ -415,7 +415,7 @@ function deathHandling(playerID) {
         
         gameRunning = false;
         
-    } else {
+    } else if(gameRunning){
         io.emit("player died", playerID);
     }
 }
