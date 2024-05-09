@@ -106,8 +106,7 @@ io.use((socket, next) => {
 });
 
 const onlineUsers = {};
-// debug, is 4
-const maxPlayer = 3;
+const maxPlayer = 4;
 
 // technically i should create a player class to store all these highly repetitive info, but if it works, dont touch it
 var players = [-1, -1, -1, -1];
@@ -246,7 +245,7 @@ io.on("connection", (socket) => {
                 if(tempSyncSource != -1) {
                     playerSockets[tempSyncSource].emit("get sync item");
                 }
-                else console.log("spectator joined when theres no player??????");
+                else console.log("error: spectator joined when theres no player");
                 
             }
         });
