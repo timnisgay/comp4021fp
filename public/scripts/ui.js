@@ -241,9 +241,9 @@ const GamePlayPage = (function() {
     const updatePlayerStats = function(userStats) {
         console.log(userStats);
 
-        $("#player-num-bomb").text(userStats[maxBomb]);
-        $("#player-num-ice-trap").text(userStats[maxIce]);
-        $("#player-attack-radius").text(userStats[attackRadius]);
+        $("#player-num-bomb").text("1");
+        $("#player-num-ice-trap").text("1");
+        $("#player-attack-radius").text("1");
     };
 
     // This function update the player info in right panel
@@ -377,7 +377,7 @@ const GameEndPage = (function() {
                                     statsBoxContent.append(numBombElement).append($("<br>"));
                                     break;
                                 case "numIceTrap":
-                                    const numIceTrapElement = $("<span class='game-stats-line'></span>").text("No. of Bomb Placed: " + value);
+                                    const numIceTrapElement = $("<span class='game-stats-line'></span>").text("No. of Ice Trap Placed: " + value);
                                     statsBoxContent.append(numIceTrapElement).append($("<br>"));
                                     break;
                                 case "maxBomb":

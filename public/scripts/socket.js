@@ -40,6 +40,7 @@ const Socket = (function() {
             LobbyPage.hide();
             GameEndPage.hide();
             GamePlayPage.updatePlayerInfo(Authentication.getUser());
+            GamePlayPage.updatePlayerStats();
             GamePlayPage.show();
             Sound.startBgm();
             Playground.setMyInfo(JSON.parse(playerInfo));
