@@ -4,7 +4,9 @@ const Sound = (function() {
     const sounds = {
         background: new Audio("assets/background.mp3"),
         collect: new Audio("assets/collect.mp3"),
-        gameover: new Audio("assets/gameover.mp3")
+        gameover: new Audio("assets/gameover.mp3"),
+        explosion: new Audio("assets/explosion.mp3"),
+        ice: new Audio("assets/iceEffect.mp3")
     };
 
     // start bgm, this will stop and replay any ongoing bgm (if there are any)
@@ -26,12 +28,26 @@ const Sound = (function() {
         sounds.collect.play();
     }
 
+    // explosionType: 0 - Bomb, 1 - Ice
+    const explosionSound = function(explosionType){
+        if(explosionType == 0) {
+            sounds.explosion.currentTime = 0;
+            sounds.explosion.play();
+        }
+        else if (explosionType == 1){
+            sounds.ice.currentTime = 0;
+            sounds.ice.play();
+        }
+    }
+
     // stops all other sound tracks, start playing the gameover sound
     const gameoverSound = function(){
 
         // pausing all other soundtracks, when new audio are added, add the lines here too to pause them
         sounds.background.pause();
         sounds.collect.pause();
+        sounds.explosion.pause();
+        sounds.ice.pause();
 
         // starts playing the gameover sound track
         sounds.gameover.currentTime = 0;
@@ -44,5 +60,5 @@ const Sound = (function() {
         sounds.gameover.pause();
     }
     
-    return {startBgm, stopBgm, collectPowerUpSound, gameoverSound, stopGameoverSound};
+    return {startBgm, stopBgm, collectPowerUpSound, gameoverSound, stopGameoverSound, explosionSound};
 })();

@@ -361,9 +361,11 @@ const Playground = (function() {
 
                 if(bombType == 0) {
                     scuffBombExplosionSprite(bombOwner, bombPower, x, y);
+                    Sound.explosionSound(bombType);
                 }
                 else if(bombType == 1) {
                     scuffIceTrapExplosionSprite(bombPower, x, y);
+                    Sound.explosionSound(bombType);
                 }
                 
                 bombList.splice(i, 1);
