@@ -136,8 +136,8 @@ const Player = function(ctx, x, y, sequence) {
 
     // bombType used for statistic collection
     const bombExploded = function(bombType) {
-        if(bombType == 0) bombStats.currentPlacedBomb--;
-        else if(bombType == 1) bombStats.currentPlacedIce--;
+        if(bombType == 0) bombStats.currentPlacedBomb = Math.max(0, bombStats.currentPlacedBomb - 1);
+        else if(bombType == 1) bombStats.currentPlacedIce = Math.max(0, bombStats.currentPlacedIce - 1);
     }
 
     const getGridXY = function() {
@@ -214,7 +214,7 @@ const Player = function(ctx, x, y, sequence) {
     const stopCheating = function() {
         if(cheating) {
             cheating = false;
-            bombStats = copyStats;
+            bombStats = {...copyStats};
         }
     }
 
