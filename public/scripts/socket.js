@@ -24,14 +24,12 @@ const Socket = (function() {
         // no matter a player is added or deleted, use this function to update the lobby
         socket.on("players", (players) => {
             players = JSON.parse(players);
-            console.log(players);
             LobbyPage.update(players);
         });
 
         // socket receives their own best statistics
         socket.on("best stats", (stats) => {
             stats = JSON.parse(stats);
-            console.log(stats);
             LobbyPage.updateBestStats(stats);
         });
 

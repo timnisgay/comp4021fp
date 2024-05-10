@@ -156,7 +156,7 @@ io.on("connection", (socket) => {
         onlineUsers[username] = {username};
         // io.emit("add user", JSON.stringify(socket.request.session.user));
 
-        console.log(onlineUsers);
+        // console.log(onlineUsers);
 
         socket.on("disconnect", () => {
             if(players.includes(username)) {
@@ -174,7 +174,7 @@ io.on("connection", (socket) => {
                         playerID: playerID,
                         message: "disconnected"
                     };
-                    console.log(username, "is removed from players, current players: ", players);
+                    // console.log(username, "is removed from players, current players: ", players);
                     io.emit("players", JSON.stringify(players));
                 }
             }
@@ -189,7 +189,7 @@ io.on("connection", (socket) => {
 
         //socket get the current players including -1
         socket.on("get players", () => {
-            console.log("current players: ", players);
+            // console.log("current players: ", players);
             socket.emit("players", JSON.stringify(players));
         });
 
@@ -208,8 +208,8 @@ io.on("connection", (socket) => {
 
                     const len = getPlayerLength();
 
-                    console.log(len);
-                    console.log("current players: ", players);
+                    // console.log(len);
+                    // console.log("current players: ", players);
 
                     // store the player socket
                     playerSockets[playerID] = socket;
@@ -341,11 +341,11 @@ io.on("connection", (socket) => {
         socket.on("return stat", (data) => {
             const stats = JSON.parse(data);
             const playerID = getPlayerID(username);
-            console.log(playerID);
+            // console.log(playerID);
             if(playerID != -1) {
                 playerStats[username] = stats;
                 playerStats[username]["playerID"] = playerID;
-                console.log(playerStats[username]);
+                // console.log(playerStats[username]);
 
                 removePlayer(username); //after storing the stat, can remove this player
                 io.emit("players", JSON.stringify(players));
@@ -354,7 +354,7 @@ io.on("connection", (socket) => {
             // Need some special handling
             if(Object.keys(playerStats).length === maxPlayer) {
                 io.emit("show all stats", JSON.stringify(playerStats));
-                console.log("emit show all stats: ", playerStats);
+                // console.log("emit show all stats: ", playerStats);
 
                 //check winner stats, overwrite the best stats if needed
                 var winnerName = -1;
@@ -372,7 +372,7 @@ io.on("connection", (socket) => {
                 if (winnerName in users) {
                     const bestStat = users[winnerName].bestStats;
                     if (bestStat.bestGameTime == null || bestStat.bestGameTime > stats.timeDied) {
-                        console.log("update best stats of player: ", winnerName);
+                        // console.log("update best stats of player: ", winnerName);
                         users[winnerName].bestStats = {
                             bestGameTime: stats.timeDied, 
                             numBombUsed: stats.numBomb,
@@ -403,8 +403,8 @@ httpServer.listen(8000, () => {
 function deathHandling(playerID) {
     playerDead[playerID] = true;
 
-    console.log(playerDead);
-    console.log("how many player left: ", playerDead.filter(value => value === false).length);
+    // console.log(playerDead);
+    // console.log("how many player left: ", playerDead.filter(value => value === false).length);
     if (playerDead.filter(value => value === false).length <= 1 && gameRunning) {
         
         io.emit("end game");

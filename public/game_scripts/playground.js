@@ -375,7 +375,7 @@ const Playground = (function() {
             }
         }
 
-        // lol bug happened or sth 
+        // bug happened or sth 
         console.log("Bomb " + targetBombID + " was detonated, but it doesn't exist...");
     }
 

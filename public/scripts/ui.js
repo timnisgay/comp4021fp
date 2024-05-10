@@ -152,7 +152,7 @@ const LobbyPage = (function() {
         const playerArrayArea = $("#lobby-players-list");
 
         playerArrayArea.empty();
-        console.log(players);
+        // console.log(players);
 
         for (let i = 0; i < players.length; i++) {
             if (players[i] != -1) {
@@ -173,7 +173,7 @@ const LobbyPage = (function() {
         const lobbySelfStats = $("#lobby-self-stats");
 
         lobbySelfStats.empty();
-        console.log(stats);
+        // console.log(stats);
 
         for (const stat in stats) {
             if (stats[stat] != null) {
@@ -184,7 +184,7 @@ const LobbyPage = (function() {
 
                     const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(3, '0')}`;
 
-                    console.log(formattedTime);
+                    // console.log(formattedTime);
 
                     lobbySelfStats.append(
                         $("<div id='lobby-stats-" + stat + "' class='row lobby-stats-box'></div>")
@@ -239,7 +239,7 @@ const GamePlayPage = (function() {
     // This function updates the user stats
     // not used now and seperated in player.js
     const updatePlayerStats = function(userStats) {
-        console.log(userStats);
+        // console.log(userStats);
 
         $("#player-num-bomb").text("1");
         $("#player-num-ice-trap").text("1");
@@ -248,7 +248,7 @@ const GamePlayPage = (function() {
 
     // This function update the player info in right panel
     const updatePlayerInfo = function(user) {
-        console.log(user);
+        // console.log(user);
 
         $("#player-info").html("<p>" + user.username + "</p>");
     };
@@ -260,7 +260,7 @@ const GamePlayPage = (function() {
         let minute = Math.floor(time / 60);
         let second = Math.floor(time % 60).toString().padStart(2, '0');
 
-        console.log(minute +" : "+ second);
+        // console.log(minute +" : "+ second);
         $("#game-play-time").html("<p>" + minute + " : " + second + "</p>");
     };
 
@@ -321,7 +321,7 @@ const GameEndPage = (function() {
                   }
             })
         );
-        console.log(sortedPlayerStats);
+        // console.log(sortedPlayerStats);
 
         const currentGameStats = $("#current-game-stats");
         currentGameStats.empty();
@@ -359,7 +359,7 @@ const GameEndPage = (function() {
                     for (const key in playerData) {
                         if (playerData.hasOwnProperty(key)) {
                             const value = playerData[key];
-                            console.log(value);
+                            // console.log(value);
                             switch (key) {
                                 case "timeDied":
                                     const minutes = Math.floor(value / 60000);
@@ -368,7 +368,7 @@ const GameEndPage = (function() {
     
                                     const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(3, '0')}`;
     
-                                    console.log(formattedTime);
+                                    // console.log(formattedTime);
                                     const timeElement = $("<span class='game-stats-line'></span>").text("Survival Time: " + formattedTime);
                                     statsBoxContent.append(timeElement).append($("<br>"));
                                     break;
